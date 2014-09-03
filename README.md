@@ -7,4 +7,4 @@ Hei! Her lagrer vi kildekoden vår.
 Takk GitHub!<3
 
 
-[Doodle for Kickoffmøte](http://doodle.com/s2gcxsmzkfxi3bxi)
+[Doodle for Kickoffmøte](http://doodle.com/ie9puaqkwt5feh3e)
