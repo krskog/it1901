@@ -1,0 +1,36 @@
+# IntelliJ
+
+## Project setup
+*.iml
+*.ipr
+*.iws
+
+## User settings and sensitive files
+.idea/
+
+## Compiled stuff
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+*.launch
+*.pydevproject
+.metadata
+.gradle
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+
+# Maven
+log/
+target/
+
+# Mac
+.DS_Store
