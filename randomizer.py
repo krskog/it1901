@@ -1,24 +1,26 @@
 import random
-from colorama import init, Fore
-init(autoreset=True)
 
 manual = True
 
 li = input("Comma separated list of names (leave empty to read from names.txt)\n> ")
 
-inp = input("How many random picks do you want? ")
+if (len(li)==0):
+    manual = False
+    try:
+        with open('names.txt', 'r') as f:
+            li = f.readlines()
+    except FileNotFoundError:
+        print("Could not find names.txt -- create it and try again, or input list manually")
+        exit()
 
+
+inp = input("How many random picks do you want? ")
 num_rand = 1
 if inp != "":
     try:
         num_rand = int(inp)
     except ValueError:
         print("Something went wrong during casting; using default value '%s'" % num_rand)
-
-if (len(li)==0):
-    manual = False
-    with open('names.txt', 'r') as f:
-        li = f.readlines()
         
 # Cleaning
 for x in range(0, len(li)):
