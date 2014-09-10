@@ -1,4 +1,4 @@
-package no.ntnu.it1901-21;
+package no.ntnu.it190121;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
