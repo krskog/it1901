@@ -48,3 +48,6 @@ target/
 
 # Mac
 .DS_Store
+
+# This project files
+names.txt
