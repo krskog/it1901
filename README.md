@@ -17,18 +17,18 @@ Dette gjør at vi alltid har fungerende kode i master og dev-branchene, og utvik
 
 
 # Maven
-Last ned og installer Maven.
-If Windows:
-Sett JAVA_HOME 
-Legg til maven i Path
+Last ned og installer Maven.  
+If Windows:  
+Sett JAVA_HOME  
+Legg til maven i Path  
 
-Pull repo 
-CMD/Terminal -> cd til github-prosjektene dine 
-`cd it1901/Koiesystem` 
-`maven clean install` 
-Hvis du har eclipse: 
-`maven eclipse:eclipse` 
+Pull repo  
+CMD/Terminal -> cd til github-prosjektene dine  
+`cd it1901/Koiesystem`  
+`maven clean install`  
+Hvis du har eclipse:  
+`maven eclipse:eclipse`  
 
-Åpne IDE-en din, importer Koiesystem. 
+Åpne IDE-en din, importer Koiesystem.  
 
-Commit, push, pull ofte.
+Commit, push, pull ofte. 
