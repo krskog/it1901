@@ -10,4 +10,6 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^koie/', include('koie.urls')),
+    url(r'^report/', include('report.urls')),
+    url(r'^reservation/', include('reservation.urls')),
 )
