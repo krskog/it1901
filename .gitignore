@@ -51,3 +51,10 @@ target/
 
 # This project files
 names.txt
+
+
+# Python stuffs
+*.pyc
+
+# Virtualenv
+koiesys/
