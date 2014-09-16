@@ -29,3 +29,8 @@ class Reservation(models.Model):
 
 class Report(models.Model):
     reservation = models.ForeignKey(Reservation, related_name=_("reservation"))
+    report = models.TextField(_('end of stay report'))
+    reported_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "Report for %s" % self.reservation
