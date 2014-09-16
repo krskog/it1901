@@ -1,5 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 from django.utils.translation import ugettext_lazy as _
+
 
 class Koie(models.Model):
     name = models.CharField(_('koie name'), max_length=50)
@@ -13,3 +16,16 @@ class Koie(models.Model):
 
     def get_address(self):
         return "%s %s, %s %s" % (self.address, self.house_no, self.zip_code, self.location)
+
+class Reservation(models.Model):
+    ordered_by = models.ForeignKey(User, related_name=_("ordered by"))
+    koie_ordered = models.ForeignKey(Koie, related_name=_("ordered koie"))
+    rent_start = models.DateField(_('rent start'))
+    rent_end = models.DateField(_('rent end'))
+    ordered_date = models.DateTimeField(_('timestamp for order'), auto_now_add=True) # @TODO Exclude from forms
+
+    def __str__(self):
+        return "%s by %s @ %s" % (self.koie_ordered, self.ordered_by, self.rent_start.strftime("%d-%m-%Y"))
+
+class Report(models.Model):
+    reservation = models.ForeignKey(Reservation, related_name=_("reservation"))
