@@ -1,0 +1,23 @@
+<h1>information about the koies</h1>
+
+{% if koie %}
+  <h3>Sum info 'baut dis koi</h3>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Address</th>
+      <th>ZIP</th>
+      <th>Location</th>
+      <th>Number of beds</th>
+    </tr>
+    <tr>
+      <td>{{ koie.name }}</td>
+      <td>{{ koie.address }}</td>
+      <td>{{ koie.zip_code }}</td>
+      <td>{{ koie.location }}</td>
+      <td>{{ koie.num_beds }}</td>
+    </tr>
+  </table>
+{% else %}
+  No info about dis koie
+{% endif %}
