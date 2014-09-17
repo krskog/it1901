@@ -4,7 +4,7 @@
   <h3>List of koies</h3>
   <ul>
   {% for koie in koies %}
-    <li><a href="{% url 'detail' koie.id %}">{{ koie.name }}</a></li>
+    <li><a href="{% url 'koie_detail' koie.id %}">{{ koie.name }}</a></li>
   {% endfor %}
   </ul>
 {% else %}
