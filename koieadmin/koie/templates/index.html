@@ -1,12 +1,11 @@
-<h1>Koiesys index</h1>
+{% extends 'base.html' %}
 
-{% if koies %}
-  <h3>List of koies</h3>
-  <ul>
-  {% for koie in koies %}
-    <li><a href="{% url 'koie_detail' koie.id %}">{{ koie.name }}</a></li>
-  {% endfor %}
-  </ul>
-{% else %}
-  No koies in sys.
-{% endif %}
+{% block styles %}{% endblock styles %}
+
+{% block title %}CoolStuff{% endblock title %}
+
+
+{% block content %}
+<h1>KoieadminsysheixD</h1>
+This is home.
+{% endblock content %}

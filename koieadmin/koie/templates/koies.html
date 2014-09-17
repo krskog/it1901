@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block styles %}{% endblock styles %}
+
+{% block title %}Koier{% endblock title %}
+
+{% block content %}
+<h1>Koiesys index</h1>
+
+{% if koies %}
+  <h3>List of koies</h3>
+  <ul>
+  {% for koie in koies %}
+    <li><a href="{% url 'koie_detail' koie.id %}">{{ koie.name }}</a></li>
+  {% endfor %}
+  </ul>
+{% else %}
+  No koies in sys.
+{% endif %}
+
+{% endblock content %}
