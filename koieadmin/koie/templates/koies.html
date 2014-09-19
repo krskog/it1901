@@ -18,7 +18,7 @@
     <h3>List of koies</h3>
       <ul>
         {% for koie in koies %}
-        <li><a href="{% url 'koie_detail' koie.id %}">{{ koie.name }}</a></li>
+        <li><a href="{% url 'koie_detail' koie.id %}">{{ koie.name }}</a> | [{% koie.num_beds %}] | {% koie.location %}</li>
         {% endfor %}
       </ul>
   {% else %}
