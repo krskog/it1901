@@ -7,30 +7,37 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-md-12">
-    <h1>information about the koies</h1>
-  </div>
   <div class="col-md-8">
-  {% if koie %}
-  <h3>Sum info 'baut dis koi</h3>
-  <table class="table table-striped">
-    <tr>
-      <th>Name</th>
-      <th>Address</th>
-      <th>ZIP</th>
-      <th>Location</th>
-      <th>Number of beds</th>
-      <th>Reserved</th>
-    </tr>
-    <tr>
-      <td>{{ koie.name }}</td>
-      <td>{{ koie.address }}</td>
-      <td>{{ koie.zip_code }}</td>
-      <td>{{ koie.location }}</td>
-      <td>{{ koie.num_beds }}</td>
-      <td>{{ is_reserved }}</td>
-    </tr>
-  </table>
+    {% if koie %}
+    <h1>Informasjon om {{ koie.name }}</h1>
+  </div>
+  <div class="col-md-4 pull-right" style="margin-top: 15px;">
+    {% if koie.is_reserved %}
+      <div class="alert alert-danger">Status: Reservert</div>
+    {% else %}
+      <div class="alert alert-success">Status: Ledig</div>
+    {% endif %}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <p><span class="lead">{{ koie.name }}</span> ligger i <abbr title="{{ koie.zip_code }} {{ koie.location }}">{{ koie.location }}</abbr>,
+       med adressen {{ koie.address }}. </p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <h2>Praktisk informasjon</h2>
+    <p><span class="lead">Koien</span> har {{ koie.num_beds }} sengeplasser.</p>
+  </div>
+  <div class="col-md-4">
+    <h2>Lorem</h2>
+    <p><span class="lead"></span>Pip</p>
+  </div>
+  <div class="col-md-4">
+    <h2>Ipsum</h2>
+    <p><span class="lead"></span>Pap</p>
+  </div>
   {% else %}
     No info about dis koie
   {% endif %}
