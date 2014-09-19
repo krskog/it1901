@@ -20,6 +20,7 @@
       <th>ZIP</th>
       <th>Location</th>
       <th>Number of beds</th>
+      <th>Reserved</th>
     </tr>
     <tr>
       <td>{{ koie.name }}</td>
@@ -27,6 +28,7 @@
       <td>{{ koie.zip_code }}</td>
       <td>{{ koie.location }}</td>
       <td>{{ koie.num_beds }}</td>
+      <td>{{ is_reserved }}</td>
     </tr>
   </table>
   {% else %}

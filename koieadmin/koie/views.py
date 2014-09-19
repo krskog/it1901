@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-
 from django.utils.translation import ugettext_lazy as _
 
-from koie.models import Koie
+from datetime import date, datetime
+
+from koie.models import Koie, Reservation, Report
 
 # Index view: Shows all koies
 
@@ -36,4 +37,17 @@ def koie_detail(request, koie_id):
           {'name': koie.name}
       ],
       'koie': koie,
+      'is_reserved': is_koie_reserved(koie)
     })
+
+
+### ========== METHODS =============
+
+def is_koie_reserved(koie):
+    now = date.today()
+    reservation_set = Reservation.objects.filter(koie_ordered=koie)
+    for reservation in reservation_set:
+        if now > reservation.rent_start and now < reservation.rent_end:
+            return True
+
+    return False #now > koie.rent_start and now < koie.rent_end
