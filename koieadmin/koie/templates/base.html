@@ -53,6 +53,19 @@
           </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
       </div>
+      <div class="row">
+        <div class="col-md-12" id="breadcrumbs">
+          <ol class="breadcrumb">
+            {% for breadcrumb in breadcrumbs %}
+              {% if not breadcrumb.url %}
+                <li class="active">{{ breadcrumb.name }}</li>
+              {% else %}
+                <li><a href="{% url breadcrumb.url %}">{{ breadcrumb.name }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ol>
+        </div>
+      </div>
       {% block content %}{% endblock content %}
     </div>
 

@@ -1,8 +1,19 @@
-<h1>information about the koies</h1>
+{% extends 'base.html' %}
 
-{% if koie %}
+{% block styles %}{% endblock styles %}
+
+{% block title %}CoolStuff{% endblock title %}
+
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <h1>information about the koies</h1>
+  </div>
+  <div class="col-md-8">
+  {% if koie %}
   <h3>Sum info 'baut dis koi</h3>
-  <table>
+  <table class="table table-striped">
     <tr>
       <th>Name</th>
       <th>Address</th>
@@ -18,6 +29,9 @@
       <td>{{ koie.num_beds }}</td>
     </tr>
   </table>
-{% else %}
-  No info about dis koie
-{% endif %}
+  {% else %}
+    No info about dis koie
+  {% endif %}
+  </div>
+</div>
+{% endblock content %}
