@@ -5,17 +5,24 @@
 {% block title %}Koier{% endblock title %}
 
 {% block content %}
-<h1>Koiesys index</h1>
+<div class="row">
+  <div class="col-md-12">
+    <h1>KOIESYS index</h1>
+  </div>
+  <div class="col-md-8">
+    <p>Dette er et administrasjonssystem for NTNUI sine Koier.</p>
+  </div>
 
-{% if koies %}
-  <h3>List of koies</h3>
-  <ul>
-  {% for koie in koies %}
-    <li><a href="{% url 'koie_detail' koie.id %}">{{ koie.name }}</a></li>
-  {% endfor %}
-  </ul>
-{% else %}
-  No koies in sys.
-{% endif %}
-
+  <div class="col-md-6">
+  {% if koies %}
+    <h3>List of koies</h3>
+      <ul>
+        {% for koie in koies %}
+        <li><a href="{% url 'koie_detail' koie.id %}">{{ koie.name }}</a></li>
+        {% endfor %}
+      </ul>
+  {% else %}
+    <h3>No koies in KOIESYS.</h3>
+  {% endif %}
+  </div>
 {% endblock content %}
