@@ -13,14 +13,30 @@
     <p>Dette er et administrasjonssystem for NTNUI sine Koier.</p>
   </div>
 
-  <div class="col-md-6">
+  <div class="col-md-10">
   {% if koies %}
     <h3>List of koies</h3>
-      <ul>
+      <table class="table table-striped">
+        <tr>
+          <th>Name</th>
+          <th>Address</th>
+          <th>ZIP</th>
+          <th>Location</th>
+          <th>Number of beds</th>
+          <th>Reserved</th>
+        </tr>
         {% for koie in koies %}
-        <li><a href="{% url 'koie_detail' koie.id %}">{{ koie.name }}</a> | [{{ koie.num_beds }}] | {{ koie.location }}</li>
+        <tr{% if koie.is_reserved %} class="alert alert-danger"{% endif %}>
+          <td><a href="{% url 'koie_detail' koie.id %}">{{ koie.name }}</a></td>
+          <td>{{ koie.address }}</td>
+          <td>{{ koie.zip_code }}</td>
+          <td>{{ koie.location }}</td>
+          <td>{{ koie.num_beds }}</td>
+          {% if koie.is_reserved %}<td>{{ koie.is_reserved.0 }} - {{ koie.is_reserved.1 }}</td>
+          {% else %}<td>{{ koie.is_reserved %}</td>{% endif %}
+        </tr>
         {% endfor %}
-      </ul>
+      </table>
   {% else %}
     <h3>No koies in KOIESYS.</h3>
   {% endif %}
