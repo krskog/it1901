@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 class Koie(models.Model):
     name = models.CharField(_('koie name'), max_length=50)
     address = models.CharField(_('koie address'), max_length=200)
-    zip_code = models.IntegerField(_('zip code'), max_length=4) 
+    zip_code = models.DecimalField(_('zip code'), max_digits=4, decimal_places=0)
     location = models.CharField(_('location'), max_length=50)
     num_beds = models.IntegerField(_('beds'), default=0)
 
