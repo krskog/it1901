@@ -10,11 +10,12 @@ Bruker -> Reservasjonsside: Koie 1
 Reservasjonsside -> Bruker: status koie 1, kalender over reservasjonsdato
 Bruker -> Reservasjonsside: Koie 1, 12/07/2015
 Reservasjonsside -> DB: erReservert(koie1, 12/07/2015)
-DB -> Reservasjonsside: true
+DB -> Reservasjonsside: false
 Reservasjonsside -> DB: reserver(koie1, 12/07/2015)
 DB -> Reservasjonsside: Koie1 er nå reservert for 12/07/2015
 Reservasjonsside -> Bruker: erReservert(koie1, 12/07/2015)
 DB -> Reservasjonsside: true
+Reservasjonsside -> Bruker: Du har nå reservert Koie1 for 12/07/2015
 
 @enduml
 
