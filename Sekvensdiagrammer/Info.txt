@@ -1,0 +1,4 @@
+Tilfeller:
+Registrering av bruker
+Innlogging
+Reservasjon av koie
