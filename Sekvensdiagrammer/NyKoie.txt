@@ -1,0 +1,12 @@
+@startuml
+Administrasjonspanel -> Koieadministrasjon: legg til ny koie
+Koieadministrasjon -> Bruker: Registreringskjema
+Bruker -> Koieadministrasjon: Utfylt skjema
+Koieadministrasjon -> DB: nyKoie(skjema)
+DB -> Koieadministrasjon: Registrert
+
+
+@enduml
+
+
+

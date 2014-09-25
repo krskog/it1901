@@ -1,12 +1,12 @@
 Tilfeller:
 
 Bruker:
-Registrering av bruker
-Innlogging
-Reservasjon av koie
-Rapportere inn koiens tilstand
+-Registrering av bruker
+-Innlogging
+-Reservasjon av koie
+-Rapportere inn koiens tilstand
 
 Admin:
-Legge til ny koie
-Endre koie
-Endre reservasjon
+-Legge til ny koie
+-Endre koie
+-Endre reservasjon
