@@ -7,5 +7,6 @@ Reservasjon av koie
 Rapportere inn koiens tilstand
 
 Admin:
-Legg til / endre koie
+Legge til ny koie
+Endre koie
 Endre reservasjon
