@@ -10,7 +10,6 @@ DB -> Reservasjonsside: false
 Reservasjonsside -> DB: reserver(koie X, dd/mm/yyyy)
 DB -> Reservasjonsside: Koie X er nå reservert for tidsperioden dd/mm/yyyy til dd/mm/yy
 Reservasjonsside -> Bruker: Du har nå reservert Koie X for tidsperioden dd/mm/yyyy til dd/mm/yy
-
 @enduml
 
 
