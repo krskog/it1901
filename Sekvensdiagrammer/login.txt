@@ -1,0 +1,9 @@
+@startuml
+
+Hovedside -> Login: Log inn
+Login -> Database: Sjekk bruker
+Database -> Login: OK currentUser
+Login -> Hovedside: Hovedside currentUser
+
+
+@enduml
