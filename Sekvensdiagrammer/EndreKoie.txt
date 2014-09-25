@@ -2,12 +2,12 @@
 Bruker -> Administrasjonspanel: Forespørsel om å administrere koiene     
 Administrasjonspanel -> Koieadministrasjon: Åpner panelet for administrasjon av koier
 Koieadministrasjon -> Bruker: Endre eller legge til?
-Bruker -> Koieadministrasjon: Legge til
-Koieadministrasjon -> Bruker: Registreringskjema
-Bruker -> Koieadministrasjon: Utfylt skjema
-Koieadministrasjon -> DB: nyKoie(skjema)
+Bruker -> Koieadministrasjon: Endre
+Koieadministrasjon -> Bruker: Utfylt registreringskjema
+Bruker -> Koieadministrasjon: Endret skjema
+Koieadministrasjon -> DB: endretKoie(skjema)
 DB -> Koieadministrasjon: Registrert
-Koieadministrasjon -> Bruker: Koien ligger nå i systemet
+Koieadministrasjon -> Bruker: Endringen av koien er nå lagret i systemet
 
 @enduml
 
