@@ -1,0 +1,22 @@
+@startuml
+Bruker -> Hovedside: loggInn(brukernavn,passord)
+Hovedside -> DB: isUser(brukernavn,passord)
+DB -> Hovedside: true
+Hovedside -> Bruker: godkjenning
+Bruker -> Brukerside: reservasjon
+Brukerside -> Reservasjonsside: vil reservere
+Reservasjonsside -> Bruker: oversikt over koier
+Bruker -> Reservasjonsside: Koie 1
+Reservasjonsside -> Bruker: status koie 1, kalender over reservasjonsdato
+Bruker -> Reservasjonsside: Koie 1, 12/07/2015
+Reservasjonsside -> DB: erReservert(koie1, 12/07/2015)
+DB -> Reservasjonsside: true
+Reservasjonsside -> DB: reserver(koie1, 12/07/2015)
+DB -> Reservasjonsside: Koie1 er nå reservert for 12/07/2015
+Reservasjonsside -> Bruker: erReservert(koie1, 12/07/2015)
+DB -> Reservasjonsside: true
+
+@enduml
+
+
+
