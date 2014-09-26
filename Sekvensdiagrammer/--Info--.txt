@@ -10,3 +10,4 @@ Admin:
 -Legge til ny koie
 -Endre koie
 -Endre reservasjon
+-Koiestatus (ved, skader..)
