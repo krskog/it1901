@@ -1,6 +1,6 @@
 @startuml
-Bruker -> Brukerside: Reservasjon
-Brukerside -> Reservasjonsside: Forespørsel om reservasjon
+Bruker -> Brukerside: Rapportere
+Brukerside -> Reservasjonsside: Forespørsel om å rapportere
 Reservasjonsside -> Bruker: Reservere eller administrere reservasjoner?
 Bruker -> Reservasjonsside: Administrere reservasjoner
 Reservasjonsside -> DB: gyldigeReservasjoner(bruker)
