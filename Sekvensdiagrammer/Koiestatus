@@ -1,0 +1,20 @@
+@startuml
+Bruker -> Brukerside: Reservasjon
+Brukerside -> Reservasjonsside: Forespørsel om reservasjon
+Reservasjonsside -> Bruker: Reservere eller administrere reservasjoner?
+Bruker -> Reservasjonsside: Administrere reservasjoner
+Reservasjonsside -> DB: gyldigeReservasjoner(bruker)
+DB -> Reservasjonsside: Liste over gyldige reservasjoner
+Reservasjonsside -> Bruker: Liste over gyldige reservasjoner
+Bruker -> Reservasjonsside: Reservasjon X
+Reservasjonsside -> Bruker: Reservasjonsskjema
+Bruker -> Reservasjonsside: Endret reservasjonsskjema
+Reservasjonsside -> DB: erReservert(endretReservasjonsskjema)
+DB -> Reservasjonsside: false
+Reservasjonsside -> DB: reserver(endretReservasjonsskjema)
+DB -> Reservasjonsside: Reservasjonen er nå endret
+Reservasjonsside -> Bruker: Reservasjonen X er nå endret
+@enduml
+
+
+

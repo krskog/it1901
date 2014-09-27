@@ -1,0 +1,16 @@
+@startuml
+Bruker -> Hovedside: Registrering
+Hovedside -> Registrering: Registrer bruker
+Registrering -> Bruker: Registreringsskjema
+Bruker -> Registrering: Utfylt registreringsskjema
+Registrering -> Database: addUser(skjema)
+Database -> Registrering: Bruker lagt til, send passord til x e-postadresse
+Registrering -> Bruker: E-post med passord
+Registrering -> Bruker: Melding: Bruker lagt til og passord tilsendt på e-post
+Bruker -> Hovedside: Hovedside
+
+@enduml
+
+
+
+

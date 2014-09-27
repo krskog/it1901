@@ -1,0 +1,14 @@
+@startuml
+Administrator -> Administrasjonspanel: Forespørsel om å administrere koiene     
+Administrasjonspanel -> Koieadministrasjon: Åpner panelet for administrasjon av koier
+Koieadministrasjon -> Administrator: Endre eller legge til?
+Administrator -> Koieadministrasjon: Endre
+Koieadministrasjon -> Administrator: Utfylt registreringskjema
+Administrator -> Koieadministrasjon: Endret skjema
+Koieadministrasjon -> DB: endretKoie(skjema)
+DB -> Koieadministrasjon: Registrert
+Koieadministrasjon -> Administrator: Endringen av koien er nå lagret i systemet
+@enduml
+
+
+
