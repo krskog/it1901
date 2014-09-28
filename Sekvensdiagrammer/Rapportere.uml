@@ -1,0 +1,12 @@
+@startuml
+Bruker -> Brukerside: Rapportere
+Brukerside -> Reservasjonsside: Forespørsel om å rapportere
+Reservasjonsside -> Bruker: Rapporteringsskjema
+Bruker -> Reservasjonsside: Utfylt rapporteringsskjema
+Reservasjonsside -> DB: report(oppholdsnr, skjema)
+DB -> Reservasjonsside: Rapport er registrert for Opphold nr. x
+Reservasjonsside -> Bruker: Takk for at du leverte rapport
+@enduml
+
+
+
