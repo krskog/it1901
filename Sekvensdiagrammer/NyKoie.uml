@@ -1,14 +1,13 @@
 @startuml
-Bruker -> Administrasjonspanel: Forespørsel om å administrere koiene     
+Admin -> Administrasjonspanel: Forespørsel om å administrere koiene     
 Administrasjonspanel -> Koieadministrasjon: Åpner panelet for administrasjon av koier
-Koieadministrasjon -> Bruker: Endre eller legge til?
-Bruker -> Koieadministrasjon: Legge til
-Koieadministrasjon -> Bruker: Registreringskjema
-Bruker -> Koieadministrasjon: Utfylt skjema
-Koieadministrasjon -> DB: nyKoie(skjema)
-DB -> Koieadministrasjon: Registrert
-Koieadministrasjon -> Bruker: Koien ligger nå i systemet
-
+Koieadministrasjon -> Admin: Endre eller legge til?
+Admin -> Koieadministrasjon: Legge til
+Koieadministrasjon -> Admin: Registreringskjema
+Admin -> Koieadministrasjon: Utfylt skjema
+Koieadministrasjon -> Database: nyKoie(skjema)
+Database -> Koieadministrasjon: Registrert
+Koieadministrasjon -> Admin: Koien ligger nå i systemet
 @enduml
 
 

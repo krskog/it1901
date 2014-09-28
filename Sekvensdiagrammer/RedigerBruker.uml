@@ -1,11 +1,9 @@
 @startuml
-
 Bruker -> Redigerbruker: Redigerings skjema
 Redigerbruker -> Bruker: Registerings info
 Redigerbruker -> Database: changeUser
 Database -> Redigerbruker: OK
 Redigerbruker -> Bruker: Bruker redigert
-
 @enduml
 
 
