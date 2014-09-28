@@ -4,7 +4,7 @@ Brukerside -> Reservasjonsside: Forespørsel om å rapportere
 Reservasjonsside -> Bruker: Rapporteringsskjema
 Bruker -> Reservasjonsside: Utfylt rapporteringsskjema
 Reservasjonsside -> Database: report(oppholdsnr, skjema)
-Database -> Reservasjonsside: Rapport er registrert for Opphold nr. x
+Database -> Reservasjonsside: Rapport er registrert for opphold nr. x
 Reservasjonsside -> Bruker: Takk for at du leverte rapport
 @enduml
 

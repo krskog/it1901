@@ -1,9 +1,12 @@
 @startuml
-Bruker -> Redigerbruker: Redigerings skjema
-Redigerbruker -> Bruker: Registerings info
-Redigerbruker -> Database: changeUser
-Database -> Redigerbruker: OK
-Redigerbruker -> Bruker: Bruker redigert
+Bruker -> Brukerside: Forespørsel om å redigere bruker
+Brukerside -> Database: hentBrukerskjema(bruker x)
+Database -> Brukerside: Brukerskjema
+Brukerside -> Bruker: Utfylt brukerskjema
+Bruker -> Brukerside: Endret skjema
+Brukerside -> Database: endreBrukerskjema(bruker x, endret skjema)
+Database -> Brukerside: Endring utført
+Brukerside -> Bruker: Brukeren er nå endret
 @enduml
 
 

@@ -1,0 +1,9 @@
+@startuml
+object Bruker
+Bruker : boolean autentisert = false
+
+object Bruker_innelogget
+Bruker_innelogget : boolean autentisert = true
+
+Bruker -> Bruker_innelogget : logIn(brukernavn/e-post, passord)
+@enduml

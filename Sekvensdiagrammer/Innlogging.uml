@@ -1,0 +1,10 @@
+@startuml
+Bruker -> Hovedside: Logg inn
+Hovedside -> Innlogging: Innlogging
+Innlogging -> Bruker: Innloggingsskjema
+Bruker -> Innlogging: Utfylt Innloggingsskjema
+Innlogging -> Database: isUser(skjema)
+Database -> Innlogging: true; sessionID X
+Innlogging -> Hovedside: start sessionID X
+Bruker -> Hovedside: Aksesserer en hovedside med forhåndsdefinerte brukerrettigheter og evt. data fra tidligere bruk
+@enduml

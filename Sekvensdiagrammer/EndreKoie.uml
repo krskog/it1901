@@ -3,11 +3,11 @@ Admin -> Administrasjonspanel: Forespørsel om å administrere koiene
 Administrasjonspanel -> Koieadministrasjon: Åpner panelet for administrasjon av koier
 Koieadministrasjon -> Admin: Endre eller legge til?
 Admin -> Koieadministrasjon: Endre
-Koieadministrasjon -> Administrator: Utfylt registreringskjema
+Koieadministrasjon -> Admin: Utfylt registreringskjema
 Admin -> Koieadministrasjon: Endret skjema
 Koieadministrasjon -> Database: endretKoie(skjema)
 Database -> Koieadministrasjon: Registrert
-Koieadministrasjon -> Admin: Endringen av koien er nå lagret i systemet
+Koieadministrasjon -> Admin: Endringen av koien er nå lagret i systemets database
 @enduml
 
 
