@@ -33,7 +33,7 @@
           <td>{{ koie.location }}</td>
           <td>{{ koie.num_beds }}</td>
           {% if koie.is_reserved %}<td>{{ koie.is_reserved.0 }} - {{ koie.is_reserved.1 }}</td>
-          {% else %}<td>{{ koie.is_reserved %}</td>{% endif %}
+          {% else %}<td>{% koie.is_reserved %}</td>{% endif %}
         </tr>
         {% endfor %}
       </table>
