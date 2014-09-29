@@ -15,7 +15,7 @@ class Koie(models.Model):
         return self.name
 
     def get_address(self):
-        return "%s %s, %s %s" % (self.address, self.zip_code, self.location)
+        return "%s, %s %s" % (self.address, self.zip_code, self.location)
 
 class Reservation(models.Model):
     ordered_by = models.ForeignKey(User, related_name=_("ordered by"))
