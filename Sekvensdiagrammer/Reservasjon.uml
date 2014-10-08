@@ -1,6 +1,6 @@
 @startuml
-Bruker -> Brukerside: Reservasjon
-Brukerside -> Reservasjonsside: Forespørsel om reservasjon
+
+Bruker -> Reservasjonsside: Forespørsel om reservasjon
 Reservasjonsside -> Bruker: oversikt over koier
 Bruker -> Reservasjonsside: Koie X
 Reservasjonsside -> Bruker: Status for koie X, reservasjonskalender
@@ -11,6 +11,5 @@ Reservasjonsside -> Database: reserver(koie X, e-postadresse, dd/mm/yyyy)
 Database -> Reservasjonsside: Koie X er nå reservert den dd/mm/yyyy for e-postadresse
 Reservasjonsside -> Bruker: Du har nå reservert Koie X for datoen dd/mm/yyyy
 @enduml
-
 
 
