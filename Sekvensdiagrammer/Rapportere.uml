@@ -1,6 +1,5 @@
 @startuml
-Bruker -> Brukerside: Rapportere
-Brukerside -> Reservasjonsside: Forespørsel om å rapportere
+Bruker -> Reservasjonsside: Forespørsel om å rapportere
 Reservasjonsside -> Bruker: Rapporteringsskjema
 Bruker -> Reservasjonsside: Utfylt rapporteringsskjema
 Reservasjonsside -> Database: report(oppholdsnr, skjema)
