@@ -1,7 +1,6 @@
 @startuml
 Admin -> Administrasjonspanel: Forespørsel om kartoversikt
-Administrasjonspanel -> Database: Forespørsel om kartoversikt
-Database -> Administrasjonspanel: Kartoversikt
+
 Administrasjonspanel -> Admin: Kartoversikt
 Admin -> Administrasjonspanel: Valgt koie
 Administrasjonspanel -> Database: Valgt koie
