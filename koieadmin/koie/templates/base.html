@@ -1,0 +1,77 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap.min.css"><!--{% static "css/boostrap.min.css" %}-->
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/navbar.css">
+    {% block styles %}{% endblock styles %}
+
+    <title>{% block title %}{% endblock %} - KoieSys</title>
+</head>
+
+<body>
+    <div class="container">
+      <!-- navbar -->
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Project name</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <!-- Choose which menu item is active -->
+              <li{% if active == 'index' %} class="active"{% endif %}><a href="{% url "index" %}">Hjem</a></li>
+              <li{% if active == 'koie_index' %} class="active"{% endif %}><a href="{% url "koie_index" %}">Koier</a></li>
+              <li{% if active == 'koie_detail' %} class="active"{% endif %}><a href="#">...</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administrasjon <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Administrasjonspanel</a></li>
+                  <li><a href="#">Siste rapporter</a></li>
+                  <li><a href="#">Informasjon om Koie</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Status</li>
+                  <li><a href="#">Vedstatus</a></li>
+                  <li><a href="#">Skader</a></li>
+                </ul>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li{% if active == 'not_index' %} class="active"{% endif %}><a href="./">Default</a></li>
+              <li{% if active == 'not_index' %} class="active"{% endif %}><a href="../navbar-static-top/">Static top</a></li>
+              <li{% if active == 'not_index' %} class="active"{% endif %}><a href="../navbar-fixed-top/">Fixed top</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </div>
+      <div class="row">
+        <div class="col-md-12" id="breadcrumbs">
+          <ol class="breadcrumb">
+            {% for breadcrumb in breadcrumbs %}
+              {% if not breadcrumb.url %}
+                <li class="active">{{ breadcrumb.name }}</li>
+              {% else %}
+                <li><a href="{% url breadcrumb.url %}">{{ breadcrumb.name }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ol>
+        </div>
+      </div>
+      {% block content %}{% endblock content %}
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+</body>
+</html>
