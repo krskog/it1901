@@ -10,6 +10,16 @@ Admin -> Koieadministrasjon: Endret skjema
 Koieadministrasjon -> Database: endreKoie(skjema)
 Database -> Koieadministrasjon: Registrert
 Koieadministrasjon -> Admin: Endringen av koien er nå lagret i systemets database
+Reservasjonsside -> Database: Har koien utstyrsmelding?
+Database -> Reservasjonsside: Liste over koier med utstyrsmelding
+Reservasjonsside -> Database: er koie X reservert innen de neste 24 timene?
+Database -> Reservasjonsside: true
+Reservasjonsside -> Database: Returner utstyrsmeldingen for koie X
+Database -> Reservasjonsside: Utstyrsmeldingen
+Reservasjonsside -> Database: Returner første person som står oppført på koie X
+Database -> Reservasjonsside: E-postadresse
+Reservasjonsside -> Bruker: @ e-postadresse: Utstyrsmeldingen
+Reservasjonsside -> Database: Fjern utstyrsmeldingen for koie X
 @enduml
 
 
