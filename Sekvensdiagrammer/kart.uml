@@ -1,10 +1,8 @@
 @startuml
 Admin -> Administrasjonspanel: Forespørsel om kartoversikt
-
 Administrasjonspanel -> Admin: Kartoversikt
 Admin -> Administrasjonspanel: Valgt koie
 Administrasjonspanel -> Database: Valgt koie
 Database -> Administrasjonspanel: Koieinfo
 Administrasjonspanel -> Admin: Koieinfo
-
 @enduml

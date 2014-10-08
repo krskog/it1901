@@ -11,6 +11,3 @@ Koieadministrasjon -> Database: endreKoie(skjema)
 Database -> Koieadministrasjon: Registrert
 Koieadministrasjon -> Admin: Endringen av koien er nå lagret i systemets database
 @enduml
-
-
-

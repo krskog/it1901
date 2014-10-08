@@ -21,6 +21,6 @@ Database -> Reservasjonsside: E-postadresse
 Reservasjonsside -> Bruker: @ e-postadresse: Utstyrsmeldingen
 Reservasjonsside -> Database: Fjern utstyrsmeldingen for koie X
 @enduml
-
+ 
 
 

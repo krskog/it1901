@@ -3,4 +3,4 @@ Admin -> Administrasjonspanel: Forespørsel om vedstatus
 Administrasjonspanel -> Database: Hente vedstatus
 Database -> Administrasjonspanel: Vedstatus
 Administrasjonspanel -> Admin: Vedstatus(Hvor mye ved/ dager veden holder)
-@enduml
+@enduml 
