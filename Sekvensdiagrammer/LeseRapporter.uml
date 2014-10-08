@@ -1,6 +1,6 @@
 @startuml
 Admin -> Administrasjonspanel: Forespørsel om å lese rapporter    
-Administrasjonspanel -> Koieadministrasjon: Finn listen over utfylte rapporter
+Administrasjonspanel -> Koieadministrasjon: Finn listen over uleste rapporter
 Koieadministrasjon -> Database: finn rapporterte opphold
 Database -> Koieadministrasjon: Liste over etterspurte rapporter
 Koieadministrasjon -> Admin: Liste over ulike rapporter
@@ -8,6 +8,7 @@ Admin -> Koieadministrasjon: Rapport for koie X, for opphold Y
 Koieadministrasjon -> Database: finn rapporten for opphold Y på koie X
 Database -> Koieadministrasjon: Etterspurt rapport
 Koieadministrasjon -> Admin: Rapporten
+Koieadministrasjon -> Database: markAsRead(Etterspurt rapport)
 @enduml
 
 
