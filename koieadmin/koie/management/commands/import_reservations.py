@@ -26,6 +26,18 @@ def get_or_create_user(email):
         user.save()
         return user
 
+"""
+    Gets all reservation for given day.
+    Checks whether this user has an existing reservation for this day.
+    @TODO Should probably move to validations in models?
+"""
+def existing_reservation(user, reservation):
+    res_dates = Reservation.objects.filter(rent_start=reservation.rent_start)
+    for r in res_dates.all():
+        if user == r.ordered_by:
+            return True
+    return False
+
 class Command(BaseCommand):
     args = "no arguments"
     help = "Import data from another koie-system"
@@ -34,6 +46,7 @@ class Command(BaseCommand):
         reservations = 0
         new = 0
         failed = 0
+        existing = 0
         for reservation in raw_data:
             r = Reservation()
             res = reservation.split(";") # 0: Koie, 1: epost, 2: dato
@@ -61,9 +74,15 @@ class Command(BaseCommand):
                 input_date[x] = int(input_date[x])
             reservation_date = date(input_date[2], input_date[1], input_date[0])
 
+
             r.rent_start = reservation_date
             r.rent_end = reservation_date
 
+            if existing_reservation(user, r):
+                #self.stderr.write("This user already has a reservation for this date: %s" % existing_reservation(user, r))
+                existing += 1
+                continue
+
             r.save()
             new += 1
-        self.stdout.write('%s reservations looked at. %s reservations failed to parse, therefore %s new reservations were added.' % (reservations, failed, new))
+        self.stdout.write('%s reservations looked at. %s reservations were already in the system, %s reservations failed to parse, therefore %s new reservations were added.' % (reservations, existing, failed, new))
