@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from datetime import date, datetime
 
 from koie.models import Koie, Reservation, Report
+from koie.forms import ReservationForm
 
 # Index view: Shows all koies
 
@@ -42,6 +43,27 @@ def koie_detail(request, koie_id):
       'koie': koie
     })
 
+### Forms & Stuff
+
+def reserve_koie(request, reservation_id=None):
+    if reservation_id == None:
+        reservation = Reservation()
+    else:
+        reservation = get_object_or_404(Reservation, pk=reservation_id)
+    # Some form stuff
+
+    if request.method == 'POST':
+        form = ReservationForm(request.POST)
+        # Find user by email or crash
+        print("form pre validation\n%s" % form)
+        if form.is_valid():
+            print("form %s" % form)
+            return redirect('/')
+    else:
+        form = ReservationForm()
+
+    return render(request, 'reservation.html', {'form': form})
+    
 
 ### ========== METHODS =============
 

@@ -41,6 +41,7 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
+    'widget_tweaks',
     'koie',
 )
 
