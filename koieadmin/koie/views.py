@@ -39,11 +39,15 @@ def koie_detail(request, koie_id):
           {'name': _('koier'), 'url':'koie_index'},
           {'name': koie.name}
       ],
-      'koie': koie
+      'koie': koie,
+      'future_reservations': list_future_reservations(koie),
+      #'free_beds': koie.free_beds(reservation.rent_start)
     })
 
 
-### ========== METHODS =============
+## ========== METHODS =============
+
+### Validation
 
 def is_koie_reserved(koie):
     now = date.today()
@@ -53,3 +57,14 @@ def is_koie_reserved(koie):
             return (reservation.rent_start, reservation.rent_end)
 
     return False #now > koie.rent_start and now < koie.rent_end
+
+### Lists / views
+
+def list_future_reservations(koie):
+    reservations = Reservation.objects.filter(koie_ordered=koie).order_by('rent_start')
+    future = []
+    for r in reservations.all():
+        if r.rent_start > date.today():
+            r.free_beds = r.koie_ordered.free_beds(r.rent_start)
+            future.append(r)
+    return future
