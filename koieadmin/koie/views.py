@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from datetime import date, datetime
 
+from django.contrib.auth.models import User
 from koie.models import Koie, Reservation, Report
 from koie.forms import ReservationForm
 
@@ -59,8 +60,12 @@ def reserve_koie(request, reservation_id=None):
         # Find user by email or crash
         print("form pre validation\n%s" % form)
         if form.is_valid():
-            print("form %s" % form)
-            return redirect('/')
+            print("form.cleaned %s" % form.cleaned_data)
+            reservation = form.save(commit=False)
+            reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
+            print("reservation %s" % reservation)
+            reservation.save()
+            return redirect('/') # Redirect to koie page
     else:
         form = ReservationForm()
 
@@ -79,6 +84,20 @@ def is_koie_reserved(koie):
             return (reservation.rent_start, reservation.rent_end)
 
     return False #now > koie.rent_start and now < koie.rent_end
+
+def get_or_create_user(email):
+    users = User.objects.filter(email=email)
+    if users.count() > 1:
+        pass # WHAT THE FUCK
+    elif users.count() == 1:
+        return users[0]
+    else:
+       # Create new user
+        user = User()
+        user.email = email
+        user.username = email
+        user.save()
+        return user
 
 ### Lists / views
 
