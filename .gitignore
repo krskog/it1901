@@ -51,3 +51,13 @@ target/
 
 # This project files
 names.txt
+
+
+# Python stuffs
+*.pyc
+
+# Django stuffs
+db.db
+
+# Virtualenv
+it1901/
