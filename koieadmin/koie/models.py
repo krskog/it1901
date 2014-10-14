@@ -24,6 +24,13 @@ class Koie(models.Model):
 
     def get_address(self):
         return "%s, %s %s" % (self.address, self.zip_code, self.location)
+    
+    def free_beds(self, date):
+        res = Reservation.objects.filter(rent_start=date)
+        beds = 0
+        for r in res.all():
+            beds += r.beds
+        return self.num_beds - beds
 
 class Reservation(models.Model):
     ordered_by = models.ForeignKey(User, related_name=_("ordered by"))
@@ -31,6 +38,7 @@ class Reservation(models.Model):
     rent_start = models.DateField(_('rent start'))
     rent_end = models.DateField(_('rent end'))
     ordered_date = models.DateTimeField(_('timestamp for order'), auto_now_add=True) # @TODO Exclude from forms
+    beds = models.IntegerField(_('number of beds'))
 
     def __str__(self):
         return "%s by %s @ %s" % (self.koie_ordered, self.ordered_by, self.rent_start.strftime("%d-%m-%Y"))
