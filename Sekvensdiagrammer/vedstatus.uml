@@ -1,5 +1,7 @@
 @startuml
+actor Admin
 Admin -> Administrasjonspanel: Forespørsel om vedstatus
+database Database
 Administrasjonspanel -> Database: Hente vedstatus
 Database -> Administrasjonspanel: Vedstatus
 Administrasjonspanel -> Admin: Vedstatus(Hvor mye ved/ dager veden holder)

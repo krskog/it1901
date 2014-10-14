@@ -1,7 +1,9 @@
 @startuml
+actor Bruker
 Bruker -> Reservasjonsside: Forespørsel om reservasjon
 Reservasjonsside -> Bruker: Reservere eller administrere reservasjoner?
 Bruker -> Reservasjonsside: Administrere reservasjoner
+database Database
 Reservasjonsside -> Database: gyldigeReservasjoner(e-postadresse)
 Database -> Reservasjonsside: Liste over gyldige reservasjoner
 Reservasjonsside -> Bruker: Liste over gyldige reservasjoner

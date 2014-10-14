@@ -1,10 +1,12 @@
 @startuml
+actor Admin
 Admin -> Administrasjonspanel: Forespørsel om å administrere koiene     
 Administrasjonspanel -> Koieadministrasjon: Åpner panelet for administrasjon av koier
 Koieadministrasjon -> Admin: Endre eller legge til?
 Admin -> Koieadministrasjon: Legge til
 Koieadministrasjon -> Admin: Registreringsskjema
 Admin -> Koieadministrasjon: Utfylt skjema
+database Database
 Koieadministrasjon -> Database: nyKoie(skjema)
 Database -> Koieadministrasjon: Registrert
 Koieadministrasjon -> Admin: Koien ligger nå i systemet

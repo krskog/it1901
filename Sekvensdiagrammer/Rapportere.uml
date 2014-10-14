@@ -1,7 +1,9 @@
 @startuml
+database Database
 Reservasjonsside -> Database: urapporterteOpphold()
 Database -> Reservasjonsside: Liste over urapporterte opphold
 Reservasjonsside -> Reservasjonsside: Finn opphold som må rapporteres
+actor Bruker
 Reservasjonsside -> Bruker: Rapporteringsskjema
 Bruker -> Reservasjonsside: Utfylt rapporteringsskjema
 Reservasjonsside -> Database: report(oppholdsnr, skjema)

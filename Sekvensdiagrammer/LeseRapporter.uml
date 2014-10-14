@@ -1,6 +1,8 @@
 @startuml
+actor Admin
 Admin -> Administrasjonspanel: Forespørsel om å lese rapporter    
 Administrasjonspanel -> Koieadministrasjon: Finn listen over uleste rapporter
+database Database
 Koieadministrasjon -> Database: finn rapporterte opphold
 Database -> Koieadministrasjon: Liste over forespurte rapporter
 Koieadministrasjon -> Admin: Liste over ulike rapporter

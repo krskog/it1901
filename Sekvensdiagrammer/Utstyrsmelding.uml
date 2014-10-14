@@ -1,4 +1,5 @@
 @startuml
+actor Admin
 Admin -> Administrasjonspanel: Forespørsel om å administrere koiene     
 Administrasjonspanel -> Koieadministrasjon: Åpner panelet for administrasjon av koier
 Koieadministrasjon -> Admin: Endre eller legge til?

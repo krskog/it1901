@@ -1,10 +1,11 @@
 @startuml
-
+actor Bruker
 Bruker -> Reservasjonsside: Forespørsel om reservasjon
 Reservasjonsside -> Bruker: oversikt over koier
 Bruker -> Reservasjonsside: Koie X
 Reservasjonsside -> Bruker: Status for koie X, reservasjonskalender
 Bruker -> Reservasjonsside: dd/mm/yyyy
+database Database
 Reservasjonsside -> Database: erLedig(koie X, dd/mm/yyyy)
 Database -> Reservasjonsside: true
 Reservasjonsside -> Bruker: Ta inn brukerens e-postadresse
