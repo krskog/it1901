@@ -46,6 +46,12 @@ def koie_detail(request, koie_id):
       #'free_beds': koie.free_beds(reservation.rent_start)
     })
 
+def next_reservations(request):
+    return render(request, 'next_reservations.html', {
+      'active': 'next_reservations',
+      'future_reservations': list_next_reservations(25),
+    })
+
 ### Forms & Stuff
 
 def reserve_koie(request, reservation_id=None):
@@ -70,7 +76,7 @@ def reserve_koie(request, reservation_id=None):
         form = ReservationForm()
 
     return render(request, 'reservation.html', {'form': form})
-    
+
 
 ## ========== METHODS =============
 
@@ -109,3 +115,14 @@ def list_future_reservations(koie):
             r.free_beds = r.koie_ordered.free_beds(r.rent_start)
             future.append(r)
     return future
+
+def list_next_reservations(number):
+    reservations = Reservation.objects.order_by('rent_start')
+    nextRes = []
+    for r in reservations.all():
+        if r.rent_start > date.today():
+            r.free_beds = r.koie_ordered.free_beds(r.rent_start)
+            nextRes.append(r)
+        if (len(nextRes) == number):
+            break
+    return nextRes
