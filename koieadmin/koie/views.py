@@ -76,7 +76,7 @@ def reserve_koie(request, reservation_id=None):
         form = ReservationForm()
 
     return render(request, 'reservation.html', {'form': form})
-    
+
 
 ## ========== METHODS =============
 
@@ -123,8 +123,6 @@ def list_next_reservations(number):
         if r.rent_start > date.today():
             r.free_beds = r.koie_ordered.free_beds(r.rent_start)
             nextRes.append(r)
-        if (nextRes.count() == number):
+        if (len(nextRes) == number):
             break
     return nextRes
-
-
