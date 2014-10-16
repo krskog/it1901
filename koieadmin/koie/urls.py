@@ -8,4 +8,5 @@ urlpatterns = patterns('',
     url(r'^koie/(?P<koie_id>\d+)/$', views.koie_detail, name='koie_detail'),
     url(r'^reserve/$', views.reserve_koie, name='reserve_koie'),
     url(r'^list/$', views.next_reservations, name='next_reservations'),
+	url(r'^report/$', views.report_koie, name='report_koie'),
 )
