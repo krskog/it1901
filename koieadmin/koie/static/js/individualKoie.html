@@ -5,11 +5,11 @@
     <meta charset="utf-8">
     <title> Koie X</title>
     <style>
-      #map-canvas {
+      #koie {
         width: 300px;
         height: 240px;
         position: absolute;
-        margin-left: 25%;
+        margin-left: 50%;
         margin-top: 3%;
       }
     </style>
@@ -21,21 +21,36 @@ function initialize() {
     zoom: 12,
     center: koieMap
   }
-  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-
+  var map = new google.maps.Map(document.getElementById('koie'), mapOptions);
+  var infowindow = new google.maps.InfoWindow({
+    content: "testwindow"  /* NAVN / INFO */
+  });
+  
   var marker = new google.maps.Marker({
       position: koieMap,
       map: map,
-      title: 'HJEM'
+  });
+
+  google.maps.event.addListener(marker, "mouseover", function(){
+      infowindow.open(map, marker);
+  })
+
+  google.maps.event.addListener(marker, "mouseout", function(){
+    infowindow.close();
+  });
+
+  google.maps.event.addListener(marker, "click", function(){
+    window.location.href = marker.url;
   });
 }
+
 
 google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
   </head>
   <body>
-    <div id="map-canvas"></div>
+    <div id="koie"></div>
     <p> Koie info </p>
     <p> Koie map --> </p>
   </body>
