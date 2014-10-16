@@ -64,12 +64,9 @@ def reserve_koie(request, reservation_id=None):
     if request.method == 'POST':
         form = ReservationForm(request.POST)
         # Find user by email or crash
-        print("form pre validation\n%s" % form)
         if form.is_valid():
-            print("form.cleaned %s" % form.cleaned_data)
             reservation = form.save(commit=False)
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
-            print("reservation %s" % reservation)
             reservation.save()
             return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
     else:
