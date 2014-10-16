@@ -75,7 +75,14 @@ def reserve_koie(request, reservation_id=None):
     else:
         form = ReservationForm()
 
-    return render(request, 'reservation.html', {'form': form})
+    return render(request, 'reservation.html', {
+    'active': 'reserve_koie',
+    'breadcrumbs': [
+        {'name': _('home'), 'url': 'index'},
+        {'name': _('reservation')}
+    ],
+    'form': form
+    })
 
 
 ## ========== METHODS =============
