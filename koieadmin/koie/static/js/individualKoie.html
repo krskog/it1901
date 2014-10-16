@@ -16,9 +16,9 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
     <script>
 function initialize() {
-  var koieMap = new google.maps.LatLng(63.416369, 10.439620); /* {{ koie.location }} */
+  var koieMap = new google.maps.LatLng(63.416369, 10.439620); /* ({{koie.loatitude}}, {{koie.longitude}}) */
   var mapOptions = {
-    zoom: 11,
+    zoom: 12,
     center: koieMap
   }
   var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);

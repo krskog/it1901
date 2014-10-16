@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>Map marks</title>
     <style>
-      #map-canvas {
+      #koieOverview {
         width: 95%;
         height: 95%;
         position: absolute;
@@ -14,20 +14,70 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
     <script>
 function initialize() {
-  var koieMap = new google.maps.LatLng(63.416369, 10.439620);
-  var mapOptions = {
-    zoom: 8,
-    center: koieMap
-  }
-  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+  /*var senter = new google.maps.LatLng(63.15702, 10.36538); /* ({{koie.loatitude}}, {{koie.longitude}})
+  var koieMap2 = new google.maps.LatLng(63.43029, 10.36476);*/
 
-  var marker = new google.maps.Marker({
-      position: koieMap,
+  var liste = [                                   /* må skiftes på */
+    ["Flaakoia", 63.43418, 10.41692, 1, "www.google.com"],
+    ["Ila", 63.43029, 10.36476, 2, "www.instabart.no"]
+  ];
+
+  var mapOptions = {
+    zoom: 9,
+    center: new google.maps.LatLng(63.15702, 10.36538)      /* center */
+
+  }
+  var map = new google.maps.Map(document.getElementById('koieOverview'), mapOptions);
+  var infowindow = new google.maps.InfoWindow();
+  var marker, i;
+
+  for(i = 0; i<liste.length; i++){
+   var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(liste[i][1], liste[i][2]),
       map: map,
-      title: 'HJEM'
-  });
+      /* url: place[4] Fungerer ikke med plassering av link i liste såvidt jeg får til */
+    });
+
+    google.maps.event.addListener(marker, "mouseover", (function(marker, i){
+      return function(){
+        infowindow.setContent(liste[i][0]); /* Må skiftes på */
+        infowindow.open(map, marker);
+      }
+    })(marker, i));
+
+    google.maps.event.addListener(marker, "mouseout", function() {
+        infowindow.close();
+      });
+
+    google.maps.event.addListener(marker, "click", function(){
+      window.location.href = marker.url;
+  });  
+  }
+
+
+
+
 }
 
+  /*
+  
+
+  
+
+  var marker = new google.maps.Marker({
+      position: senter,
+      map: map,
+      title: 'flåkoia/senter'
+  });
+  var marker2 = new google.maps.Marker({
+      position: new google.maps.LatLng(63.43029, 10.36476),
+      map: map,
+      title: 'ila'
+  });*/
+
+
+
+  
 google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
@@ -35,7 +85,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
   <body>
     <p> Koie info </p>
     <p> Koie map v </p><br><br>
-    <div id="map-canvas"></div>
+    <div id="koieOverview"></div>
     
   </body>
 </html>
