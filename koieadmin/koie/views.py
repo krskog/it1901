@@ -71,7 +71,7 @@ def reserve_koie(request, reservation_id=None):
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
             print("reservation %s" % reservation)
             reservation.save()
-            return redirect('/') # Redirect to koie page
+            return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
     else:
         form = ReservationForm()
 
