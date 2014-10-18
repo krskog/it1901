@@ -6,7 +6,7 @@ from datetime import date, datetime
 
 from django.contrib.auth.models import User
 from koie.models import Koie, Reservation, Report
-from koie.forms import ReservationForm
+from koie.forms import ReservationForm, ReportForm
 
 # Index view: Shows all koies
 
@@ -82,13 +82,25 @@ def reserve_koie(request, reservation_id=None):
     })
 	
 def report_koie(request, report_id):
-	report = get_object_or_404(Report, pk=report_id)
+	rep = get_object_or_404(Report, pk=report_id)
+	
+	if request.method == 'POST':
+		form = ReportForm(request.POST)
+		if form.is_valid():
+			report_text = form.cleaned_data['report']
+			firewood = form.cleaned_data['firewood_status']
+			rep.submit(report_text, firewood)
+			return redirect('index')
+	else:
+		form = ReportForm()
+	
 	return render(request, 'report.html', {
 	'active': 'report_koie',
 	'breadcrumbs': [
 		{'name': _('home'), 'url': 'index'},
-		{'name': _(report.__str__())}
-	]
+		{'name': _(rep.__str__())}
+	],
+	'form': form
 	})
 
 

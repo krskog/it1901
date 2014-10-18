@@ -2,11 +2,28 @@
 
 {% load widget_tweaks %}
 
-{% block title %}Reservation{% endblock %}
+{% block title %}Report{% endblock %}
 
 {% block styles %}
 {% endblock %}
 
 {% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<h2>{{ form.title }}</h2>
+		<form action="" method="post" role="form" class="form-horizontal">
+			{% csrf_token %}
+			{% for field in form %}
+				<div class="form-group">
+					<label for="{{ field.name }}">{{ field.label }}</label>
+					{{ field|attr:"class:form-control" }}
+				</div>
+			{% endfor %}
+			<div class="form-group">
+				<input type="submit" value="Submit" class="btn btn-primary"/>
+			</div>
+		</form>
+	</div>
+</div>
 
 {% endblock %}
