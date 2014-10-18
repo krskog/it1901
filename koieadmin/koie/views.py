@@ -80,6 +80,16 @@ def reserve_koie(request, reservation_id=None):
     ],
     'form': form
     })
+	
+def report_koie(request, report_id):
+	report = get_object_or_404(Report, pk=report_id)
+	return render(request, 'report.html', {
+	'active': 'report_koie',
+	'breadcrumbs': [
+		{'name': _('home'), 'url': 'index'},
+		{'name': _(report.__str__())}
+	]
+	})
 
 
 ## ========== METHODS =============
