@@ -87,9 +87,7 @@ def report_koie(request, report_id):
 	if request.method == 'POST':
 		form = ReportForm(request.POST)
 		if form.is_valid():
-			report_text = form.cleaned_data['report']
-			firewood = form.cleaned_data['firewood_status']
-			rep.submit(report_text, firewood)
+			rep.submit(form.cleaned_data['report'], form.cleaned_data['firewood_status'])
 			return redirect('index')
 	else:
 		form = ReportForm()
