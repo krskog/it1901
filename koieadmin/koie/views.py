@@ -7,6 +7,7 @@ from datetime import date, datetime
 from django.contrib.auth.models import User
 from koie.models import Koie, Reservation, Report
 from koie.forms import ReservationForm, ReportForm
+from django.core.mail import send_mail
 
 # Index view: Shows all koies
 
@@ -68,6 +69,7 @@ def reserve_koie(request, reservation_id=None):
             reservation = form.save(commit=False)
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
             reservation.save()
+            #send_report_email(reservation) #Sends an email with a link to the report form connected to this reservation
             return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
     else:
         form = ReservationForm()
@@ -150,3 +152,14 @@ def list_next_reservations(number):
         if (len(nextRes) == number):
             break
     return nextRes
+	
+### Mailing
+	
+def send_report_email(reservation):
+	report = Report()
+	report.reservation = reservation
+	report.submit('', 0)
+	recipient = reservation.ordered_by.email
+	message = 'Please fill out a report for your stay at: http://127.0.0.1:8000/report/' + str(report.id) + '/'
+	send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
+	
