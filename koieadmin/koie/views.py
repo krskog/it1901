@@ -6,7 +6,8 @@ from datetime import date, datetime
 
 from django.contrib.auth.models import User
 from koie.models import Koie, Reservation, Report
-from koie.forms import ReservationForm
+from koie.forms import ReservationForm, ReportForm
+from django.core.mail import send_mail
 
 # Index view: Shows all koies
 
@@ -20,8 +21,6 @@ def index(request):
 
 def koie_index(request):
     koies = Koie.objects.all()
-    for koie in koies:
-        koie.is_reserved = is_koie_reserved(koie)
     return render(request, 'koies.html', {
       'active': 'koie_index',
       'breadcrumbs': [
@@ -33,7 +32,6 @@ def koie_index(request):
 
 def koie_detail(request, koie_id):
     koie = get_object_or_404(Koie, pk=koie_id)
-    koie.is_reserved = is_koie_reserved(koie)
     return render(request, 'koie_detail.html', {
       'active': 'koie_detail',
       'breadcrumbs': [
@@ -42,14 +40,14 @@ def koie_detail(request, koie_id):
           {'name': koie.name}
       ],
       'koie': koie,
-      'future_reservations': list_future_reservations(koie),
+      'future_reservations': get_future_reservations(koie),
       #'free_beds': koie.free_beds(reservation.rent_start)
     })
 
 def next_reservations(request):
     return render(request, 'next_reservations.html', {
       'active': 'next_reservations',
-      'future_reservations': list_next_reservations(25),
+      'future_reservations': get_future_reservations(num=25),
     })
 
 ### Forms & Stuff
@@ -59,7 +57,6 @@ def reserve_koie(request, reservation_id=None):
         reservation = Reservation()
     else:
         reservation = get_object_or_404(Reservation, pk=reservation_id)
-    # Some form stuff
 
     if request.method == 'POST':
         form = ReservationForm(request.POST)
@@ -68,7 +65,10 @@ def reserve_koie(request, reservation_id=None):
             reservation = form.save(commit=False)
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
             reservation.save()
+            #send_report_email(reservation) #Sends an email with a link to the report form connected to this reservation
             return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
+        else:
+            form = ReservationForm(request.POST)
     else:
         form = ReservationForm()
 
@@ -80,6 +80,26 @@ def reserve_koie(request, reservation_id=None):
     ],
     'form': form
     })
+
+def report_koie(request, report_id):
+	rep = get_object_or_404(Report, pk=report_id)
+
+	if request.method == 'POST':
+		form = ReportForm(request.POST)
+		if form.is_valid():
+			rep.submit(form.cleaned_data['report'], form.cleaned_data['firewood_status'])
+			return redirect('index')
+	else:
+		form = ReportForm()
+
+	return render(request, 'report.html', {
+	'active': 'report_koie',
+	'breadcrumbs': [
+		{'name': _('home'), 'url': 'index'},
+		{'name': _(rep.__str__())}
+	],
+	'form': form
+	})
 
 
 ## ========== METHODS =============
@@ -111,22 +131,19 @@ def get_or_create_user(email):
 
 ### Lists / views
 
-def list_future_reservations(koie):
-    reservations = Reservation.objects.filter(koie_ordered=koie).order_by('rent_start')
-    future = []
-    for r in reservations.all():
-        if r.rent_start > date.today():
-            r.free_beds = r.koie_ordered.free_beds(r.rent_start)
-            future.append(r)
-    return future
+def get_future_reservations(koie=None, num=10):
+    today = date.today()
+    if koie == None:
+        return Reservation.objects.filter(rent_start__gte=today).order_by('rent_start')[:num]
+    else:
+        return Reservation.objects.filter(koie_ordered=koie, rent_start__gte=today).order_by('rent_start')[:num]
 
-def list_next_reservations(number):
-    reservations = Reservation.objects.order_by('rent_start')
-    nextRes = []
-    for r in reservations.all():
-        if r.rent_start > date.today():
-            r.free_beds = r.koie_ordered.free_beds(r.rent_start)
-            nextRes.append(r)
-        if (len(nextRes) == number):
-            break
-    return nextRes
+### Mailing
+
+def send_report_email(reservation):
+	report = Report()
+	report.reservation = reservation
+	report.submit('', 0)
+	recipient = reservation.ordered_by.email
+	message = 'Please fill out a report for your stay at: http://127.0.0.1:8000/report/' + str(report.id) + '/'
+	send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
