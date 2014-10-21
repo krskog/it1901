@@ -41,7 +41,7 @@ def koie_detail(request, koie_id):
       ],
       'koie': koie,
       'future_reservations': get_future_reservations(koie),
-      #'free_beds': koie.free_beds(reservation.rent_start)
+      #'free_beds': koie.free_beds(reservation.rent_date)
     })
 
 def next_reservations(request):
@@ -106,15 +106,6 @@ def report_koie(request, report_id):
 
 ### Validation
 
-def is_koie_reserved(koie):
-    now = date.today()
-    reservation_set = Reservation.objects.filter(koie_ordered=koie)
-    for reservation in reservation_set:
-        if now > reservation.rent_start and now < reservation.rent_end:
-            return (reservation.rent_start, reservation.rent_end)
-
-    return False #now > koie.rent_start and now < koie.rent_end
-
 def get_or_create_user(email):
     users = User.objects.filter(email=email)
     if users.count() > 1:
@@ -134,9 +125,9 @@ def get_or_create_user(email):
 def get_future_reservations(koie=None, num=10):
     today = date.today()
     if koie == None:
-        return Reservation.objects.filter(rent_start__gte=today).order_by('rent_start')[:num]
+        return Reservation.objects.filter(rent_date__gte=today).order_by('rent_date')[:num]
     else:
-        return Reservation.objects.filter(koie_ordered=koie, rent_start__gte=today).order_by('rent_start')[:num]
+        return Reservation.objects.filter(koie_ordered=koie, rent_date__gte=today).order_by('rent_date')[:num]
 
 ### Mailing
 

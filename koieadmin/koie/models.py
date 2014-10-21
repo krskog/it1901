@@ -19,7 +19,7 @@ class Koie(models.Model):
         return self.name
 
     def get_free_beds(self, date):
-        res = Reservation.objects.filter(rent_start=date)
+        res = Reservation.objects.filter(rent_date=date)
         beds = 0
         for r in res.all():
             beds += r.beds
@@ -28,8 +28,7 @@ class Koie(models.Model):
 class Reservation(models.Model):
     ordered_by = models.ForeignKey(User, related_name=_("ordered by"))
     koie_ordered = models.ForeignKey(Koie, related_name=_("ordered koie"))
-    rent_start = models.DateField(_('rent start'))
-    rent_end = models.DateField(_('rent end'))
+    rent_date = models.DateField(_('rent date'))
     ordered_date = models.DateTimeField(_('timestamp for order'), auto_now_add=True) # @TODO Exclude from forms
     beds = models.IntegerField(_('number of beds'))
 
@@ -37,10 +36,10 @@ class Reservation(models.Model):
         get_latest_by = 'id'
 
     def __str__(self):
-        return "%s by %s @ %s" % (self.koie_ordered, self.ordered_by, self.rent_start.strftime("%d-%m-%Y"))
+        return "%s by %s @ %s" % (self.koie_ordered, self.ordered_by, self.rent_date.strftime("%d-%m-%Y"))
 
     def get_free_beds(self):
-        return self.koie_ordered.get_free_beds(self.rent_start)
+        return self.koie_ordered.get_free_beds(self.rent_date)
 
 class Report(models.Model):
     reservation = models.ForeignKey(Reservation, related_name=_("reservation"))
