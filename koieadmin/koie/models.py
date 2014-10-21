@@ -47,7 +47,6 @@ class Reservation(models.Model):
         return "%s by %s @ %s" % (self.koie_ordered, self.ordered_by, self.rent_start.strftime("%d-%m-%Y"))
 
     def get_free_beds(self):
-        print("yolo", self.koie_ordered.get_free_beds(self.rent_start))
         return self.koie_ordered.get_free_beds(self.rent_start)
 
 class Report(models.Model):
