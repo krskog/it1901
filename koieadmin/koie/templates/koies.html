@@ -20,7 +20,7 @@
         <tr>
           <th>Name</th>
           <th>Address</th>
-          <th>ZIP</th>
+          <th>Coords</th>
           <th>Location</th>
           <th>Number of beds</th>
           <th>Reserved</th>
@@ -29,7 +29,7 @@
         <tr{% if koie.is_reserved %} class="alert alert-danger"{% endif %}>
           <td><a href="{% url 'koie_detail' koie.id %}">{{ koie.name }}</a></td>
           <td>{{ koie.address }}</td>
-          <td>{{ koie.zip_code }}</td>
+          <td>({{ koie.latitude }}, {{ koie.longitude }})</td>
           <td>{{ koie.location }}</td>
           <td>{{ koie.num_beds }}</td>
           <td>Reimplement</td>

@@ -10,20 +10,13 @@ from django.utils.translation import ugettext_lazy as _
 class Koie(models.Model):
     name = models.CharField(_('koie name'), max_length=50)
     address = models.CharField(_('koie address'), max_length=200)
-    zip_code = models.IntegerField(
-        validators=[
-            MaxValueValidator(9999),
-            MinValueValidator(0000)
-        ]
-     )
     location = models.CharField(_('location'), max_length=50)
+    latitude = models.DecimalField(_('latitude'), max_digits=10, decimal_places=5)
+    longitude = models.DecimalField(_('longitude'), max_digits=10, decimal_places=5)
     num_beds = models.IntegerField(_('beds'), default=0)
 
     def __str__(self):
         return self.name
-
-    def get_address(self):
-        return "%s, %s %s" % (self.address, self.zip_code, self.location)
 
     def get_free_beds(self, date):
         res = Reservation.objects.filter(rent_start=date)
