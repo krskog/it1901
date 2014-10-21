@@ -19,7 +19,7 @@ class Koie(models.Model):
         return self.name
 
     def get_free_beds(self, date):
-        res = Reservation.objects.filter(rent_date=date)
+        res = Reservation.objects.filter(koie_ordered=self, rent_date=date)
         beds = 0
         for r in res.all():
             beds += r.beds
