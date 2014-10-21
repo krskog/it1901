@@ -32,7 +32,7 @@
           {% for reservation in future_reservations %}
             <tr>
               <td>{{ reservation.rent_date }}</td>
-              <td>{{ reservation.get_free_beds }}
+              <td>{{ reservation.beds }}
               <span class="pull-right">
                 {% if reservation.get_free_beds > 0 %}
                   <span class="glyphicon glyphicon-ok"></span> {{ reservation.get_free_beds }}
