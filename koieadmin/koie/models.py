@@ -25,7 +25,7 @@ class Koie(models.Model):
     def get_address(self):
         return "%s, %s %s" % (self.address, self.zip_code, self.location)
 
-    def free_beds(self, date):
+    def get_free_beds(self, date):
         res = Reservation.objects.filter(rent_start=date)
         beds = 0
         for r in res.all():
@@ -40,15 +40,22 @@ class Reservation(models.Model):
     ordered_date = models.DateTimeField(_('timestamp for order'), auto_now_add=True) # @TODO Exclude from forms
     beds = models.IntegerField(_('number of beds'))
 
+    class Meta:
+        get_latest_by = 'id'
+
     def __str__(self):
         return "%s by %s @ %s" % (self.koie_ordered, self.ordered_by, self.rent_start.strftime("%d-%m-%Y"))
+
+    def get_free_beds(self):
+        print("yolo", self.koie_ordered.get_free_beds(self.rent_start))
+        return self.koie_ordered.get_free_beds(self.rent_start)
 
 class Report(models.Model):
     reservation = models.ForeignKey(Reservation, related_name=_("reservation"))
     report = models.TextField(_('end of stay report'))
     reported_date = models.DateTimeField(auto_now_add=True)
     firewood_status = models.IntegerField()
-	
+
     def submit(self, rep, num):
         self.report = rep
         self.firewood_status = num
