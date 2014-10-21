@@ -31,7 +31,7 @@
           <tr><th>Dato</th><th>Reserverte sengeplasser (ledige)</th><th>Reservèr for denne dagen</th></tr>
           {% for reservation in future_reservations %}
             <tr>
-              <td>{{ reservation.rent_start }}</td>
+              <td>{{ reservation.rent_date }}</td>
               <td>{{ reservation.get_free_beds }}
               <span class="pull-right">
                 {% if reservation.get_free_beds > 0 %}
