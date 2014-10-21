@@ -50,14 +50,6 @@ def next_reservations(request):
       'future_reservations': get_future_reservations(num=25),
     })
 
-def latest_reports(request):
-    return render(request, 'latest_reports.html', {
-      'active': 'latest reports',
-      'breadcrumbs': [
-          {'name': _('home')}
-      ]
-    })
-
 ### Forms & Stuff
 
 def reserve_koie(request, reservation_id=None):
