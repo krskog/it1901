@@ -13,7 +13,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 from os.path import dirname, realpath, join
-PROJECT_ROOT = dirname(realpath(__file__))
+PROJECT_ROOT = BASE_DIR
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -26,7 +26,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'k.sklirg.io']
 
 
 # Application definition
@@ -43,6 +43,7 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'widget_tweaks',
     'koie',
+    'django_extensions'
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS
@@ -70,10 +71,21 @@ WSGI_APPLICATION = 'koieadmin.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-DATABASES = {
+"""DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.db'),
+    }
+}"""
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'it1901',
+        'USER': 'it1901',
+        'PASSWORD': 'X9K9DLqNJyGzGw7zFpR5',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
