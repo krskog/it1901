@@ -55,6 +55,7 @@ names.txt
 
 # Python stuffs
 *.pyc
+__pycache__
 
 # Django stuffs
 db.db
