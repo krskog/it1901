@@ -23,7 +23,7 @@ class Command(BaseCommand):
             koies += 1
             k = Koie()
             koie = json_data[koie]
-            
+
             # Check if koie already exists
             if Koie.objects.filter(name=koie['name']).count() > 0:
                 existing += 1
@@ -32,7 +32,8 @@ class Command(BaseCommand):
             k.name = koie['name']
             k.address = koie['address']
             k.location = koie['location']
-            k.zip_code = koie['zip_code']
+            k.latitude = koie['latitude']
+            k.longitude = koie['longitude']
             k.num_beds = koie['num_beds']
             k.save()
             new += 1
