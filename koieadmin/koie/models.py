@@ -52,6 +52,9 @@ class Report(models.Model):
         self.report = rep
         self.firewood_status = num
         self.save()
+    def readIt(self, boolVer):
+        self.read = boolVer
+        self.save()
 
     def __str__(self):
         return "Report for %s" % self.reservation

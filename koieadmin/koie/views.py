@@ -64,6 +64,27 @@ def latest_reports(request):
       ],
     })
 
+def get_report(request, report_id):
+	rep = get_object_or_404(Report, pk=report_id)
+
+	if request.method == 'POST':
+		form = ReadForm(request.POST)
+		if form.is_valid():
+			rep.readIt(form.cleaned_data['read'])
+			return redirect('latest_reports')
+	else:
+		form = ReadForm()
+
+	return render(request, 'sreport.html', {
+	'active': 'les rapport',
+            'reporten': get_specific_report(report_id),
+	'breadcrumbs': [
+		{'name': _('home'), 'url': 'index'},
+                        {'name': _('latest reports'), 'url': 'latest_reports'},
+		{'name': _(rep.__str__())}
+	],
+	'form': form
+	})
 
 
 ### Forms & Stuff
@@ -151,27 +172,7 @@ def get_latest_reports():
 def get_specific_report(iden):
     return Report.objects.filter(id = iden)
 
-def get_report(request, report_id):
-	rep = get_object_or_404(Report, pk=report_id)
 
-	if request.method == 'POST':
-		form = ReadForm(request.POST)
-		if form.is_valid():
-			rep.submit(form.cleaned_data['read'])
-			return redirect('latest_reports')
-	else:
-		form = ReadForm()
-
-	return render(request, 'sreport.html', {
-	'active': 'les rapport',
-            'reporten': get_specific_report(report_id),
-	'breadcrumbs': [
-		{'name': _('home'), 'url': 'index'},
-                        {'name': _('latest reports'), 'url': 'latest_reports'},
-		{'name': _(rep.__str__())}
-	],
-	'form': form
-	})
 
 
 ### Mailing
