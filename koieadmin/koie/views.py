@@ -6,7 +6,7 @@ from datetime import date, datetime
 
 from django.contrib.auth.models import User
 from koie.models import Koie, Reservation, Report
-from koie.forms import ReservationForm, ReportForm
+from koie.forms import ReservationForm, ReportForm, ReadForm
 from django.core.mail import send_mail
 
 # Index view: Shows all koies
@@ -48,7 +48,23 @@ def next_reservations(request):
     return render(request, 'next_reservations.html', {
       'active': 'next_reservations',
       'future_reservations': get_future_reservations(num=25),
+      'breadcrumbs': [
+          {'name': _('home'), 'url': 'index'},
+          {'name': _('next reservations')}
+      ],
     })
+
+def latest_reports(request):
+    return render(request, 'latest_reports.html', {
+      'active': 'next_reservations',
+      'latest_reports': get_latest_reports(),
+      'breadcrumbs': [
+          {'name': _('home'), 'url': 'index'},
+          {'name': _('latest reports')}
+      ],
+    })
+
+
 
 ### Forms & Stuff
 
@@ -128,6 +144,35 @@ def get_future_reservations(koie=None, num=10):
         return Reservation.objects.filter(rent_date__gte=today).order_by('rent_date')[:num]
     else:
         return Reservation.objects.filter(koie_ordered=koie, rent_date__gte=today).order_by('rent_date')[:num]
+
+def get_latest_reports():
+    return Report.objects.filter(read=False)
+
+def get_specific_report(iden):
+    return Report.objects.filter(id = iden)
+
+def get_report(request, report_id):
+	rep = get_object_or_404(Report, pk=report_id)
+
+	if request.method == 'POST':
+		form = ReadForm(request.POST)
+		if form.is_valid():
+			rep.submit(form.cleaned_data['read'])
+			return redirect('latest_reports')
+	else:
+		form = ReadForm()
+
+	return render(request, 'sreport.html', {
+	'active': 'les rapport',
+            'reporten': get_specific_report(report_id),
+	'breadcrumbs': [
+		{'name': _('home'), 'url': 'index'},
+                        {'name': _('latest reports'), 'url': 'latest_reports'},
+		{'name': _(rep.__str__())}
+	],
+	'form': form
+	})
+
 
 ### Mailing
 
