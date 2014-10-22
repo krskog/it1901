@@ -18,8 +18,8 @@
               <td>{{ reservation.koie_ordered }}</td>
               <td>{{ reservation.rent_start }}</td>
               <td>
-                {% if reservation.free_beds > 0 %}
-                  {{ reservation.free_beds }}
+                {% if reservation.get_free_beds > 0 %}
+                  {{ reservation.get_free_beds }}
                 {% else %}
                   0
                 {% endif %}
