@@ -12,13 +12,17 @@
     <h2>Rapport {{ report.id }}</h2>
     <p><span class="lead"></span>
         <table class="table">
-          <tr><th>Feedback</th><th>Vedstatus</th><th>Koie</th></tr>
+          <tr><th></th><th>Vedstatus</th><th>Koie</th></tr>
+            <tr>
+              <td>{{ report.firewood_status }}</td>
+            </tr>
+            
+            <tr><th>Tilbakemelding</th></tr>
             <tr>
               <td>{{ report.report }}</td>
-              <td>{{ report.firewood_status }}</td>
-              <td>{{ report.koie }}</td>
             </tr>
           {% endfor %}
+          
         </table>
       {% else %}
       404 - Denne rapporten eksisterer ikke.
@@ -26,6 +30,7 @@
     </p>
   </div>
 </div>
+
 <div class="row">
 	<div class="col-md-12">
 		<h2>{{ form.title }}</h2>
@@ -43,7 +48,6 @@
 		</form>
 	</div>
 </div>
-
 
 
 {% endblock %}

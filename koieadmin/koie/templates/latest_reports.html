@@ -12,11 +12,11 @@
     <p><span class="lead"></span>
       {% if latest_reports %}
         <table class="table">
-          <tr><th>Feedback</th><th>Vedstatus</th></tr>
+          <tr><th>Reservasjonsid</th><th>Vedstatus</th></tr>
           {% for reporten in latest_reports %}
             <tr>
             
-              <td>{{ reporten.report }}</td>
+              <td>{{ reporten.reservation_id }}</td>
               <td>{{ reporten.firewood_status }}</td>
               <td><a href="{% url 'get_report' reporten.id %}">Les rapporten</a></td>
             </tr>
