@@ -56,5 +56,8 @@ class Report(models.Model):
         self.read = boolVer
         self.save()
 
+    def get_reservation(self):
+        return self.reservation
+
     def __str__(self):
         return "Report for %s" % self.reservation

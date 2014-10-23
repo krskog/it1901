@@ -12,18 +12,15 @@
     <h2>Rapport {{ report.id }}</h2>
     <p><span class="lead"></span>
         <table class="table">
-          <tr><th></th><th>Vedstatus</th><th>Koie</th></tr>
+          <tr><th>Vedstatus</th><th>Koie</th></tr>
             <tr>
               <td>{{ report.firewood_status }}</td>
+              <td>{{ koia }}</td>
             </tr>
-            
-            <tr><th>Tilbakemelding</th></tr>
-            <tr>
-              <td>{{ report.report }}</td>
-            </tr>
+            <table>
+            <h3>Tilbakemelding</h3>
+           {{ report.report }}
           {% endfor %}
-          
-        </table>
       {% else %}
       404 - Denne rapporten eksisterer ikke.
       {% endif %}

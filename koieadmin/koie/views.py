@@ -78,6 +78,7 @@ def get_report(request, report_id):
 	return render(request, 'sreport.html', {
 	'active': 'les rapport',
             'reporten': get_specific_report(report_id),
+            'koia': get_koia(report_id),
 	'breadcrumbs': [
 		{'name': _('home'), 'url': 'index'},
                         {'name': _('latest reports'), 'url': 'latest_reports'},
@@ -166,12 +167,20 @@ def get_future_reservations(koie=None, num=10):
     else:
         return Reservation.objects.filter(koie_ordered=koie, rent_date__gte=today).order_by('rent_date')[:num]
 
+
+### Latest reports
+
 def get_latest_reports():
     return Report.objects.filter(read=False)
 
 def get_specific_report(iden):
     return Report.objects.filter(id = iden)
 
+def get_koia(iden):
+    repid =  Report.objects.get(id = iden)
+    resid =  Reservation.objects.get(id = repid.reservation_id)
+    koie = Koie.objects.get(id = resid.koie_ordered_id)
+    return koie.name
 
 
 
