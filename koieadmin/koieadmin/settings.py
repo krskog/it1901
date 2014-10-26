@@ -22,11 +22,15 @@ PROJECT_ROOT = BASE_DIR
 SECRET_KEY = 'ge_q)l68gr3%sb6u)*1kb*yc&h4-4_e8xg7^7ax*+8i(qcllu9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'k.sklirg.io']
+
+
+
+ADMINS = (('Sklirg', 'sklirg@sklirg.io'),)
 
 
 # Application definition
@@ -55,6 +59,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
 )
 
 STATICFILES_FINDERS = (
