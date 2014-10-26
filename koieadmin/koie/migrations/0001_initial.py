@@ -15,10 +15,25 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Koie',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=50)),
-                ('address', models.CharField(max_length=200)),
-                ('num_beds', models.IntegerField(default=0)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('name', models.CharField(verbose_name='koie name', max_length=50)),
+                ('address', models.CharField(verbose_name='koie address', max_length=200)),
+                ('location', models.CharField(verbose_name='location', max_length=50)),
+                ('latitude', models.DecimalField(verbose_name='latitude', decimal_places=5, max_digits=10)),
+                ('longitude', models.DecimalField(verbose_name='longitude', decimal_places=5, max_digits=10)),
+                ('num_beds', models.IntegerField(default=0, verbose_name='beds')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Report',
+            fields=[
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('report', models.TextField(verbose_name='end of stay report')),
+                ('reported_date', models.DateTimeField(auto_now_add=True)),
+                ('firewood_status', models.IntegerField()),
             ],
             options={
             },
@@ -27,14 +42,22 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Reservation',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
-                ('rent_date', models.DateField()),
-                ('ordered_date', models.DateTimeField(auto_now_add=True)),
-                ('koie_ordered', models.ForeignKey(to='koie.Koie', related_name='Ordered koie')),
-                ('ordered_by', models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name='Ordered by')),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('rent_date', models.DateField(verbose_name='rent date')),
+                ('ordered_date', models.DateTimeField(verbose_name='timestamp for order', auto_now_add=True)),
+                ('beds', models.IntegerField(verbose_name='number of beds')),
+                ('koie_ordered', models.ForeignKey(related_name='ordered koie', to='koie.Koie')),
+                ('ordered_by', models.ForeignKey(related_name='ordered by', to=settings.AUTH_USER_MODEL)),
             ],
             options={
+                'get_latest_by': 'id',
             },
             bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='report',
+            name='reservation',
+            field=models.ForeignKey(related_name='reservation', to='koie.Reservation'),
+            preserve_default=True,
         ),
     ]

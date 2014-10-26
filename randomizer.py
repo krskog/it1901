@@ -29,6 +29,10 @@ if inp != "":
         num_rand = int(inp)
     except ValueError:
         print("Something went wrong during casting; using default value '%s'" % num_rand)
+
+
+if manual:
+    li = li.split(",")
         
 # Create list if input was CSV
 if manual:
@@ -37,7 +41,8 @@ if manual:
 # Cleaning lines
 for x in range(0, len(li)):
     if manual:
-        name = li[x].strip(" ")
+        name = li[x].strip()
+        print(name)
     else:
         name = li[x].strip('\n')
     li[x] = name

@@ -12,3 +12,5 @@ Last ned og installer Python 3.4.
 `pip install -r requirements.txt`
 
 Dersom dere driver med mye annet python-ish på fritiden bure dere se på virtualenvs.
+
+[How to work on this project!](https://github.com/sklirg/it1901/wiki/How-to-work-on-this-project)

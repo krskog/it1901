@@ -1,0 +1,10 @@
+@startuml
+Bruker -> Hovedside: loggInn(brukernavn,passord)
+Hovedside -> DB: isUser(brukernavn,passord)
+DB -> Hovedside: true
+Hovedside -> Bruker: godkjenning
+Bruker -> Brukerside:aksesser
+@enduml
+
+
+
