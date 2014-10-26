@@ -15,7 +15,7 @@ def index(request):
     return render(request, 'index.html', {
       'active': 'index',
       'breadcrumbs': [
-          {'name': _('home')}
+          {'name': _('home').capitalize()}
       ]
     })
 
@@ -24,8 +24,8 @@ def koie_index(request):
     return render(request, 'koies.html', {
       'active': 'koie_index',
       'breadcrumbs': [
-          {'name': _('home'), 'url': 'index'},
-          {'name': _('koier')}
+          {'name': _('home').capitalize(), 'url': 'index'},
+          {'name': _('koier').capitalize()}
       ],
       'koies': koies
     })
@@ -35,8 +35,8 @@ def koie_detail(request, koie_id):
     return render(request, 'koie_detail.html', {
       'active': 'koie_detail',
       'breadcrumbs': [
-          {'name': _('home'), 'url': 'index'},
-          {'name': _('koier'), 'url':'koie_index'},
+          {'name': _('home').capitalize(), 'url': 'index'},
+          {'name': _('koier').capitalize(), 'url':'koie_index'},
           {'name': koie.name}
       ],
       'koie': koie,
@@ -113,8 +113,8 @@ def reserve_koie(request, reservation_id=None):
     return render(request, 'reservation.html', {
     'active': 'reserve_koie',
     'breadcrumbs': [
-        {'name': _('home'), 'url': 'index'},
-        {'name': _('reservation')}
+        {'name': _('home').capitalize(), 'url': 'index'},
+        {'name': _('reservation').capitalize()}
     ],
     'form': form
     })
@@ -133,8 +133,8 @@ def report_koie(request, report_id):
 	return render(request, 'report.html', {
 	'active': 'report_koie',
 	'breadcrumbs': [
-		{'name': _('home'), 'url': 'index'},
-		{'name': _(rep.__str__())}
+		{'name': _('home').capitalize(), 'url': 'index'},
+		{'name': rep.capitalize()}
 	],
 	'form': form
 	})
