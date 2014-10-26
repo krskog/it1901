@@ -75,7 +75,7 @@ def get_report(request, report_id):
 	else:
 		form = ReadForm()
 
-	return render(request, 'sreport.html', {
+	return render(request, 'show_report.html', {
 	'active': 'les rapport',
             'reporten': get_specific_report(report_id),
             'koia': get_koia(report_id),
@@ -173,11 +173,11 @@ def get_future_reservations(koie=None, num=10):
 def get_latest_reports():
     return Report.objects.filter(read=False)
 
-def get_specific_report(iden):
-    return Report.objects.filter(id = iden)
+def get_specific_report(id):
+    return Report.objects.filter(id = id)
 
-def get_koia(iden):
-    repid =  Report.objects.get(id = iden)
+def get_koia(id):
+    repid =  Report.objects.get(id = id)
     resid =  Reservation.objects.get(id = repid.reservation_id)
     koie = Koie.objects.get(id = resid.koie_ordered_id)
     return koie.name
