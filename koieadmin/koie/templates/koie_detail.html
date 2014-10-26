@@ -11,35 +11,46 @@
     {% if koie %}
     <h1>Informasjon om {{ koie.name }}</h1>
   </div>
-  <div class="col-md-4 pull-right" style="margin-top: 15px;">
-    {% if koie.is_reserved %}
-      <div class="alert alert-danger">Status: Reservert</div>
-    {% else %}
-      <div class="alert alert-success">Status: Ledig</div>
-    {% endif %}
-  </div>
 </div>
 <div class="row">
   <div class="col-md-4">
-    <p><span class="lead">{{ koie.name }}</span> ligger i <abbr title="{{ koie.zip_code }} {{ koie.location }}">{{ koie.location }}</abbr>,
-       med adressen {{ koie.address }}. </p>
+    <p><span class="lead">{{ koie.name }}</span> ligger i <abbr title="Should we have something here?">{{ koie.location }}</abbr>,
+       med adressen {{ koie.address }}.</p>
+    <p>Koien har <span class="lead">{{ koie.num_beds }}</span> sengeplasser.</p>
+  </div>
+  <div class="col-md-8">
+    <img src="{{ STATIC_URL }}img/{{ koie.name.lower }}.jpg" class="img-responsive" alt="{{ koie.name }}">
   </div>
 </div>
 <div class="row">
-  <div class="col-md-4">
-    <h2>Praktisk informasjon</h2>
-    <p><span class="lead">Koien</span> har {{ koie.num_beds }} sengeplasser.</p>
-  </div>
-  <div class="col-md-4">
-    <h2>Lorem</h2>
-    <p><span class="lead"></span>Pip</p>
-  </div>
-  <div class="col-md-4">
-    <h2>Ipsum</h2>
-    <p><span class="lead"></span>Pap</p>
+  <div class="col-md-12">
+    <h2>Kommende reservasjoner</h2>
+    <p><span class="lead"></span>
+      {% if future_reservations %}
+        <table class="table">
+          <tr><th>Dato</th><th>Reserverte sengeplasser (ledige)</th><th>Reservèr for denne dagen</th></tr>
+          {% for reservation in future_reservations %}
+            <tr>
+              <td>{{ reservation.rent_date }}</td>
+              <td>{{ reservation.beds }}
+              <span class="pull-right">
+                {% if reservation.get_free_beds > 0 %}
+                  <span class="glyphicon glyphicon-ok"></span> {{ reservation.get_free_beds }}
+                {% else %}
+                  <span class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+                </span></td>
+              <td>ToDo<!-- Add link to auto-filled form for this date. (Set POST-values?)--></td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+      Ingen kommende reservasjoner.
+      {% endif %}
+    </p>
   </div>
   {% else %}
-    No info about dis koie
+  <h3>Det eksisterer foreløpig ingen informasjon om denne koien.</h3>
   {% endif %}
   </div>
 </div>

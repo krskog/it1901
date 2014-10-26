@@ -1,0 +1,11 @@
+Tilfeller:
+
+Bruker:
+Registrering av bruker
+Innlogging
+Reservasjon av koie
+Rapportere inn koiens tilstand
+
+Admin:
+Legg til / endre koie
+Endre reservasjon
