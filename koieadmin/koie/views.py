@@ -103,7 +103,7 @@ def reserve_koie(request, reservation_id=None):
             reservation = form.save(commit=False)
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
             reservation.save()
-            #send_report_email(reservation) #Sends an email with a link to the report form connected to this reservation
+            send_report_email(reservation) #Sends an email with a link to the report form connected to this reservation
             return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
         else:
             form = ReservationForm(request.POST)
@@ -134,7 +134,7 @@ def report_koie(request, report_id):
 	'active': 'report_koie',
 	'breadcrumbs': [
 		{'name': _('home').capitalize(), 'url': 'index'},
-		{'name': rep.capitalize()}
+		{'name': rep}
 	],
 	'form': form
 	})
