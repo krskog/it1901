@@ -14,3 +14,9 @@ class ReportForm(ModelForm):
 	class Meta:
 		model = Report
 		fields = ('report', 'firewood_status')
+
+class ReadForm(ModelForm):
+	
+	class Meta:
+		model = Report
+		fields = ('read',)

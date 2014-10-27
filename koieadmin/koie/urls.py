@@ -10,5 +10,4 @@ urlpatterns = patterns('',
     url(r'^reservation/(?P<koie_id>\d+)/$', views.reserve_koie, name='reserve_koie'),
     url(r'^reservation/upcoming/$', views.next_reservations, name='next_reservations'),
     url(r'^report/(?P<report_id>\d+)/$', views.report_koie, name='report_koie'),
-
 )
