@@ -97,7 +97,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'nb-no'
 
 TIME_ZONE = 'UTC'
 
@@ -106,6 +106,10 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+from django.contrib.messages import constants as message_constants
+MESSAGE_TAGS = {message_constants.ERROR: 'danger',}
 
 
 # Static files (CSS, JavaScript, Images)
