@@ -44,13 +44,23 @@ class Reservation(models.Model):
 class Report(models.Model):
     reservation = models.ForeignKey(Reservation, related_name=_("reservation"))
     report = models.TextField(_('end of stay report'))
-    reported_date = models.DateTimeField(auto_now_add=True)
+    reported_date = models.DateTimeField(blank=True, null=True)
+    read_date = models.DateTimeField(blank=True, null=True)
     firewood_status = models.IntegerField()
 
     def submit(self, rep, num):
         self.report = rep
         self.firewood_status = num
         self.save()
+
+    def reported(self):
+        return self.reported_date != None
+
+    def read(self):
+        return self.read_date != None
+
+    def get_reservation(self):
+        return self.reservation
 
     def __str__(self):
         return "Report for %s" % self.reservation

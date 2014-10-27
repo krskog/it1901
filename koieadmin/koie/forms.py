@@ -8,9 +8,9 @@ class ReservationForm(ModelForm):
     class Meta:
         model = Reservation
         exclude = ('ordered_by', 'ordered_date',)
-		
+
 class ReportForm(ModelForm):
-	
-	class Meta:
-		model = Report
-		fields = ('report', 'firewood_status')
+
+    class Meta:
+        model = Report
+        fields = ('report', 'firewood_status')

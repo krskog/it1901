@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block styles %}{% endblock styles %}
+{% load widget_tweaks %}
+{% block title %}CoolStuff{% endblock title %}
+
+
+{% block content %}
+<div class="row">
+  <div class="col-md-4">
+  {% if report %}
+    <h2>Rapport {{ report.id }}</h2>
+    <p><span class="lead"></span>
+        <table class="table">
+          <tr><th>Vedstatus</th><th>Koie</th></tr>
+            <tr>
+              <td>{{ report.firewood_status }}</td>
+              <td>{{ koia }}</td>
+            </tr>
+            <table>
+            <h3>Tilbakemelding</h3>
+           {{ report.report }}
+      {% else %}
+      404 - Denne rapporten eksisterer ikke.
+      {% endif %}
+    </p>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>{{ form.title }}</h2>
+        <form action="" method="post" role="form" class="form-horizontal">
+            {% csrf_token %}
+            <input type="text" name="act" value="report_read" hidden>
+            <div class="form-group">
+                <input type="submit" name="read-btn" value="Lest" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

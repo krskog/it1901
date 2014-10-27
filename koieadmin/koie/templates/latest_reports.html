@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block styles %}{% endblock styles %}
+
+{% block title %}CoolStuff{% endblock title %}
+
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <h2>Siste rapporter</h2>
+    <p><span class="lead"></span>
+      {% if latest_reports %}
+        <table class="table">
+            <tr><th>id</th><th>Vedstatus</th><th>Rapportert</th></tr>
+          {% for report in latest_reports %}
+            <tr>
+              <td>{{ report.reservation_id }}</td>
+              <td>{{ report.firewood_status }}</td>
+              <td>
+                {% if report.reported %}
+                    <span class="glyphicon glyphicon-ok"></span> (<a href="{% url 'read_report' report.id %}">Les rapport</a>)
+                {% else %}
+                    <span class="glyphicon glyphicon-remove"></span> (Send påminnelse)
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+        {% if slug %}
+          Ingen rapporter passet til ditt søk på '{{ slug }}'.
+        {% else %}
+          Ingen uleste rapporter.
+        {% endif %}
+      {% endif %}
+    </p>
+  </div>
+  <div class="col-md-4">
+    <h2>Filter</h2>
+    <ul>
+        <li><a href="{% url 'latest_reports' %}">Standard</a></li>
+        <li><a href="{% url 'latest_reports' 'reported' %}">Utfylte rapporter</a></li>
+        <li><a href="{% url 'latest_reports' 'read' %}">Leste rapporter</a></li>
+        <li><a href="{% url 'latest_reports' 'unread' %}">Uleste rapporter</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock content %}
