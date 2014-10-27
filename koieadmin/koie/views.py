@@ -174,7 +174,7 @@ def get_future_reservations(koie=None, num=10):
 ### Latest reports
 
 def get_latest_reports():
-    return Report.objects.filter(read=False)
+    return Report.objects.filter(read_date=None)
 
 def get_specific_report(id):
     return Report.objects.filter(id = id)
