@@ -146,10 +146,11 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
             reservation = form.save(commit=False)
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
             reservation.save()
+            report = send_report_email(reservation)
             messages.success(request, '%s reserved for %s.' % (reservation.koie_ordered, reservation.rent_date))
+            messages.info(request, 'You will have to fill out a report after your stay. Please check your email.')
             # Sends an email with a link to the report form connected to this reservation
             # Should be split into report creation and then cronjob email sending
-            send_report_email(reservation)
             return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
         else:
             messages.error(request, 'Form validation failed, are you sure you filled out all the values correctly?')
@@ -256,3 +257,4 @@ def send_report_email(reservation):
     recipient = reservation.ordered_by.email
     message = 'Please fill out a report for your stay at: http://127.0.0.1:8000/report/' + str(report.id) + '/'
     #send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
+    return report
