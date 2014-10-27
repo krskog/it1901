@@ -90,7 +90,7 @@ def get_report(request, report_id):
 
 ### Forms & Stuff
 
-def reserve_koie(request, reservation_id=None):
+def reserve_koie(request, reservation_id=None, koie_id=None):
     if reservation_id == None:
         reservation = Reservation()
     else:
@@ -109,6 +109,9 @@ def reserve_koie(request, reservation_id=None):
             form = ReservationForm(request.POST)
     else:
         form = ReservationForm()
+        if koie_id is not None:
+            koie = get_object_or_404(Koie, id=koie_id)
+            form.fields['koie_ordered'].initial = koie
 
     return render(request, 'reservation.html', {
     'active': 'reserve_koie',
