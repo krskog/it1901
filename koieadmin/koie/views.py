@@ -103,7 +103,11 @@ def reserve_koie(request, reservation_id=None):
             reservation = form.save(commit=False)
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
             reservation.save()
+<<<<<<< HEAD
             #send_report_email(reservation) #Sends an email with a link to the report form connected to this reservation
+=======
+            send_report_email(reservation) #Sends an email with a link to the report form connected to this reservation
+>>>>>>> parent of 19eec26... Merge
             return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
         else:
             form = ReservationForm(request.POST)
@@ -133,8 +137,13 @@ def report_koie(request, report_id):
 	return render(request, 'report.html', {
 	'active': 'report_koie',
 	'breadcrumbs': [
+<<<<<<< HEAD
 		{'name': _('home'), 'url': 'index'},
 		{'name': _(rep.__str__())}
+=======
+		{'name': _('home').capitalize(), 'url': 'index'},
+		{'name': rep}
+>>>>>>> parent of 19eec26... Merge
 	],
 	'form': form
 	})
