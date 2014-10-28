@@ -15,7 +15,7 @@ def index(request):
     return render(request, 'index.html', {
       'active': 'index',
       'breadcrumbs': [
-          {'name': _('home')}
+          {'name': _('home').capitalize()}
       ]
     })
 
@@ -24,8 +24,8 @@ def koie_index(request):
     return render(request, 'koies.html', {
       'active': 'koie_index',
       'breadcrumbs': [
-          {'name': _('home'), 'url': 'index'},
-          {'name': _('koier')}
+          {'name': _('home').capitalize(), 'url': 'index'},
+          {'name': _('koier').capitalize()}
       ],
       'koies': koies
     })
@@ -35,8 +35,8 @@ def koie_detail(request, koie_id):
     return render(request, 'koie_detail.html', {
       'active': 'koie_detail',
       'breadcrumbs': [
-          {'name': _('home'), 'url': 'index'},
-          {'name': _('koier'), 'url':'koie_index'},
+          {'name': _('home').capitalize(), 'url': 'index'},
+          {'name': _('koier').capitalize(), 'url':'koie_index'},
           {'name': koie.name}
       ],
       'koie': koie,
@@ -90,7 +90,7 @@ def get_report(request, report_id):
 
 ### Forms & Stuff
 
-def reserve_koie(request, reservation_id=None):
+def reserve_koie(request, reservation_id=None, koie_id=None):
     if reservation_id == None:
         reservation = Reservation()
     else:
@@ -103,22 +103,21 @@ def reserve_koie(request, reservation_id=None):
             reservation = form.save(commit=False)
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
             reservation.save()
-<<<<<<< HEAD
-            #send_report_email(reservation) #Sends an email with a link to the report form connected to this reservation
-=======
             send_report_email(reservation) #Sends an email with a link to the report form connected to this reservation
->>>>>>> parent of 19eec26... Merge
             return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
         else:
             form = ReservationForm(request.POST)
     else:
         form = ReservationForm()
+        if koie_id is not None:
+            koie = get_object_or_404(Koie, id=koie_id)
+            form.fields['koie_ordered'].initial = koie
 
     return render(request, 'reservation.html', {
     'active': 'reserve_koie',
     'breadcrumbs': [
-        {'name': _('home'), 'url': 'index'},
-        {'name': _('reservation')}
+        {'name': _('home').capitalize(), 'url': 'index'},
+        {'name': _('reservation').capitalize()}
     ],
     'form': form
     })
@@ -137,13 +136,8 @@ def report_koie(request, report_id):
 	return render(request, 'report.html', {
 	'active': 'report_koie',
 	'breadcrumbs': [
-<<<<<<< HEAD
-		{'name': _('home'), 'url': 'index'},
-		{'name': _(rep.__str__())}
-=======
 		{'name': _('home').capitalize(), 'url': 'index'},
 		{'name': rep}
->>>>>>> parent of 19eec26... Merge
 	],
 	'form': form
 	})
@@ -179,8 +173,8 @@ def get_future_reservations(koie=None, num=10):
 
 ### Latest reports
 
-def get_latest_reports(rapport):
-    return Report.objects.filter(rapport.read())
+def get_latest_reports():
+    return Report.objects.filter(read_date=None)
 
 def get_specific_report(id):
     return Report.objects.filter(id = id)
