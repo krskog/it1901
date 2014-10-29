@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block styles %}{% endblock styles %}
+
+{% block title %}CoolStuff{% endblock title %}
+
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <h2>Kommende reservasjoner</h2>
+    <p><span class="lead"></span>
+      {% if future_reservations %}
+        <table class="table">
+          <tr><th>Koie</th><th>Dato</th><th>Ledige sengeplasser</th><th>E-Post</th></tr>
+          {% for reservation in future_reservations %}
+            <tr>
+              <td>{{ reservation.koie_ordered }}</td>
+              <td>{{ reservation.rent_start }}</td>
+              <td>
+                {% if reservation.get_free_beds > 0 %}
+                  {{ reservation.get_free_beds }}
+                {% else %}
+                  0
+                {% endif %}
+              </td>
+              <td>{{ reservation.ordered_by }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+      Ingen kommende reservasjoner.
+      {% endif %}
+    </p>
+  </div>
+</div>
+{% endblock content %}

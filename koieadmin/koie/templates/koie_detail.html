@@ -2,44 +2,61 @@
 
 {% block styles %}{% endblock styles %}
 
-{% block title %}CoolStuff{% endblock title %}
+{% block title %}{{ koie.name }}{% endblock title %}
 
 
 {% block content %}
 <div class="row">
   <div class="col-md-8">
     {% if koie %}
-    <h1>Informasjon om {{ koie.name }}</h1>
-  </div>
-  <div class="col-md-4 pull-right" style="margin-top: 15px;">
-    {% if koie.is_reserved %}
-      <div class="alert alert-danger">Status: Reservert</div>
-    {% else %}
-      <div class="alert alert-success">Status: Ledig</div>
-    {% endif %}
+    <h1>Informasjon om {{ koie.name }} <span class="small"><a href="#kart">Kart</a></h1>
   </div>
 </div>
 <div class="row">
   <div class="col-md-4">
-    <p><span class="lead">{{ koie.name }}</span> ligger i <abbr title="{{ koie.zip_code }} {{ koie.location }}">{{ koie.location }}</abbr>,
-       med adressen {{ koie.address }}. </p>
+    <p><span class="lead">{{ koie.name }}</span> ligger i <abbr title="Should we have something here?">{{ koie.location }}</abbr>,
+       med adressen {{ koie.address }}.</p>
+    <p>Koien har <span class="lead">{{ koie.num_beds }}</span> sengeplasser.</p>
+  </div>
+  <div class="col-md-8">
+    <img src="{{ STATIC_URL }}img/{{ koie.name.lower }}.jpg" class="pull-right img-responsive" alt="{{ koie.name }}" style="max-height: 300px;">
   </div>
 </div>
 <div class="row">
-  <div class="col-md-4">
-    <h2>Praktisk informasjon</h2>
-    <p><span class="lead">Koien</span> har {{ koie.num_beds }} sengeplasser.</p>
+  <div class="col-md-6">
+    <h2>Kommende reservasjoner</h2>
+    <h4>Reservèr {{ koie.name }} ved å klikke <a href="{% url 'reserve_koie' koie.id %}">her</a>, <span class="small">eller ved å klikke på markøren på kartet.</span></h4>
+    <p><span class="lead"></span>
+      {% if future_reservations %}
+        <table class="table">
+          <tr><th>Dato</th><th>Reserverte sengeplasser (ledige)</th></tr>
+          {% for reservation in future_reservations %}
+            <tr>
+              <td>{{ reservation.rent_date }}</td>
+              <td>{{ reservation.beds }}
+              <span class="pull-right">
+                {% if reservation.get_free_beds > 0 %}
+                  <span class="glyphicon glyphicon-ok"></span> {{ reservation.get_free_beds }}
+                {% else %}
+                  <span class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+                </span></td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+        Ingen kommende reservasjoner.
+      {% endif %}
+    </p>
   </div>
-  <div class="col-md-4">
-    <h2>Lorem</h2>
-    <p><span class="lead"></span>Pip</p>
-  </div>
-  <div class="col-md-4">
-    <h2>Ipsum</h2>
-    <p><span class="lead"></span>Pap</p>
-  </div>
+  <section name="kart" id="kart">
+      <div class="col-md-6">
+          <h2>Kart</h2>
+          {% include 'koie_map.html' %}
+      </div>
+  </section>
   {% else %}
-    No info about dis koie
+  <h3>Det eksisterer foreløpig ingen informasjon om denne koien.</h3>
   {% endif %}
   </div>
 </div>

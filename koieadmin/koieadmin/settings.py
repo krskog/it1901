@@ -41,6 +41,7 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
+    'widget_tweaks',
     'koie',
 )
 
@@ -96,3 +97,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = join(PROJECT_ROOT, 'static/')
+
+# Setup for email using gmail as a SMTP host
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ntnu.koier@gmail.com'
+EMAIL_HOST_PASSWORD = 'it1901it1901'

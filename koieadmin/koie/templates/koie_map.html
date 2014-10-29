@@ -1,0 +1,48 @@
+    <style>
+      #koie {
+        width: 400px;
+        height: 400px;
+        text-align: center;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script>
+function initialize() {
+<<<<<<< HEAD:koieadmin/koie/static/js/individualKoie.html
+  var koieMap = new google.maps.LatLng(63.39030, 11.41852); /* ({{koie.loatitude}}, {{koie.longitude}}) */
+=======
+  //var koieMap = new google.maps.LatLng(63.416369, 10.439620); /* ({{koie.loatitude}}, {{koie.longitude}}) */
+  var koieMap = new google.maps.LatLng({{ koie.latitude }}, {{ koie.longitude }});
+>>>>>>> origin/individual_koie_map:koieadmin/koie/templates/koie_map.html
+  var mapOptions = {
+    zoom: 12,
+    center: koieMap
+  }
+  var map = new google.maps.Map(document.getElementById('koie'), mapOptions);
+  var infowindow = new google.maps.InfoWindow({
+      content: "{{ koie.name }}, {{ koie.location }}"  /* NAVN / INFO */
+  });
+  
+  var marker = new google.maps.Marker({
+      position: koieMap,
+      map: map,
+  });
+
+  google.maps.event.addListener(marker, "mouseover", function(){
+      infowindow.open(map, marker);
+  })
+
+  google.maps.event.addListener(marker, "mouseout", function(){
+    infowindow.close();
+  });
+
+  google.maps.event.addListener(marker, "click", function(){
+      window.location.href = "{% url 'reserve_koie' koie.id %}";
+  });
+}
+
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+    <div id="koie"></div>
