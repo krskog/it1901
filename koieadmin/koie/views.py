@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
+
 from datetime import date, datetime
+
 from django.contrib.auth.models import User
 from django.contrib import messages
 from koie.models import Koie, Reservation, Report
@@ -131,47 +133,16 @@ def read_report(request, report_id=None):
 
 ### Forms & Stuff
 
-def valDal(form):
-        reservation = form.save(commit=False)
-        rdate = reservation.rent_date
-        cdate = date.today()
-        if rdate >= cdate:
-            return True
-        else:
-            return False
-        
-def valBal(form):
-        if form.is_valid():
-            reservation = form.save(commit=False)
-            rbeds = reservation.beds
-            fbeds = reservation.get_free_beds()
-            if 0 < rbeds and rbeds <= fbeds:
-                return True
-            else:
-                return False
-
-        else:
-            return False
-
-def errorMessage(form):
-    if not form.is_valid():
-        return  'Your email adress is invalid'
-    else:
-        if not valBal(form):
-            return  'Your desired amount of bed is not available'
-        else:
-            if not valDal(form):
-                return  'Your desired rent date is invalid'
-
 def reserve_koie(request, reservation_id=None, koie_id=None):
     if reservation_id == None:
         reservation = Reservation()
     else:
         reservation = get_object_or_404(Reservation, pk=reservation_id)
+
     if request.method == 'POST':
         form = ReservationForm(request.POST)
         # Find user by email or crash
-        if valBal(form) and valDal(form):
+        if form.is_valid():
             reservation = form.save(commit=False)
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
             reservation.save()
@@ -182,7 +153,7 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
             # Should be split into report creation and then cronjob email sending
             return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
         else:
-            messages.error(request, errorMessage(form))
+            messages.error(request, 'Form validation failed, are you sure you filled out all the values correctly?')
             form = ReservationForm(request.POST)
     else:
         form = ReservationForm()

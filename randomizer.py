@@ -31,9 +31,6 @@ if inp != "":
         print("Something went wrong during casting; using default value '%s'" % num_rand)
 
 
-if manual:
-    li = li.split(",")
-        
 # Create list if input was CSV
 if manual:
     li = str_input.split(",")

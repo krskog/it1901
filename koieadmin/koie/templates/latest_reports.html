@@ -7,29 +7,44 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-md-4">
+  <div class="col-md-8">
     <h2>Siste rapporter</h2>
     <p><span class="lead"></span>
       {% if latest_reports %}
         <table class="table">
-          <tr><th>Reservasjonsid</th><th>Vedstatus</th></tr>
-          {% for reporten in latest_reports %}
+            <tr><th>id</th><th>Vedstatus</th><th>Rapportert</th></tr>
+          {% for report in latest_reports %}
             <tr>
-            
-              <td>{{ reporten.reservation_id }}</td>
-              <td>{{ reporten.firewood_status }}</td>
-              <td><a href="{% url 'get_report' reporten.id %}">Les rapporten</a></td>
+              <td>{{ report.reservation_id }}</td>
+              <td>{{ report.firewood_status }}</td>
+              <td>
+                {% if report.reported %}
+                    <span class="glyphicon glyphicon-ok"></span> (<a href="{% url 'read_report' report.id %}">Les rapport</a>)
+                {% else %}
+                    <span class="glyphicon glyphicon-remove"></span> (Send påminnelse)
+                {% endif %}
+              </td>
             </tr>
           {% endfor %}
         </table>
       {% else %}
-      Ingen uleste rapporter.
+        {% if slug %}
+          Ingen rapporter passet til ditt søk på '{{ slug }}'.
+        {% else %}
+          Ingen uleste rapporter.
+        {% endif %}
       {% endif %}
     </p>
   </div>
   <div class="col-md-4">
-    <h2>Ipsum</h2>
-    <p><span class="lead"></span>Pap</p>
+    <h2>Filter</h2>
+    <ul>
+        <li><a href="{% url 'latest_reports' %}">Standard</a></li>
+        <li><a href="{% url 'latest_reports' 'reported' %}">Utfylte rapporter</a></li>
+        <li><a href="{% url 'latest_reports' 'unreported' %}">Uutfylte rapporter</a></li>
+        <li><a href="{% url 'latest_reports' 'read' %}">Leste rapporter</a></li>
+        <li><a href="{% url 'latest_reports' 'unread' %}">Uleste rapporter</a></li>
+    </ul>
   </div>
 </div>
 {% endblock content %}

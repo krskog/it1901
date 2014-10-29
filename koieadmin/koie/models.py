@@ -52,7 +52,10 @@ class Report(models.Model):
         self.report = rep
         self.firewood_status = num
         self.save()
-        
+
+    def reported(self):
+        return self.reported_date != None
+
     def read(self):
         return self.read_date != None
 
