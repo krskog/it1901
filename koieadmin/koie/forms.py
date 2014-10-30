@@ -10,7 +10,7 @@ class ReservationForm(ModelForm):
         exclude = ('ordered_by', 'ordered_date',)
 
 class ReportForm(ModelForm):
-
+    damages = forms.CharField(label='Her kan eventuelle skader fylles inn. I folgende format: \n skader \n viktighet \n \n evt. flere skader')
     class Meta:
         model = Report
         fields = ('report', 'firewood_status')
