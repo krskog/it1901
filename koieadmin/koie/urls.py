@@ -16,4 +16,5 @@ urlpatterns = patterns('',
     url(r'^damages/(?P<slug>[^\.]+)', views.get_damages, name='damages'),
     url(r'^damages', views.get_damages, name='damages'),
     url(r'^damage/(?P<damage_id>\d+)/fixed/$', views.damage_fixed, name='damage_fixed'),
+    url(r'^damage_importance/(?P<damage_id>\d+)/$', views.edit_damage, name='damage_importance'),
     )

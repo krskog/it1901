@@ -21,7 +21,7 @@
               {% if damage.importance %}
                     {{ damage.importance }}
                 {% else %}
-                    <span class="glyphicon glyphicon-remove"></span> (<a href="{% url 'damage_fixed' damage.id %}">Vurdér</a>)
+                    <span class="glyphicon glyphicon-remove"></span> (<a href="{% url 'damage_importance' damage.id %}">Vurdér</a>)
                 {% endif %}
               </td>
               <td>
@@ -48,7 +48,7 @@
   <div class="col-md-4">
     <h2>Filter</h2>
     <ul>
-        <li><a href="{% url 'damages' 'all' %}">Standard</a></li>
+        <li><a href="{% url 'damages' 'default' %}">Standard</a></li>
         <li><a href="{% url 'damages' 'fixed' %}">Fiksede skader</a></li>
         <li><a href="{% url 'damages' 'not_fixed' %}">Ikke fiksede skader</a></li>
     </ul>
