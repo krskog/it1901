@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block styles %}{% endblock styles %}
+
+{% block title %}CoolStuff{% endblock title %}
+
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <h2>Skaderapporter</h2>
+    <p><span class="lead"></span>
+      {% if damages %}
+        <table class="table">
+            <tr><th>Koie</th><th>Skade</th><th>Viktighet</th><th>Fikset</th></tr>
+          {% for damage in damages %}
+            <tr>
+              <td>{{ damage.damaged_koie.name }}</td>
+              <td>{{ damage.damage }}</td>
+              <td>
+              {% if damage.importance %}
+                    {{ damage.importance }}
+                {% else %}
+                    <span class="glyphicon glyphicon-remove"></span> (<a href="{% url 'damage_importance' damage.id %}">Vurdér</a>)
+                {% endif %}
+              </td>
+              <td>
+              {% if damage.fixed_date %}
+                    <span class="glyphicon glyphicon-ok"></span>
+                    {{ damage.fixed_date }}
+              {% else %}
+                    <span class="glyphicon glyphicon-remove"></span> (<a href="{% url 'damage_fixed' damage.id %}">Fiks</a>)
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+        {% if slug %}
+          Ingen rapporter passet til ditt søk på '{{ slug }}'.
+        {% else %}
+          Ingen ufiksede skader
+        {% endif %}
+      {% endif %}
+    </p>
+  </div>
+  <div class="col-md-4">
+    <h2>Filter</h2>
+    <ul>
+        <li><a href="{% url 'damages' 'default' %}">Standard</a></li>
+        <li><a href="{% url 'damages' 'fixed' %}">Fiksede skader</a></li>
+        <li><a href="{% url 'damages' 'not_fixed' %}">Ikke fiksede skader</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock content %}
