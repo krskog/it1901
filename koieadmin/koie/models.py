@@ -64,3 +64,12 @@ class Report(models.Model):
 
     def __str__(self):
         return "Report for %s" % self.reservation
+
+class Damage(models.Model):
+    reporten = models.ForeignKey(Report, related_name=_("reporten"), blank=True, null=True)
+    damaged_koie = models.ForeignKey(Koie, related_name=_("damaged_koie"), blank=True, null=True)
+    damage = models.TextField(_('skade'), blank=True, null=True)
+    importance = models.IntegerField(blank=True, null=True)
+    fixed_date = models.DateTimeField(blank=True, null=True)
+    
+    

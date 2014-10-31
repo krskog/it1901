@@ -1,4 +1,5 @@
-    <style>
+{% load l10n %}
+<style>
       #koie {
         width: 400px;
         height: 400px;
@@ -9,7 +10,7 @@
     <script>
 function initialize() {
   //var koieMap = new google.maps.LatLng(63.416369, 10.439620); /* ({{koie.loatitude}}, {{koie.longitude}}) */
-  var koieMap = new google.maps.LatLng({{ koie.latitude }}, {{ koie.longitude }});
+  var koieMap = new google.maps.LatLng({{ koie.latitude|unlocalize }}, {{ koie.longitude | unlocalize }});
   var mapOptions = {
     zoom: 12,
     center: koieMap
@@ -18,7 +19,7 @@ function initialize() {
   var infowindow = new google.maps.InfoWindow({
       content: "{{ koie.name }}, {{ koie.location }}"  /* NAVN / INFO */
   });
-  
+
   var marker = new google.maps.Marker({
       position: koieMap,
       map: map,
