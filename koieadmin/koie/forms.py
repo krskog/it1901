@@ -16,7 +16,6 @@ class ReportForm(ModelForm):
         fields = ('report', 'firewood_status', 'damages', )
 
 class DamageForm(ModelForm):
-    
     class Meta:
         model = Damage
         fields = ('importance', 'fixed_date', )

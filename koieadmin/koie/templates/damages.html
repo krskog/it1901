@@ -26,10 +26,9 @@
               </td>
               <td>
               {% if damage.fixed_date %}
-                    <span class="glyphicon glyphicon-ok"></span> (Skaden er fikset)
-                    <td>{{ damage.fixed_date }}</td>
-                    
-                {% else %}
+                    <span class="glyphicon glyphicon-ok"></span>
+                    {{ damage.fixed_date }}
+              {% else %}
                     <span class="glyphicon glyphicon-remove"></span> (<a href="{% url 'damage_fixed' damage.id %}">Fiks</a>)
                 {% endif %}
               </td>

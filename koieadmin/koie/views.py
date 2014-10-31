@@ -101,34 +101,6 @@ def latest_reports(request, slug=None):
     })
 
 
-# A view for admins to read reports
-def read_report(request, report_id=None):
-    if report_id is None:
-        messages.error(request, 'No report specified')
-        return redirect(latest_reports)
-
-    report = get_object_or_404(Report, id=report_id)
-    if request.method == 'POST':
-        print(request.POST)
-        # Should mark report as read?
-        if request.POST['act'] == 'report_read':
-            if request.POST['read-btn'] == 'Lest':
-                messages.success(request, 'Report marked as read')
-                report.read_date = datetime.now()
-                report.save()
-                return redirect(latest_reports)
-
-    return render(request, 'show_report.html', {
-        'active': 'read_report',
-        'breadcrumbs': [
-            {'name': _('home').capitalize(), 'url': 'index'},
-            {'name': _('reports').capitalize(), 'url': 'latest_reports'},
-            {'name': report}
-        ],
-        'report': report,
-    })
-
-
 # Lists damages
 def get_damages(request, slug=None):
     # Filters for the damage view
@@ -198,7 +170,34 @@ def edit_damage(request, damage_id):
     ],
     'form': form
     })
-    
+
+
+# A view for admins to read reports
+def read_report(request, report_id=None):
+    if report_id is None:
+        messages.error(request, 'No report specified')
+        return redirect(latest_reports)
+
+    report = get_object_or_404(Report, id=report_id)
+    if request.method == 'POST':
+        print(request.POST)
+        # Should mark report as read?
+        if request.POST['act'] == 'report_read':
+            if request.POST['read-btn'] == 'Lest':
+                messages.success(request, 'Report marked as read')
+                report.read_date = datetime.now()
+                report.save()
+                return redirect(latest_reports)
+
+    return render(request, 'show_report.html', {
+        'active': 'read_report',
+        'breadcrumbs': [
+            {'name': _('home').capitalize(), 'url': 'index'},
+            {'name': _('reports').capitalize(), 'url': 'latest_reports'},
+            {'name': report}
+        ],
+        'report': report,
+    })
 
 
 ### Forms & Stuff
@@ -281,37 +280,41 @@ def reportDamage(tekst, report):
             bit = tdamages[n].strip()
             if 3 < len(bit):
                 damage = Damage()
-                damage.damage = tdamages[0]
+                damage.damage = bit
                 damage.reporten = report
                 damage.damaged_koie = get_koi(report.id)
                 damage.save()
-                
+
     else:
         damage = Damage()
         damage.damage = tekst
         damage.reporten = report
         damage.damaged_koie = get_koi(report.id)
-        damage.save()        
+        damage.save()
 
 
 def report_koie(request, report_id):
     report = get_object_or_404(Report, pk=report_id)
     if request.method == 'POST':
-        form = ReportForm(request.POST)
+        form = ReportForm(request.POST, instance=report)
         if form.is_valid():
             report_clean = form.save(commit=False)
             report_clean.reservation = report.reservation
             print("clean report", report_clean)
             report_clean.reported = datetime.now()
             print("report %s" % report_clean)
+# <<<<<<< HEAD
             dob = str(form.cleaned_data['damages'] )
             report_clean.save()
             reportDamage(dob, report_clean)
+# =======
+  #          report_clean.save()
+# >>>>>>> dev
             #report.submit(form.cleaned_data['report'], form.cleaned_data['firewood_status'])
             messages.success(request, 'Report submitted')
             return redirect('index')
     else:
-        form = ReportForm()
+        form = ReportForm(instance=report)
 
     return render(request, 'report.html', {
     'active': 'report_koie',
@@ -324,7 +327,10 @@ def report_koie(request, report_id):
 
 
 ## ========== METHODS =============
+
+
 ### Validation
+
 
 def get_or_create_user(email):
     users = User.objects.filter(email=email)
