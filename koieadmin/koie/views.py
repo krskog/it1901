@@ -227,7 +227,7 @@ def valBal(form):
 
 def errorMessage(form):
     if not form.is_valid():
-        return  'Your email adress is invalid'
+        return  'Something went wrong - please check your information.'
     else:
         if not valBal(form):
             return  'Your desired number of beds is not available'
@@ -281,7 +281,7 @@ def reportDamage(tekst, report):
             bit = tdamages[n].strip()
             if 3 < len(bit):
                 damage = Damage()
-                damage.damage = tdamages[0]
+                damage.damage = bit
                 damage.reporten = report
                 damage.damaged_koie = get_koi(report.id)
                 damage.save()
