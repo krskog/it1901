@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from datetime import date, datetime
 from django.contrib.auth.models import User
 from django.contrib import messages
-from koie.models import Koie, Reservation, Report
+from koie.models import Koie, Reservation, Report, Damage
 from koie.forms import ReservationForm, ReportForm
 from django.core.mail import send_mail
 
@@ -129,6 +129,52 @@ def read_report(request, report_id=None):
     })
 
 
+# Lists damages
+def get_damages(request, slug=None):
+    # Filters for the damage view
+    if slug == 'all':
+        damages = Damage.objects.all()
+        damages.reverse()
+    elif slug == 'fixed':
+        damages = []
+        for d in Damage.objects.all():
+            if d.fixed_date is not None:
+                damages.append(d)
+        damages.reverse()
+    elif slug == 'not_fixed':
+        damages = []
+        for d in Damage.objects.all():
+            if d.fixed_date is None:
+                damages.append(d)
+        damages.reverse()
+    else:
+        slug = 'default'
+        damages = get_latest_damages()
+        damages.reverse()
+    return render(request, 'damages.html', {
+      'active': 'damages',
+      'damages': damages,
+      'breadcrumbs': [
+          {'name': _('home').capitalize(), 'url': 'index'},
+          {'name': _('damages').capitalize(), 'url': 'damages'},
+          {'name': slug.capitalize()}
+      ],
+      'slug': slug,
+    })
+
+# A view for admins to read reports
+def damage_fixed(request, damage_id=None):
+    if damage_id is None:
+        messages.error(request, 'No report specified')
+        return redirect(get_damages)
+
+    damage = get_object_or_404(Damage, id=damage_id)
+    damage.fixed_date = datetime.now()
+    damage.save()
+    return get_damages(request)
+    
+
+
 ### Forms & Stuff
 #checks for valid date
 def valDal(form):
@@ -158,10 +204,11 @@ def errorMessage(form):
         return  'Your email adress is invalid'
     else:
         if not valBal(form):
-            return  'Your desired number of bed is not available'
+            return  'Your desired number of beds is not available'
         else:
             if not valDal(form):
                 return  'Your desired rent date is invalid'
+
 
 def reserve_koie(request, reservation_id=None, koie_id=None):
     if reservation_id == None:
@@ -199,10 +246,35 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
     'form': form
     })
 
+def reportDamage(tekst, report):
+    if '--' in tekst:
+        if '---' in tekst:
+            tdamages = tekst.split('---')
+            ldamages = len(tdamages)
+            #lokken
+            for n in range(0, ldamages):
+                bit = tdamages[n].strip()
+                if 3 < len(bit):
+                    sdamage = bit.split('--')
+                    damage = Damage()
+                    damage.damage = str(sdamage[0].strip())
+                    damage.importance =int(sdamage[1])
+                    damage.reporten = report
+                    damage.damaged_koie = get_koi(report.id)
+                    damage.save()
+                
+        else:
+            lol = tekst.split('--')
+            damage = Damage()
+            damage.damage = str(lol[0].strip())
+            damage.importance = int(lol[1].strip())
+            damage.reporten = report
+            damage.damaged_koie = get_koi(report.id)
+            damage.save()        
+
 
 def report_koie(request, report_id):
     report = get_object_or_404(Report, pk=report_id)
-
     if request.method == 'POST':
         form = ReportForm(request.POST)
         if form.is_valid():
@@ -211,7 +283,9 @@ def report_koie(request, report_id):
             print("clean report", report_clean)
             report_clean.reported = datetime.now()
             print("report %s" % report_clean)
+            dob = str(form.cleaned_data['damages'] )
             report_clean.save()
+            reportDamage(dob, report_clean)
             #report.submit(form.cleaned_data['report'], form.cleaned_data['firewood_status'])
             messages.success(request, 'Report submitted')
             return redirect('index')
@@ -229,10 +303,7 @@ def report_koie(request, report_id):
 
 
 ## ========== METHODS =============
-
-
 ### Validation
-
 
 def get_or_create_user(email):
     users = User.objects.filter(email=email)
@@ -260,6 +331,9 @@ def get_future_reservations(koie=None, num=10):
 
 ### Latest reports
 
+def get_latest_damages():
+    return Damage.objects.filter(fixed_date=None)
+
 def get_latest_reports():
     return Report.objects.filter(read_date=None)
 
@@ -272,6 +346,11 @@ def get_koia(id):
     koie = Koie.objects.get(id = resid.koie_ordered_id)
     return koie.name
 
+def get_koi(report_id):
+    repid =  Report.objects.get(id = report_id)
+    resid =  Reservation.objects.get(id = repid.reservation_id)
+    koie = Koie.objects.get(id = resid.koie_ordered_id)
+    return koie
 
 
 ### Mailing

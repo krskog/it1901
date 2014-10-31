@@ -13,4 +13,7 @@ urlpatterns = patterns('',
     url(r'^report/latest', views.latest_reports, name='latest_reports'),
     url(r'^report/(?P<report_id>\d+)/$', views.report_koie, name='report_koie'),
     url(r'^report/(?P<report_id>\d+)/read/$', views.read_report, name='read_report'),
-)
+    url(r'^damages/(?P<slug>[^\.]+)', views.get_damages, name='damages'),
+    url(r'^damages', views.get_damages, name='damages'),
+    url(r'^damage/(?P<damage_id>\d+)/fixed/$', views.damage_fixed, name='damage_fixed'),
+    )
