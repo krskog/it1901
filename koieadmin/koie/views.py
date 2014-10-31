@@ -142,23 +142,23 @@ def damage_fixed(request, damage_id=None):
     damage = get_object_or_404(Damage, id=damage_id)
     damage.fixed_date = datetime.now()
     damage.save()
-    return get_damages(request)
+    return redirect(get_damages)
 
 
 def edit_damage(request, damage_id):
     damage = get_object_or_404(Damage, pk=damage_id)
     if request.method == 'POST':
-        form = DamageForm(request.POST)
+        form = DamageForm(request.POST, instance=damage)
         if form.is_valid():
             damage_clean = form.save(commit=False)
             damage.importance = damage_clean.importance
             if not damage_clean.fixed_date == None:
                 damage.fixed_date = damage_clean.fixed_date
             damage.save()
-            messages.success(request, 'Damage submitted')
-            return redirect('index')
+            messages.success(request, 'Damage edited')
+            return redirect(get_damages)
     else:
-        form = DamageForm()
+        form = DamageForm(instance=damage)
 
     return render(request, 'damage_importance.html', {
     'active': 'damagen',
@@ -201,39 +201,6 @@ def read_report(request, report_id=None):
 
 
 ### Forms & Stuff
-#checks for valid date
-def valDal(form):
-        reservation = form.save(commit=False)
-        rdate = reservation.rent_date
-        cdate = date.today()
-        if rdate >= cdate:
-            return True
-        else:
-            return False
-#checks for valid number of beds
-def valBal(form):
-        if form.is_valid():
-            reservation = form.save(commit=False)
-            rbeds = reservation.beds
-            fbeds = reservation.get_free_beds()
-            if 0 < rbeds and rbeds <= fbeds:
-                return True
-            else:
-                return False
-
-        else:
-            return False
-
-def errorMessage(form):
-    if not form.is_valid():
-        return  'Your email adress is invalid'
-    else:
-        if not valBal(form):
-            return  'Your desired number of beds is not available'
-        else:
-            if not valDal(form):
-                return  'Your desired rent date is invalid'
-
 
 def reserve_koie(request, reservation_id=None, koie_id=None):
     if reservation_id == None:
@@ -242,19 +209,21 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
         reservation = get_object_or_404(Reservation, pk=reservation_id)
     if request.method == 'POST':
         form = ReservationForm(request.POST)
-        # Find user by email or crash
-        if valBal(form) and valDal(form):
+        if form.is_valid():
             reservation = form.save(commit=False)
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
-            reservation.save()
-            report = send_report_email(reservation)
-            messages.success(request, '%s reserved for %s.' % (reservation.koie_ordered, reservation.rent_date))
-            messages.info(request, 'You will have to fill out a report after your stay. Please check your email.')
-            # Sends an email with a link to the report form connected to this reservation
-            # Should be split into report creation and then cronjob email sending
-            return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
+            if validate_reservation(request, reservation):
+                reservation.save()
+                send_report_email(reservation)
+                messages.success(request, '%s reserved for %s.' % (reservation.koie_ordered, reservation.rent_date))
+                messages.info(request, 'You will have to fill out a report after your stay. Please check your email.')
+                # Sends an email with a link to the report form connected to this reservation
+                # Should be split into report creation and then cronjob email sending
+                return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
+            else:
+                form = ReservationForm(request.POST)
         else:
-            messages.error(request, errorMessage(form))
+            messages.error(request, 'Invalid email address')
             form = ReservationForm(request.POST)
     else:
         form = ReservationForm()
@@ -271,28 +240,6 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
     'form': form
     })
 
-def reportDamage(tekst, report):
-    if '--' in tekst:
-        tdamages = tekst.split('--')
-        ldamages = len(tdamages)
-        #lokken
-        for n in range(0, ldamages):
-            bit = tdamages[n].strip()
-            if 3 < len(bit):
-                damage = Damage()
-                damage.damage = bit
-                damage.reporten = report
-                damage.damaged_koie = get_koi(report.id)
-                damage.save()
-
-    else:
-        damage = Damage()
-        damage.damage = tekst
-        damage.reporten = report
-        damage.damaged_koie = get_koi(report.id)
-        damage.save()
-
-
 def report_koie(request, report_id):
     report = get_object_or_404(Report, pk=report_id)
     if request.method == 'POST':
@@ -300,17 +247,10 @@ def report_koie(request, report_id):
         if form.is_valid():
             report_clean = form.save(commit=False)
             report_clean.reservation = report.reservation
-            print("clean report", report_clean)
             report_clean.reported = datetime.now()
-            print("report %s" % report_clean)
-# <<<<<<< HEAD
-            dob = str(form.cleaned_data['damages'] )
+            damages = str(form.cleaned_data['damages'] )
             report_clean.save()
-            reportDamage(dob, report_clean)
-# =======
-  #          report_clean.save()
-# >>>>>>> dev
-            #report.submit(form.cleaned_data['report'], form.cleaned_data['firewood_status'])
+            reportDamage(damages, report_clean)
             messages.success(request, 'Report submitted')
             return redirect('index')
     else:
@@ -325,12 +265,29 @@ def report_koie(request, report_id):
     'form': form
     })
 
+# This should be rewritten to use newlines instead.
+def reportDamage(tekst, report):
+    if '--' in tekst:
+        tdamages = tekst.split('--')
+        num_damages = len(tdamages)
+        for n in range(0, num_damages):
+            reported_damage = tdamages[n].strip()
+            if 3 < len(reported_damage):
+                damage = Damage()
+                damage.damage = reported_damage
+                damage.report = report
+                damage.damaged_koie = report.koie_ordered
+                damage.save()
+    else:
+        damage = Damage()
+        damage.damage = tekst
+        damage.reporten = report
+        damage.damaged_koie = report.koie_ordere
+        damage.save()
 
 ## ========== METHODS =============
 
-
 ### Validation
-
 
 def get_or_create_user(email):
     users = User.objects.filter(email=email)
@@ -380,8 +337,7 @@ def get_koi(report_id):
     return koie
 
 
-### Mailing
-
+# Mailing
 def send_report_email(reservation):
     report = Report()
     report.reservation = reservation
@@ -393,3 +349,23 @@ def send_report_email(reservation):
     message = 'Please fill out a report for your stay at: http://127.0.0.1:8000/report/' + str(report.id) + '/'
     #send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
     return report
+
+# Validates reservation
+def validate_reservation(request, reservation):
+    if not validate_date(reservation.rent_date):
+        messages.error(request, 'Invalid reservation date')
+        return False
+    elif not validate_reserved_beds(reservation.koie_ordered, reservation.beds):
+        messages.error(request, 'Invalid number of beds')
+        return False
+    else:
+        return True
+
+
+# Validates date
+def validate_date(date):
+    return date >= date.today()
+
+# Validates number of beds
+def validate_reserved_beds(koie, num_beds):
+    return num_beds > 0 and num_beds <= koie.num_beds
