@@ -277,7 +277,7 @@ def my_reports(request, email=None):
         if reports.count() == 0:
             messages.success(request, "You have no unreported stays.")
             return redirect(index)
-        elif reports.count == 1:
+        elif reports.count() == 1:
             return redirect(report_koie, reports[0].id)
         else:
             messages.success(request, "You have more than one report to fill out. Here is the first one.")
