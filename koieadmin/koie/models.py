@@ -65,6 +65,9 @@ class Report(models.Model):
     def __str__(self):
         return "Report for %s" % self.reservation
 
+    class Meta:
+        get_latest_by = 'reported_date'
+
 class Damage(models.Model):
     reporten = models.ForeignKey(Report, related_name=_("reporten"), blank=True, null=True)
     damaged_koie = models.ForeignKey(Koie, related_name=_("damaged_koie"), blank=True, null=True)
