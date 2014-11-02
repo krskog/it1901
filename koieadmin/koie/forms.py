@@ -8,8 +8,7 @@ from datetime import date, datetime
 class ReservationForm(ModelForm):
     email = forms.EmailField(label='Your email', max_length=100)
     rente_date = forms.DateField(widget=SelectDateWidget, initial=date.today())
-    #forms.DateField(label='Rent date', widget=SelectDateWidget())
-
+   
     class Meta:
         model = Reservation
         exclude = ('ordered_by', 'ordered_date', 'rent_date' ,)

@@ -215,6 +215,7 @@ def valDal(form):
 def valBal(form):
         if form.is_valid():
             reservation = form.save(commit=False)
+            reservation.rent_date = form.cleaned_data['rente_date']
             rbeds = reservation.beds
             fbeds = reservation.get_free_beds()
             if 0 < rbeds and rbeds <= fbeds:
