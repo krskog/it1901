@@ -71,5 +71,6 @@ class Damage(models.Model):
     damage = models.TextField(_('skade'), blank=True, null=True)
     importance = models.IntegerField(blank=True, null=True)
     fixed_date = models.DateTimeField(blank=True, null=True)
-    
-    
+
+    def __str__(self):
+        return "%s (@%s)" % (self.damage, self.damaged_koie)

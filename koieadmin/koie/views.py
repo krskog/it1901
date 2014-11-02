@@ -5,7 +5,7 @@ from datetime import date, datetime
 from django.contrib.auth.models import User
 from django.contrib import messages
 from koie.models import Koie, Reservation, Report, Damage
-from koie.forms import ReservationForm, ReportForm, DamageForm
+from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm
 from django.core.mail import send_mail
 
 
@@ -247,12 +247,14 @@ def report_koie(request, report_id):
         if form.is_valid():
             report_clean = form.save(commit=False)
             report_clean.reservation = report.reservation
-            report_clean.reported = datetime.now()
+            report_clean.reported_date = datetime.now()
             damages = str(form.cleaned_data['damages'] )
             report_clean.save()
             reportDamage(damages, report_clean)
             messages.success(request, 'Report submitted')
             return redirect('index')
+        else:
+            messages.error(request, "Did you fill out all the fields?")
     else:
         form = ReportForm(instance=report)
 
@@ -264,6 +266,32 @@ def report_koie(request, report_id):
     ],
     'form': form
     })
+
+def my_reports(request, email=None):
+    if request.method == 'POST':
+        form = GetReportsForm(request.POST)
+        if form.is_valid() and email is None:
+            email = form.cleaned_data['email']
+        user = User.objects.get(email=email)
+        reports = Report.objects.filter(reservation__ordered_by=user, reported_date=None)
+        if reports.count() == 0:
+            messages.success(request, "You have no unreported stays.")
+            return redirect(index)
+        elif reports.count == 1:
+            return redirect(report_koie, reports[0].id)
+        else:
+            messages.success(request, "You have more than one report to fill out. Here is the first one.")
+            return redirect(report_koie, reports[0].id)
+    else:
+        form = GetReportsForm()
+        return render(request, 'get_unreported_reports.html', {
+            'active': 'get_unreported_reports',
+            'breadcrumbs': [
+                {'name': _('home').capitalize(), 'url': 'index'},
+                {'name': _('get reports').capitalize()},
+            ],
+            'form': form,
+        })
 
 # This should be rewritten to use newlines instead.
 def reportDamage(tekst, report):
@@ -282,7 +310,7 @@ def reportDamage(tekst, report):
         damage = Damage()
         damage.damage = tekst
         damage.reporten = report
-        damage.damaged_koie = report.koie_ordere
+        damage.damaged_koie = report.reservation.koie_ordered
         damage.save()
 
 ## ========== METHODS =============
