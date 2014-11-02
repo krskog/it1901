@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import User
 from django.contrib import messages
 from koie.models import Koie, Reservation, Report, Damage
@@ -207,7 +208,8 @@ def valDal(form):
         reservation = form.save(commit=False)
         rdate = form.cleaned_data['rente_date']
         cdate = date.today()
-        if rdate >= cdate:
+        fdate = date.today() + relativedelta( months = +3 )
+        if rdate >= cdate and rdate <= fdate:
             return True
         else:
             return False
