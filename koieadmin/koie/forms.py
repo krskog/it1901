@@ -7,7 +7,7 @@ from datetime import date, datetime
 
 class ReservationForm(ModelForm):
     email = forms.EmailField(label='Your email', max_length=100)
-    rente_date = forms.DateField(widget=SelectDateWidget, initial=date.today())
+    rente_date = forms.DateField(label='Rent date', widget=SelectDateWidget, initial=date.today())
    
     class Meta:
         model = Reservation
