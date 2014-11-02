@@ -1,13 +1,17 @@
 from django import forms
-from django.forms import ModelForm
+from django.forms import ModelForm, Form
 from koie.models import Reservation, Report, Damage
+from django.forms.extras.widgets import SelectDateWidget
+from django.contrib.admin.widgets import AdminDateWidget
+import datetime
 
 class ReservationForm(ModelForm):
     email = forms.EmailField(label='Your email', max_length=100)
+    rente_date = forms.DateField(label='Rent date', widget=SelectDateWidget)
 
     class Meta:
         model = Reservation
-        exclude = ('ordered_by', 'ordered_date',)
+        exclude = ('ordered_by', 'ordered_date', 'rent_date' ,)
 
 class ReportForm(ModelForm):
     damages = forms.CharField(label='Her kan eventuelle skader fylles inn. I folgende format: skade1 -- skade2 -- skade3...')

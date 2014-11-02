@@ -205,7 +205,7 @@ def edit_damage(request, damage_id):
 #checks for valid date
 def valDal(form):
         reservation = form.save(commit=False)
-        rdate = reservation.rent_date
+        rdate = form.cleaned_data['rente_date']
         cdate = date.today()
         if rdate >= cdate:
             return True
@@ -247,6 +247,7 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
         if valBal(form) and valDal(form):
             reservation = form.save(commit=False)
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
+            reservation.rent_date = form.cleaned_data['rente_date']
             reservation.save()
             report = send_report_email(reservation)
             messages.success(request, '%s reserved for %s.' % (reservation.koie_ordered, reservation.rent_date))
