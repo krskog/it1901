@@ -3,11 +3,12 @@ from django.forms import ModelForm, Form
 from koie.models import Reservation, Report, Damage
 from django.forms.extras.widgets import SelectDateWidget
 from django.contrib.admin.widgets import AdminDateWidget
-import datetime
+from datetime import date, datetime
 
 class ReservationForm(ModelForm):
     email = forms.EmailField(label='Your email', max_length=100)
-    rente_date = forms.DateField(label='Rent date', widget=SelectDateWidget)
+    rente_date = forms.DateField(widget=SelectDateWidget, initial=date.today())
+    #forms.DateField(label='Rent date', widget=SelectDateWidget())
 
     class Meta:
         model = Reservation
