@@ -28,6 +28,7 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+ADMINS = (('Sklirg', 'sklirg@sklirg.io'),)
 
 # Application definition
 
