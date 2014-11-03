@@ -1,0 +1,63 @@
+   <style>
+      #allKoie {
+        width: 95%;
+        height: 95%;
+        position: absolute;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script>
+
+  function initialize(){
+
+  	<<<<<<< HEAD:koieadmin/koie/static/js/allKoie.html
+  var koieMap = new google.maps.LatLng(63.39030, 11.41852);
+=======
+  
+  var koieMap = new google.maps.LatLng({{ koie.latitude }}, {{ koie.longitude }});
+>>>>>>> origin/individual_koie_map:koieadmin/koie/templates/all_koie_map.html
+
+  		var mapOptions = {
+  			zoom: 12,
+  			center: koieMap
+  		}
+
+  		var map = new google.maps.Map(document.getElementById("allKoie"), mapOptions);
+
+  		var infowindow = new google.maps.InfoWindow({
+  			content: "{{ koie.name }}, {{koie.location}}"
+  		});
+
+  		var marker, i;
+  		for(i in "{{ koie.id}}"){ /* FOR LØKKE SOM HENTER INN DATA */
+
+  				var marker = new google.maps.Marker({
+  					position: koieMap,			/* hente inn data */
+  					map: map,
+  				});
+
+  				google.maps.event.addListener(marker, "mouseover", (function(marker, i){
+      				return function(){
+        			infowindow.setContent(liste[i][0]); /* Må skiftes på */
+        			infowindow.open(map, marker);
+    		  }
+    		})(marker, i));
+
+		    google.maps.event.addListener(marker, "mouseout", function() {
+		        infowindow.close();
+		      });
+
+		    google.maps.event.addListener(marker, "click", function(){
+		      window.location.href = "{% url 'reserve_koie' koie.id %}";
+		  });			
+
+  		};
+
+  }
+
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  
+    <div id="allKoie"></div>
