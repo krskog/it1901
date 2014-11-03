@@ -46,6 +46,7 @@ class Report(models.Model):
     read_date = models.DateTimeField(blank=True, null=True)
     firewood_status = models.IntegerField()
     notificated_date = models.DateTimeField(blank=True, null=True)
+    notificated = models.BooleanField(default = False)
     reported_date = models.DateTimeField(blank=True, null=True)
 
     def notificated_today(self):
