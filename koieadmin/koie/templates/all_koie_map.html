@@ -36,12 +36,9 @@
   					map: map,
   				});
 
-  				google.maps.event.addListener(marker, "mouseover", (function(marker, i){
-      				return function(){
-        			infowindow.setContent(liste[i][0]); /* Må skiftes på */
-        			infowindow.open(map, marker);
-    		  }
-    		})(marker, i));
+				google.maps.event.addListener(marker, "mouseover", function(){
+				infowindow.open(map, marker);
+				});
 
 		    google.maps.event.addListener(marker, "mouseout", function() {
 		        infowindow.close();
