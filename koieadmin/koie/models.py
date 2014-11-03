@@ -43,19 +43,13 @@ class Reservation(models.Model):
 class Report(models.Model):
     reservation = models.ForeignKey(Reservation, related_name=_("reservation"))
     report = models.TextField(_('end of stay report'))
-    report_notification = models.DateTimeField(blank=True, null=True)
-    notificated_today = models.BooleanField(default=False)
-    reported_date = models.DateTimeField(blank=True, null=True)
     read_date = models.DateTimeField(blank=True, null=True)
     firewood_status = models.IntegerField()
+    notificated_date = models.DateTimeField(blank=True, null=True)
+    reported_date = models.DateTimeField(blank=True, null=True)
 
-    def last_noti(self):
-        if self.report_notification != None:
-            timedelta = datetime.now().replace(tzinfo=None) - self.report_notification.replace(tzinfo=None)
-            if timedelta.days < 1 :
-                return False
-            else:
-                return True
+    def notificated_today(self):
+        return date.today() == self.notificated_date
 
     def submit(self, rep, num):
         self.report = rep

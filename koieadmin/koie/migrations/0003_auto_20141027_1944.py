@@ -7,14 +7,23 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('koie', '0001_initial'),
+        ('koie', '0002_report_read'),
     ]
 
     operations = [
+        migrations.RemoveField(
+            model_name='report',
+            name='read',
+        ),
         migrations.AddField(
             model_name='report',
-            name='report_notification',
+            name='read_date',
             field=models.DateTimeField(blank=True, null=True),
             preserve_default=True,
+        ),
+        migrations.AlterField(
+            model_name='report',
+            name='reported_date',
+            field=models.DateTimeField(blank=True, null=True),
         ),
     ]

@@ -7,14 +7,14 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('koie', '0002_report_report_notification'),
+        ('koie', '0004_damage'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='report',
-            name='notificated_today',
-            field=models.BooleanField(default=False),
+            name='notificated_date',
+            field=models.DateTimeField(null=True, blank=True),
             preserve_default=True,
         ),
     ]

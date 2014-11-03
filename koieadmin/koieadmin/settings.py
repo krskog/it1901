@@ -28,6 +28,7 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+ADMINS = (('Sklirg', 'sklirg@sklirg.io'),)
 
 # Application definition
 
@@ -80,7 +81,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'nb-no'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 

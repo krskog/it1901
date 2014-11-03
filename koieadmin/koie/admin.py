@@ -1,6 +1,17 @@
 from django.contrib import admin
-from koie.models import Koie, Reservation, Report
+from koie.models import Koie, Reservation, Report, Damage
+
+
+class DamagesInline(admin.TabularInline):
+    model = Damage
+
+class ReportAdmin(admin.ModelAdmin):
+    inlines = [
+        DamagesInline,
+    ]
+
 
 admin.site.register(Koie)
 admin.site.register(Reservation)
-admin.site.register(Report)
+admin.site.register(Report, ReportAdmin)
+admin.site.register(Damage)
