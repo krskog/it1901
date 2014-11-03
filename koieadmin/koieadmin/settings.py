@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'k.sklirg.io']
 
 ADMINS = (('Sklirg', 'sklirg@sklirg.io'),)
 
+ADMINS = (('Sklirg', 'sklirg@sklirg.io'),)
 
 # Application definition
 

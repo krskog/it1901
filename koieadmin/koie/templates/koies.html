@@ -11,6 +11,9 @@
   </div>
   <div class="col-md-8">
     <p>Dette er et administrasjonssystem for NTNUI sine Koier.</p>
+    {% if user.is_authenticated %}
+       <p>Du er administrator, og ser derfor administrasjonslisten av koiene. Den inneholder ekstra felter som forteller litt om status på koiene.</p>
+    {% endif %}
   </div>
 
   <div class="col-md-10">
@@ -19,20 +22,26 @@
       <table class="table table-striped">
         <tr>
           <th>Name</th>
-          <th>Address</th>
-          <th>Coords</th>
           <th>Location</th>
+          {% if user.is_authenticated %}
+          <th>Firewood</th>
+          <th>Damages</th>
+          <th>Unread reports</th>
+          {% else %}
           <th>Number of beds</th>
-          <th>Reserved</th>
+          {% endif %}
         </tr>
         {% for koie in koies %}
         <tr{% if koie.is_reserved %} class="alert alert-danger"{% endif %}>
           <td><a href="{% url 'koie_detail' koie.id %}">{{ koie.name }}</a></td>
-          <td>{{ koie.address }}</td>
-          <td>({{ koie.latitude }}, {{ koie.longitude }})</td>
           <td>{{ koie.location }}</td>
+          {% if user.is_authenticated %}
+          <td>{{ koie.firewood }}</td>
+          <td>{{ koie.damages }}</td>
+          <td>{{ koie.unread_reports }}</td>
+          {% else %}
           <td>{{ koie.num_beds }}</td>
-          <td>Reimplement</td>
+          {% endif %}
         </tr>
         {% endfor %}
       </table>
