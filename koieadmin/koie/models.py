@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import IntegerField, Model
-
+from datetime import date, datetime
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -43,9 +43,19 @@ class Reservation(models.Model):
 class Report(models.Model):
     reservation = models.ForeignKey(Reservation, related_name=_("reservation"))
     report = models.TextField(_('end of stay report'))
+    report_notification = models.DateTimeField(blank=True, null=True)
+    notificated_today = models.BooleanField(default=False)
     reported_date = models.DateTimeField(blank=True, null=True)
     read_date = models.DateTimeField(blank=True, null=True)
     firewood_status = models.IntegerField()
+
+    def last_noti(self):
+        if self.report_notification != None:
+            timedelta = datetime.now().replace(tzinfo=None) - self.report_notification.replace(tzinfo=None)
+            if timedelta.days < 1 :
+                return False
+            else:
+                return True
 
     def submit(self, rep, num):
         self.report = rep
