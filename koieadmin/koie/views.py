@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
 from django.contrib import messages
 from koie.models import Koie, Reservation, Report, Damage
@@ -396,8 +396,7 @@ def send_report_email(reservation=None, report_id=None):
 
 # Validates reservation
 def validate_reservation(request, reservation):
-    if not validate_date(reservation.rent_date):
-        messages.error(request, 'Invalid reservation date')
+    if not validate_date(request, reservation.rent_date):
         return False
     elif not validate_reserved_beds(reservation.koie_ordered, reservation.beds):
         messages.error(request, 'Invalid number of beds')
@@ -407,8 +406,15 @@ def validate_reservation(request, reservation):
 
 
 # Validates date
-def validate_date(date):
-    return date >= date.today()
+def validate_date(request, date):
+    if date < date.today():
+        messages.error(request, 'You cannot reserve for the past')
+        return False
+    elif date > (date.today() + timedelta(3 * 30)):
+        messages.error(request, 'You cannot reserve for more than 3 months in the future')
+        return False
+    else:
+        return True
 
 # Validates number of beds
 def validate_reserved_beds(koie, num_beds):
