@@ -21,7 +21,12 @@
                 {% if report.reported %}
                     <span class="glyphicon glyphicon-ok"></span> (<a href="{% url 'read_report' report.id %}">Les rapport</a>)
                 {% else %}
-                    <span class="glyphicon glyphicon-remove"></span> (Send påminnelse)
+                    <span class="glyphicon glyphicon-remove"></span>
+                    {% if not report.notified %}
+                     <a href="{% url 'send_report_email' report.id %}">Send påminnelse</a>
+                    {% else %}
+                    (Sendt påminnelse)
+                    {% endif %}
                 {% endif %}
               </td>
             </tr>
