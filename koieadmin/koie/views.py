@@ -43,7 +43,7 @@ def koie_index(request):
 # Koie detail, lists information about a koie
 def koie_detail(request, koie_id):
     koie = get_object_or_404(Koie, pk=koie_id)
-    facilities = Facility.objects.filter(koien=koie)
+    facilities = Facility.objects.filter(koier=koie)
     no_facilities = (len(facilities) == 0)
     return render(request, 'koie_detail.html', {
       'active': 'koie_detail',
