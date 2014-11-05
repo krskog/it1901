@@ -44,6 +44,7 @@ def koie_index(request):
 def koie_detail(request, koie_id):
     koie = get_object_or_404(Koie, pk=koie_id)
     facilities = Facility.objects.filter(koien=koie)
+    no_facilities = (len(facilities) == 0)
     return render(request, 'koie_detail.html', {
       'active': 'koie_detail',
       'breadcrumbs': [
@@ -53,6 +54,7 @@ def koie_detail(request, koie_id):
       ],
       'koie': koie,
       'facilities': facilities,
+      'no_facilities': no_facilities,
       'future_reservations': get_future_reservations(koie),
     })
 
