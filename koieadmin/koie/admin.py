@@ -10,12 +10,9 @@ class ReportAdmin(admin.ModelAdmin):
         DamagesInline,
     ]
     
-class FacilityAdmin(admin.ModelAdmin):
-    model = Facility
-    filter_horizontal = ('koier',)
      
 admin.site.register(Koie)
 admin.site.register(Reservation)
 admin.site.register(Report, ReportAdmin)
 admin.site.register(Damage)
-admin.site.register(Facility, FacilityAdmin)
+admin.site.register(Facility)

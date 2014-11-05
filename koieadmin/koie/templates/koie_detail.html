@@ -24,18 +24,10 @@
                 <li>Ingen</li>
             {% endif %}
             {% for facility in facilities %}
-                <a href="{% url 'facility_detail' facility.id %}" onclick="return popitup('{% url 'facility_detail' facility.id %}')"><li>{{ facility.facility }}</li></a>
+                <abbr title="{{ facility.info }}"><li>{{ facility.facility }}</li></abbr>
             {% endfor %}
         </ul>
     </li>
-	<script language="javascript" type="text/javascript">
-		function popitup(url) {
-		newwindow=window.open(url,'name','height=300,width=300');
-		if (window.focus) {newwindow.focus()}
-		return false;
-		}
-	</script>
-    
   </div>
   <div class="col-md-8">
     <img src="{{ STATIC_URL }}img/{{ koie.name.lower }}.jpg" class="pull-right img-responsive" alt="{{ koie.name }}" style="max-height: 300px;">
