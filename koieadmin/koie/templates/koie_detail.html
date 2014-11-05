@@ -24,7 +24,7 @@
                 <li>Ingen</li>
             {% endif %}
             {% for facility in facilities %}
-                <li>{{ facility.facility }}</li>
+                <a href="{% url 'facility_detail' facility.id %}"><li>{{ facility.facility }}</li></a>
             {% endfor %}
         </ul>
     </li>

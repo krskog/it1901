@@ -210,6 +210,14 @@ def read_report(request, report_id=None):
         ],
         'report': report,
     })
+    
+def facility_detail(request, facility_id):
+    facility = get_object_or_404(Facility, pk=facility_id)
+    return render(request, 'facility.html', {
+    'active': 'facility_detail',
+    'facility': facility
+    })
+    
 
 
 ### Forms & Stuff

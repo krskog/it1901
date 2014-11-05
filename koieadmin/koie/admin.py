@@ -12,8 +12,8 @@ class ReportAdmin(admin.ModelAdmin):
     
 class FacilityAdmin(admin.ModelAdmin):
     model = Facility
-    filter_horizontal = ('koier',) 
-    
+    filter_horizontal = ('koier',)
+     
 admin.site.register(Koie)
 admin.site.register(Reservation)
 admin.site.register(Report, ReportAdmin)

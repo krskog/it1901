@@ -80,8 +80,8 @@ class Damage(models.Model):
         
 class Facility(models.Model):
     koier = models.ManyToManyField(Koie, related_name=_('koier'), blank=True, null=True)
-    facility = models.CharField(_('facility name'), max_length=50)
-    info = models.TextField(_('facility info'), blank=True, null=True)
+    facility = models.CharField(_('facility_name'), max_length=50)
+    info = models.TextField(_('facility_info'), blank=True, null=True)
     
     def __str__(self):
         return self.facility
