@@ -79,8 +79,9 @@ class Damage(models.Model):
         return "%s (@%s)" % (self.damage, self.damaged_koie)
         
 class Facility(models.Model):
-    koien = models.manyToManyField(Koie, related_name=_("koien"), blank=True, null=True)
+    koien = models.ManyToManyField(Koie, related_name=_("koien"), blank=True, null=True)
     facility = models.CharField(_('facility name'), max_length=50)
+    info = models.TextField(_('facility info'), blank=True, null=True)
     
     def __str__(self):
-        return facility
+        return self.facility

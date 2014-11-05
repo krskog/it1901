@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from datetime import date, datetime
 from django.contrib.auth.models import User
 from django.contrib import messages
-from koie.models import Koie, Reservation, Report, Damage
+from koie.models import Koie, Reservation, Report, Damage, Facility
 from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm
 from django.core.mail import send_mail
 
@@ -43,6 +43,7 @@ def koie_index(request):
 # Koie detail, lists information about a koie
 def koie_detail(request, koie_id):
     koie = get_object_or_404(Koie, pk=koie_id)
+    facilities = Facility.objects.filter(koien=koie)
     return render(request, 'koie_detail.html', {
       'active': 'koie_detail',
       'breadcrumbs': [
@@ -51,6 +52,7 @@ def koie_detail(request, koie_id):
           {'name': koie.name}
       ],
       'koie': koie,
+      'facilities': facilities,
       'future_reservations': get_future_reservations(koie),
     })
 
@@ -347,7 +349,6 @@ def get_future_reservations(koie=None, num=10):
         return Reservation.objects.filter(rent_date__gte=today).order_by('rent_date')[:num]
     else:
         return Reservation.objects.filter(koie_ordered=koie, rent_date__gte=today).order_by('rent_date')[:num]
-
 
 ### Latest reports
 

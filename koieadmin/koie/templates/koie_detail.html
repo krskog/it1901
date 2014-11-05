@@ -59,5 +59,11 @@
   <h3>Det eksisterer foreløpig ingen informasjon om denne koien.</h3>
   {% endif %}
   </div>
+  <div>
+        {% for facility in facilities %}
+            <p>{{ facility.facility }}</p>
+        {% endfor %}
+  </div>
 </div>
 {% endblock content %}
+
