@@ -301,8 +301,29 @@ def my_reports(request, email=None):
             'form': form,
         })
 
+def firewood_status(request):
+    reports = []
+    for r in Report.objects.all():
+        if r.reported:
+            reports.append(r)
+    for i in reports:
+        for j in reports:
+            if not i.id == j.id:
+                if i.reservation.koie_ordered.name == j.reservation.koie_ordered.name:
+                    if i.reservation.rent_date > j.reservation.rent_date:
+                        reports.remove(j)
+        
+        return render(request, 'firewood.html', {
+            'active': 'reports',
+            'reports': reports,
+            'breadcrumbs': [
+                {'name': _('home').capitalize(), 'url': 'index'},
+                {'name': _('vedstatus').capitalize()},
+            ],
+        })
+
 # This should be rewritten to use newlines instead.
-def reportDamage(tekst, report):
+def get(tekst, report):
     if '--' in tekst:
         tdamages = tekst.split('--')
         num_damages = len(tdamages)
@@ -374,17 +395,25 @@ def get_koi(report_id):
 
 
 # Mailing
-def send_report_email(reservation):
-    report = Report()
-    report.reservation = reservation
-    #report.submit('', 0)
-    report.report = ''
-    report.firewood_status = 0
-    report.save()
-    recipient = reservation.ordered_by.email
+def send_report_email(reservation=None, report_id=None):
+    create_report = False
+    if report_id is None:
+        report = Report()
+        report.reservation = reservation
+        report.report = ''
+        report.firewood_status = 0
+        report.save()
+        create_report = True
+    else:
+        report = get_object_or_404(Report, pk=report_id)
+        #report.notification_date =
+    recipient = report.reservation.ordered_by.email
     message = 'Please fill out a report for your stay at: http://127.0.0.1:8000/report/' + str(report.id) + '/'
     #send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
-    return report
+    if create_report:
+        return report
+    else:
+        return redirect(latest_reports)
 
 # Validates reservation
 def validate_reservation(request, reservation):
