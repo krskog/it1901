@@ -17,17 +17,16 @@
     <p><span class="lead">{{ koie.name }}</span> ligger i <abbr title="Should we have something here?">{{ koie.location }}</abbr>,
        med adressen {{ koie.address }}.</p>
     <p>Koien har <span class="lead">{{ koie.num_beds }}</span> sengeplasser.</p>
-    <li class="dropdown" style="list-style-type: none">
+    {% if koie.facilities.all %}
+        <li class="dropdown" style="list-style-type: none">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Fasiliteter<span class="caret"></span></a>
-        <ul class="dropdown-menu" role="menu">
-            {% if no_facilities %}
-                <li>Ingen</li>
-            {% endif %}
-            {% for facility in facilities %}
-                <abbr title="{{ facility.info }}"><li>{{ facility.facility }}</li></abbr>
-            {% endfor %}
-        </ul>
-    </li>
+            <ul class="dropdown-menu" role="menu">
+                {% for facility in koie.facilities.all %}
+                    <abbr title="{{ facility.info }}"><li>{{ facility.facility }}</li></abbr>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endif %}
   </div>
   <div class="col-md-8">
     <img src="{{ STATIC_URL }}img/{{ koie.name.lower }}.jpg" class="pull-right img-responsive" alt="{{ koie.name }}" style="max-height: 300px;">
