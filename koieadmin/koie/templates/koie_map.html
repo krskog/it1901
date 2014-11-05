@@ -8,12 +8,8 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
     <script>
 function initialize() {
-<<<<<<< HEAD:koieadmin/koie/static/js/individualKoie.html
-  var koieMap = new google.maps.LatLng(63.39030, 11.41852); /* ({{koie.loatitude}}, {{koie.longitude}}) */
-=======
   //var koieMap = new google.maps.LatLng(63.416369, 10.439620); /* ({{koie.loatitude}}, {{koie.longitude}}) */
   var koieMap = new google.maps.LatLng({{ koie.latitude }}, {{ koie.longitude }});
->>>>>>> origin/individual_koie_map:koieadmin/koie/templates/koie_map.html
   var mapOptions = {
     zoom: 12,
     center: koieMap

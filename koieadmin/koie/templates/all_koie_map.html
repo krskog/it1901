@@ -10,12 +10,10 @@
 
   function initialize(){
 
-  	<<<<<<< HEAD:koieadmin/koie/static/js/allKoie.html
-  var koieMap = new google.maps.LatLng(63.39030, 11.41852);
-=======
   
+  /*var koieMap = new google.maps.LatLng(63.39030, 11.41852); */ 
   var koieMap = new google.maps.LatLng({{ koie.latitude }}, {{ koie.longitude }});
->>>>>>> origin/individual_koie_map:koieadmin/koie/templates/all_koie_map.html
+
 
   		var mapOptions = {
   			zoom: 12,
@@ -29,7 +27,7 @@
   		});
 
   		var marker, i;
-  		for(i in "{{ koie.id}}"){ /* FOR LØKKE SOM HENTER INN DATA. help håkon pls*/
+  		for(i in "{{koie.id}}"){ /* FOR LØKKE SOM HENTER INN DATA. help håkon pls*/
 
   				var marker = new google.maps.Marker({
   					position: koieMap,			/* hente inn data. help håkon pls */
