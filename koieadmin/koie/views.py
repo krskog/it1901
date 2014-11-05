@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
 from django.contrib import messages
-from koie.models import Koie, Reservation, Report, Damage
+from koie.models import Koie, Reservation, Report, Damage, Facility
 from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm
 from django.core.mail import send_mail
 
