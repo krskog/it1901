@@ -210,8 +210,6 @@ def read_report(request, report_id=None):
         ],
         'report': report,
     })
-    
-    
 
 
 ### Forms & Stuff
@@ -353,6 +351,7 @@ def get_future_reservations(koie=None, num=10):
         return Reservation.objects.filter(rent_date__gte=today).order_by('rent_date')[:num]
     else:
         return Reservation.objects.filter(koie_ordered=koie, rent_date__gte=today).order_by('rent_date')[:num]
+
 
 ### Latest reports
 

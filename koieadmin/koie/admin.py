@@ -9,8 +9,8 @@ class ReportAdmin(admin.ModelAdmin):
     inlines = [
         DamagesInline,
     ]
-    
-     
+
+
 admin.site.register(Koie)
 admin.site.register(Reservation)
 admin.site.register(Report, ReportAdmin)

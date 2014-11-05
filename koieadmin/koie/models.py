@@ -9,10 +9,10 @@ from django.utils.translation import ugettext_lazy as _
 class Facility(models.Model):
     facility = models.CharField(_('facility_name'), max_length=50)
     info = models.TextField(_('facility_info'), blank=True, null=True)
-    
+
     def __str__(self):
         return self.facility
-		
+
 class Koie(models.Model):
     name = models.CharField(_('koie name'), max_length=50)
     address = models.CharField(_('koie address'), max_length=200)
@@ -84,4 +84,3 @@ class Damage(models.Model):
 
     def __str__(self):
         return "%s (@%s)" % (self.damage, self.damaged_koie)
-        
