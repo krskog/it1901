@@ -19,4 +19,5 @@ urlpatterns = patterns('',
     url(r'^damage/(?P<damage_id>\d+)/fixed/$', views.damage_fixed, name='damage_fixed'),
     url(r'^damage_importance/(?P<damage_id>\d+)/$', views.edit_damage, name='damage_importance'),
     url(r'^firewood/$', views.firewood_status, name='firewood'),
+    url(r'^set_utstyrsmelding/(?P<koie_id>\d+)/$', views.set_utstyrsmelding, name='set_utstyrsmelding'),
     )

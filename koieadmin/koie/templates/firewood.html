@@ -10,14 +10,18 @@
   <div class="col-md-8">
     <h2>Vedstatus</h2>
     <p><span class="lead"></span>
-      {% if reports %}
+      {% if koies %}
         <table class="table">
-            <tr><th>Koie</th><th>Vedstatus</th><th>Totalt vedkapasitet</th></tr>
-          {% for report in reports %}
+            <tr><th>Koie</th><th>Vedstatus</th><th>Total vedkapasitet</th><th>Status</th></tr>
+          {% for koie in koies %}
             <tr>
-              <td>{{ report.reservation.koie_ordered }}</td>
-              <td>{{ report.firewood_status }} av totalt</td> 
-              <td>{{ report.reservation.koie_ordered.beds }}</td>
+              <td>{{ koie.name }}</td>
+              {% if koie.firewood %}
+              <td>{{ koie.firewood }}</td> 
+              {% else %}
+              <td> NA </td>
+              {% endif %}
+              <td>{{ koie.num_beds }}</td>
             </tr>
           {% endfor %}
         </table>

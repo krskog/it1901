@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from koie.models import Reservation, Report, Damage
+from koie.models import Reservation, Report, Damage, Koie
 
 class ReservationForm(ModelForm):
     email = forms.EmailField(label='Your email', max_length=100)
@@ -28,3 +28,8 @@ class DamageForm(ModelForm):
     class Meta:
         model = Damage
         fields = ('importance', 'fixed_date', )
+
+class UtstyrsmeldingForm(ModelForm):
+    class Meta:
+        model = Koie
+        fields = ('next_user_message',)

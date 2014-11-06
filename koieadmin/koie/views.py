@@ -5,7 +5,7 @@ from datetime import date, datetime
 from django.contrib.auth.models import User
 from django.contrib import messages
 from koie.models import Koie, Reservation, Report, Damage
-from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm
+from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm, UtstyrsmeldingForm
 from django.core.mail import send_mail
 
 
@@ -301,21 +301,28 @@ def my_reports(request, email=None):
             'form': form,
         })
 
+class Vedstatus:
+    def init(self, ved, seng):
+        self.ved = ved
+        self.vedkapasitet = int(seng)*2
+        if ved < 6:
+            self.status = 'Må fylles på snarest!'
+        else:
+            self.status = 'Vedbeholdningen er bra!'
+
+
 def firewood_status(request):
-    reports = []
-    for r in Report.objects.all():
-        if r.reported:
-            reports.append(r)
-    for i in reports:
-        for j in reports:
-            if not i.id == j.id:
-                if i.reservation.koie_ordered.name == j.reservation.koie_ordered.name:
-                    if i.reservation.rent_date > j.reservation.rent_date:
-                        reports.remove(j)
-        
+    koies = Koie.objects.all()
+    for koie in koies:
+        if Report.objects.filter(reservation__koie_ordered=koie).count() >= 1:
+            koie.firewood = Report.objects.filter(reservation__koie_ordered=koie).latest('reported_date').firewood_status
+        else:
+            koie.firewood = 'N/A'
+        koie.save
+
         return render(request, 'firewood.html', {
-            'active': 'reports',
-            'reports': reports,
+            'active': 'koies',
+            'koies': koies,
             'breadcrumbs': [
                 {'name': _('home').capitalize(), 'url': 'index'},
                 {'name': _('vedstatus').capitalize()},
@@ -341,6 +348,27 @@ def get(tekst, report):
         damage.reporten = report
         damage.damaged_koie = report.reservation.koie_ordered
         damage.save()
+
+def set_utstyrsmelding(request, koie_id = None):
+    if request.method == 'POST':
+        form = UtstyrsmeldingForm(request.POST)
+        if form.is_valid():
+            utstyrsmeldingen = form.cleaned_data['utstyrsmelding']
+        koien = get_object_or_404(Report, id=koie_id)
+        koien.next_user_message = utstyrsmeldingen
+        koien.save()
+        messages.success(request, "Du har nå lagt en utstyrsmelding til koien.")
+        return redirect(koie_index)
+    else:
+        form = UtstyrsmeldingForm()
+        return render(request, 'set_utstyrsmelding.html', {
+            'active': 'koie',
+            'breadcrumbs': [
+                {'name': _('home').capitalize(), 'url': 'index'},
+                {'name': _('koies').capitalize()},
+            ],
+            'form': form,
+        })
 
 ## ========== METHODS =============
 
@@ -414,6 +442,23 @@ def send_report_email(reservation=None, report_id=None):
         return report
     else:
         return redirect(latest_reports)
+
+def send_next_user_message():
+    reservations = []
+    koies = Koie.objects.all()
+    for koie in koies:
+        if not koie.next_user_message is None:
+            next_user_reservation = Reservation.objects.filter(koie_ordered=koie).latest('ordered_date')
+            dato = next_user_reservation.ordered_date
+            if time_to(dato).days <= 1:
+                recipient = next_user_reservation.ordered_by.email
+                message = koie.next_user_message
+                #send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
+                koie.next_user_message = ""
+                koie.save()
+
+def time_to(dato):
+    return (dato - date.today())
 
 # Validates reservation
 def validate_reservation(request, reservation):

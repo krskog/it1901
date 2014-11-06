@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import IntegerField, Model
-
-
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -14,6 +12,7 @@ class Koie(models.Model):
     latitude = models.DecimalField(_('latitude'), max_digits=10, decimal_places=5)
     longitude = models.DecimalField(_('longitude'), max_digits=10, decimal_places=5)
     num_beds = models.IntegerField(_('beds'), default=0)
+    next_user_message = models.TextField(_('Utstyrsmelding'), blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -77,3 +76,9 @@ class Damage(models.Model):
 
     def __str__(self):
         return "%s (@%s)" % (self.damage, self.damaged_koie)
+
+class Firewood(models.Model):
+    koie = models.ForeignKey(Koie, related_name=_("koie"))
+    firewood_status = models.IntegerField()
+    firewood_capacity = models.IntegerField()
+    updated_date = models.DateTimeField(blank=True, null=True)
