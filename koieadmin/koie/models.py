@@ -6,6 +6,12 @@ from datetime import date
 
 from django.utils.translation import ugettext_lazy as _
 
+class Facility(models.Model):
+    facility = models.CharField(_('facility_name'), max_length=50)
+    info = models.TextField(_('facility_info'), blank=True, null=True)
+
+    def __str__(self):
+        return self.facility
 
 class Koie(models.Model):
     name = models.CharField(_('koie name'), max_length=50)
@@ -14,6 +20,7 @@ class Koie(models.Model):
     latitude = models.DecimalField(_('latitude'), max_digits=10, decimal_places=5)
     longitude = models.DecimalField(_('longitude'), max_digits=10, decimal_places=5)
     num_beds = models.IntegerField(_('beds'), default=0)
+    facilities = models.ManyToManyField(Facility, related_name=_('facilities'), blank=True, null=True)
 
     def __str__(self):
         return self.name
