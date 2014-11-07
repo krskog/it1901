@@ -2,8 +2,16 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import IntegerField, Model
+from datetime import date
+
 from django.utils.translation import ugettext_lazy as _
 
+class Facility(models.Model):
+    facility = models.CharField(_('facility_name'), max_length=50)
+    info = models.TextField(_('facility_info'), blank=True, null=True)
+
+    def __str__(self):
+        return self.facility
 
 class Koie(models.Model):
     name = models.CharField(_('koie name'), max_length=50)
@@ -12,10 +20,13 @@ class Koie(models.Model):
     latitude = models.DecimalField(_('latitude'), max_digits=10, decimal_places=5)
     longitude = models.DecimalField(_('longitude'), max_digits=10, decimal_places=5)
     num_beds = models.IntegerField(_('beds'), default=0)
-    next_user_message = models.TextField(_('Utstyrsmelding'), blank=True, null=True)
+    facilities = models.ManyToManyField(Facility, related_name=_('facilities'), blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+    def firewood_capasity(self):
+        return int(self.num_beds) * 2
 
     def get_free_beds(self, date):
         res = Reservation.objects.filter(koie_ordered=self, rent_date=date)
@@ -45,6 +56,7 @@ class Report(models.Model):
     report = models.TextField(_('end of stay report'))
     reported_date = models.DateTimeField(blank=True, null=True)
     read_date = models.DateTimeField(blank=True, null=True)
+    notification_date = models.DateField(auto_now=True,null=True)
     firewood_status = models.IntegerField()
 
     def submit(self, rep, num):
@@ -57,6 +69,9 @@ class Report(models.Model):
 
     def read(self):
         return self.read_date != None
+
+    def notified(self):
+        return self.notification_date == date.today()
 
     def get_reservation(self):
         return self.reservation
@@ -76,9 +91,3 @@ class Damage(models.Model):
 
     def __str__(self):
         return "%s (@%s)" % (self.damage, self.damaged_koie)
-
-class Firewood(models.Model):
-    koie = models.ForeignKey(Koie, related_name=_("koie"))
-    firewood_status = models.IntegerField()
-    firewood_capacity = models.IntegerField()
-    updated_date = models.DateTimeField(blank=True, null=True)

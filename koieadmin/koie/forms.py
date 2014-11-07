@@ -28,8 +28,3 @@ class DamageForm(ModelForm):
     class Meta:
         model = Damage
         fields = ('importance', 'fixed_date', )
-
-class UtstyrsmeldingForm(ModelForm):
-    class Meta:
-        model = Koie
-        fields = ('next_user_message',)
