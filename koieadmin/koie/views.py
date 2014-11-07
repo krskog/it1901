@@ -74,7 +74,7 @@ def latest_reports(request, slug=None):
         if not r.notificated_today:
             r.notificated = False
             r.save()
-            
+
     # Filters for the report view
     if slug == 'read':
         reports = []
@@ -99,11 +99,24 @@ def latest_reports(request, slug=None):
         reports = []
         for r in Report.objects.all():
             if r.reported_date is None:
-                reports.append(r)                   
+                reports.append(r)
     else:
         slug = 'default'
         reports = get_latest_reports()
-            
+
+    tall = Rapporttall()
+    for r in Report.objects.all():
+        if r.read_date is not None:
+            tall.leste += 1
+    for r in Report.objects.all():
+        if r.read_date is None:
+            tall.uleste += 1
+    for r in Report.objects.all():
+        if r.reported_date is None:
+            tall.uutfylte += 1
+    for r in Report.objects.all():
+        if not r.reported_date is None:
+            tall.utfylte += 1
     return render(request, 'latest_reports.html', {
       'active': 'next_reservations',
       'latest_reports': reports,
@@ -113,7 +126,20 @@ def latest_reports(request, slug=None):
           {'name': slug.capitalize()}
       ],
       'slug': slug,
+      'tall': tall,
     })
+
+class Rapporttall():
+    leste = 0
+    uleste = 0
+    utfylte = 0
+    uutfylte = 0
+
+    def init(self):
+        self.leste = 0
+        self.uleste = 0
+        self.utfylte = 0
+        self.uutfylte = 0
 
 
 # Lists damages
@@ -315,13 +341,13 @@ def reportDamage(tekst, report):
                 damage.reporten = report
                 damage.damaged_koie = get_koi(report.id)
                 damage.save()
-                
+
     else:
         damage = Damage()
         damage.damage = tekst
         damage.reporten = report
         damage.damaged_koie = get_koi(report.id)
-        damage.save()        
+        damage.save()
 
 
 
@@ -455,14 +481,14 @@ def send_report_notification(request, report_id=None):
     if report_id is None:
         messages.error(request, 'No report specified')
         return redirect(latest_reports)
-    report = get_object_or_404(Report, id=report_id)    
+    report = get_object_or_404(Report, id=report_id)
     report.notificated_date = date.today()
     report.notificated = True
     report.save()
     #send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
     messages.success(request, 'En påminnelse er nå sendt til brukeren.')
     return latest_reports(request)
-    
+
 
 def send_report_email(reservation):
     report = Report()
