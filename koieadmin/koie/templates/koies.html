@@ -27,7 +27,6 @@
           <th>Firewood</th>
           <th>Damages</th>
           <th>Unread reports</th>
-          <th>Utstyrsmelding</th>
           {% else %}
           <th>Number of beds</th>
           {% endif %}
@@ -40,7 +39,6 @@
           <td>{{ koie.firewood }}</td>
           <td>{{ koie.damages }}</td>
           <td>{{ koie.unread_reports }}</td>
-          <td> <a href="{% url 'set_utstyrsmelding' koie.id %}">Sett utstyrsmelding</a> </td>
           {% else %}
           <td>{{ koie.num_beds }}</td>
           {% endif %}

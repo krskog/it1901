@@ -314,19 +314,20 @@ class Vedstatus:
 def firewood_status(request):
     koies = Koie.objects.all()
     for koie in koies:
+        koie.unread_reports = Report.objects.filter(reservation__koie_ordered=koie, read_date=None).exclude(reported_date=None).count()
         if Report.objects.filter(reservation__koie_ordered=koie).count() >= 1:
             koie.firewood = Report.objects.filter(reservation__koie_ordered=koie).latest('reported_date').firewood_status
         else:
-            koie.firewood = 'N/A'
-        koie.save
-        return render(request, 'firewood.html', {
-            'active': 'koies',
-            'koies': koies,
-            'breadcrumbs': [
-                {'name': _('home').capitalize(), 'url': 'index'},
-                {'name': _('vedstatus').capitalize()},
-            ],
-        })
+            koie.firewood = -1
+
+    return render(request, 'firewood.html', {
+    'active': 'koies',
+    'koies': koies,
+    'breadcrumbs': [
+    {'name': _('home').capitalize(), 'url': 'index'},
+    {'name': _('vedstatus').capitalize()},
+        ],
+    })
 
 # This should be rewritten to use newlines instead.
 def get(tekst, report):

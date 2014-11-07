@@ -16,12 +16,19 @@
           {% for koie in koies %}
             <tr>
               <td>{{ koie.name }}</td>
-              {% if koie.firewood %}
-              <td>{{ koie.firewood }}</td>
+              {% if koie.firewood == -1 %}
+              <td>N/A</td>
               {% else %}
-              <td> NA </td>
+              <td> {{ koie.firewood }} </td>
               {% endif %}
-              <td>{{ koie.firewood_capasity }}</td>
+              <td>{{ koie.firewood_capacity }}</td>
+              <td>
+                {% if koie.needs_refill %}
+                Koien trenger påfyll av ved!
+                {% else %}
+                Vedstanden er grei!
+                {% endif %}
+              </td>
             </tr>
           {% endfor %}
         </table>
