@@ -70,11 +70,6 @@ def next_reservations(request):
 
 # Lists latest reports
 def latest_reports(request, slug=None):
-    for r in Report.objects.all():
-        if not r.notificated_today:
-            r.notificated = False
-            r.save()
-            
     # Filters for the report view
     if slug == 'read':
         reports = []
@@ -99,10 +94,15 @@ def latest_reports(request, slug=None):
         reports = []
         for r in Report.objects.all():
             if r.reported_date is None:
-                reports.append(r)                   
+                if not r.notificated_today():
+                    reports.append(r)
     else:
         slug = 'default'
-        reports = get_latest_reports()
+        reporte = get_latest_reports()
+        reports = []
+        for r in reporte:
+            if not r.notificated_today():
+                reports.append(r)
             
     return render(request, 'latest_reports.html', {
       'active': 'next_reservations',
@@ -457,7 +457,6 @@ def send_report_notification(request, report_id=None):
         return redirect(latest_reports)
     report = get_object_or_404(Report, id=report_id)    
     report.notificated_date = date.today()
-    report.notificated = True
     report.save()
     #send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
     messages.success(request, 'En påminnelse er nå sendt til brukeren.')
@@ -471,7 +470,6 @@ def send_report_email(reservation):
     report.report = ''
     report.firewood_status = 0
     report.notificated_date = date.today()
-    report.notificated = True
     report.save()
     recipient = reservation.ordered_by.email
     message = 'Please fill out a report for your stay at: http://127.0.0.1:8000/report/' + str(report.id) + '/'
