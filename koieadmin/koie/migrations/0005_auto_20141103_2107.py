@@ -23,8 +23,4 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
-        migrations.AlterModelOptions(
-            name='report',
-            options={'get_latest_by': 'reported_date'},
-        ),
     ]
