@@ -5,12 +5,27 @@
 {% block content %}
 <div class="row">
     <div class="col-md-8">
-        <h3>Utstyrsmeldinger</h3>
+        <h3>Utstyrsmeldinger <span class="small">Klikk på en melding for mer informasjon</span></h3>
         {% if notifications %}
         {% for notification in notifications %}
-        <div class="">
-            <h4 name="notification-title"><a>{{ notification.koie }} ({{ notification.due_date }})</a></h4>
-            <p class="hidden" name="notification" id="notification-{{ notification.id }}">{{ notification.message }}</p>
+        <div id="n-{{ notification.id }}">
+            <h4 name="notification-title">
+                {% if notification.reservation %}
+                <span class="glyphicon glyphicon-ok"></span>
+                {% else %}
+                <span class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+                {{ notification.koie }} ({{ notification.due_date }})
+            </h4>
+            <p class="hidden" name="notification">
+            {% if notification.reservation %}
+                <span class="lead">Koblet til reservasjon: {{ notification.reservation }}</span>
+            {% else %}
+                <span class="lead alert-danger">Ikke koblet til noen reservasjon</span>
+            {% endif %}
+                <br>
+                {{ notification.message }}
+            </p>
         </div>
         {% endfor %}
         {% endif %}
@@ -18,20 +33,10 @@
     </div>
 </div>
 <script>
-    var notification_titles = document.getElementsByName('notification-title');
-    var notifications = document.getElementsByName('notification');
-    for (var i = 0; i < notifications.length; i++) {
-        var n = notifications[i];
-        var nt = notification_titles[0];
-        nt.addEventListener('click', function() {
-            //nt.preventDefault();
-            if (n.className == 'hidden') {
-                n.className = '';
-            }
-            else {
-                n.className = 'hidden';
-            }
+    window.addEventListener('load', function() {
+        $('h4').on('click', function() {
+            $(this).next().toggleClass('hidden');
         })
-    }
+    })
 </script>
 {% endblock content %}
