@@ -23,6 +23,35 @@ class Koie(models.Model):
     def __str__(self):
         return self.name
 
+    def firewood_capacity(self):
+        return self.num_beds * 2
+
+    def needs_refill(self):
+        # Error codes:
+        # 0 Needs refill
+        # 1 OK
+        # 2 Soon needs refill
+        # 9 No data
+        try:
+            firewood_status = Report.objects.get(reservation__koie_ordered=self).firewood_status
+        except:
+            return True
+        print("%s: %s" % (self, firewood_status))
+        if Report.objects.filter(reservation__koie_ordered=self).count() == 0:
+            return True
+        else:
+            if firewood_status > 15:
+                # return 1
+                return False
+            elif firewood_status > 10:
+                # return 2
+                return False
+            elif firewood_status > 5:
+                # return 0
+                return False
+            else:
+                return True
+
     def get_free_beds(self, date):
         res = Reservation.objects.filter(koie_ordered=self, rent_date=date)
         beds = 0
