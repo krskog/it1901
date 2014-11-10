@@ -113,23 +113,12 @@ def latest_reports(request, slug=None):
 def get_damages(request, slug=None):
     # Filters for the damage view
     if slug == 'fixed':
-        damages = []
-        for d in Damage.objects.all():
-            if d.fixed_date is not None:
-                damages.append(d)
-        damages.reverse()
+        damages = Damage.objects.exclude(fixed_date=None).order_by('-importance')
     elif slug == 'not_fixed':
-        damages = []
-        for d in Damage.objects.all():
-            if d.fixed_date is None:
-                damages.append(d)
-        damages.reverse()
+        damages = Damage.objects.filter(fixed_date=None).order_by('-importance')
     else:
         slug = 'default'
-        damages = []
-        for d in Damage.objects.all():
-            damages.append(d)
-        damages.reverse()
+        damages = get_latest_damages()
     return render(request, 'damages.html', {
       'active': 'damages',
       'damages': damages,
@@ -324,7 +313,7 @@ def my_reports(request, email=None):
         form = GetReportsForm(request.POST)
         if form.is_valid() and email is None:
             email = form.cleaned_data['email']
-        user = User.objects.get(email=email)
+        user = get_or_create_user(email)
         reports = Report.objects.filter(reservation__ordered_by=user, reported_date=None)
         if reports.count() == 0:
             messages.success(request, _("You have no unreported stays."))
@@ -376,8 +365,8 @@ def firewood_status(request):
 
 # This should be rewritten to use newlines instead.
 def reportDamage(tekst, report):
-    if '--' in tekst:
-        tdamages = tekst.split('--')
+    if '\n' in tekst:
+        tdamages = tekst.split('\n')
         num_damages = len(tdamages)
         for n in range(0, num_damages):
             reported_damage = tdamages[n].strip()
@@ -385,7 +374,7 @@ def reportDamage(tekst, report):
                 damage = Damage()
                 damage.damage = reported_damage
                 damage.report = report
-                damage.damaged_koie = report.koie_ordered
+                damage.damaged_koie = report.reservation.koie_ordered
                 damage.save()
     else:
         damage = Damage()
@@ -425,7 +414,7 @@ def get_future_reservations(koie=None, num=10):
 ### Latest reports
 
 def get_latest_damages():
-    return Damage.objects.filter(fixed_date)
+    return Damage.objects.filter(fixed_date=None).order_by('-importance')
 
 def get_latest_reports():
     return Report.objects.filter(read_date=None)

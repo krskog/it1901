@@ -8,7 +8,7 @@ from datetime import date
 
 class ReservationForm(ModelForm):
     name = _('reservation form')
-    
+
     email = forms.EmailField(label=_('Your email'), max_length=100)
     rent_date = forms.DateField(label=_("Rent date"), widget=SelectDateWidget, initial=date.today())
 
@@ -20,7 +20,7 @@ class ReservationForm(ModelForm):
 class ReportForm(ModelForm):
     name = _('report form')
 
-    damages = forms.CharField(label='Her kan eventuelle skader fylles inn. I folgende format: skade1 -- skade2 -- skade3...', required=False)
+    damages = forms.CharField(label='damages; write each damage on its own line', widget=forms.Textarea)
     class Meta:
         model = Report
         fields = ('report', 'firewood_status', 'damages',)
@@ -45,6 +45,8 @@ class DamageForm(ModelForm):
 
 class NotificationForm(ModelForm):
     name = _('notification form')
+
+    due_date = forms.DateField(label='due date', widget=SelectDateWidget, initial=date.today())
 
     class Meta:
         model = Notification
