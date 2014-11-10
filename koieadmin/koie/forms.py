@@ -38,6 +38,8 @@ class DamageForm(ModelForm):
 class NotificationForm(ModelForm):
     #name = _('notification form')
 
+    due_date = forms.DateField(label='due date', widget=SelectDateWidget, initial=date.today())
+
     class Meta:
         model = Notification
         fields = ('koie', 'due_date', 'message',)
