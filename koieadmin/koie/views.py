@@ -346,35 +346,6 @@ def my_reports(request, email=None):
             'form': form,
         })
 
-class Vedstatus:
-    def init(self, ved, seng):
-        self.ved = ved
-        self.vedkapasitet = int(seng)*2
-        if ved < 6:
-            self.status = 'Må fylles på snarest!'
-        else:
-            self.status = 'Vedbeholdningen er bra!'
-
-
-def firewood_status(request):
-    koies = Koie.objects.all()
-    for koie in koies:
-        print(koie, koie.needs_refill())
-        #koie.unread_reports = Report.objects.filter(reservation__koie_ordered=koie, read_date=None).exclude(reported_date=None).count()
-        if Report.objects.filter(reservation__koie_ordered=koie).count() >= 1:
-            koie.firewood = Report.objects.filter(reservation__koie_ordered=koie).latest('reported_date').firewood_status
-        else:
-            koie.firewood = -1
-
-    return render(request, 'firewood.html', {
-    'active': 'koies',
-    'koies': koies,
-    'breadcrumbs': [
-    {'name': _('home').capitalize(), 'url': 'index'},
-    {'name': _('vedstatus').capitalize()},
-        ],
-    })
-
 # This should be rewritten to use newlines instead.
 def reportDamage(tekst, report):
     if '--' in tekst:
