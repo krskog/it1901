@@ -22,13 +22,15 @@
               <td> {{ koie.firewood }} </td>
               {% endif %}
               <td>{{ koie.firewood_capacity }}</td>
-              <td>
-                {% if koie.needs_refill %}
-                Koien trenger påfyll av ved!
-                {% else %}
-                Vedstanden er grei!
+              {% if koie.needs_refill %}
+                {% if koie.firewood == -1 %}
+                  <td class="warning">Ingen informasjon om vedstatus</td>
+                  {% else %}
+                  <td class="danger">Koien trenger påfyll av ved!</td>
                 {% endif %}
-              </td>
+              {% else %}
+                <td class="success">Vedstanden er grei!</td>
+              {% endif %}
             </tr>
           {% endfor %}
         </table>

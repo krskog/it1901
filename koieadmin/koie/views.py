@@ -314,7 +314,8 @@ class Vedstatus:
 def firewood_status(request):
     koies = Koie.objects.all()
     for koie in koies:
-        koie.unread_reports = Report.objects.filter(reservation__koie_ordered=koie, read_date=None).exclude(reported_date=None).count()
+        print(koie, koie.needs_refill())
+        #koie.unread_reports = Report.objects.filter(reservation__koie_ordered=koie, read_date=None).exclude(reported_date=None).count()
         if Report.objects.filter(reservation__koie_ordered=koie).count() >= 1:
             koie.firewood = Report.objects.filter(reservation__koie_ordered=koie).latest('reported_date').firewood_status
         else:
@@ -330,7 +331,7 @@ def firewood_status(request):
     })
 
 # This should be rewritten to use newlines instead.
-def get(tekst, report):
+def reportDamage(tekst, report):
     if '--' in tekst:
         tdamages = tekst.split('--')
         num_damages = len(tdamages)

@@ -21,22 +21,38 @@ class Koie(models.Model):
     longitude = models.DecimalField(_('longitude'), max_digits=10, decimal_places=5)
     num_beds = models.IntegerField(_('beds'), default=0)
     facilities = models.ManyToManyField(Facility, related_name=_('facilities'), blank=True, null=True)
-    firewood = models.IntegerField(_('firewood'), default=0)
 
     def __str__(self):
         return self.name
 
     def firewood_capacity(self):
-        return int(self.num_beds) * 2
+        return self.num_beds * 2
 
     def needs_refill(self):
-        if self.firewood == -1:
-            return False
+        # Error codes:
+        # 0 Needs refill
+        # 1 OK
+        # 2 Soon needs refill
+        # 9 No data
+        try:
+            firewood_status = Report.objects.get(reservation__koie_ordered=self).firewood_status
+        except:
+            return True
+        print("%s: %s" % (self, firewood_status))
+        if Report.objects.filter(reservation__koie_ordered=self).count() == 0:
+            return True
         else:
-            if(self.firewood_capacity() -  int(self.firewood)) > 5:
-                return True
-            else:
+            if firewood_status > 15:
+                # return 1
                 return False
+            elif firewood_status > 10:
+                # return 2
+                return False
+            elif firewood_status > 5:
+                # return 0
+                return False
+            else:
+                return True
 
     def get_free_beds(self, date):
         res = Reservation.objects.filter(koie_ordered=self, rent_date=date)
