@@ -366,8 +366,8 @@ def firewood_status(request):
 
 # This should be rewritten to use newlines instead.
 def reportDamage(tekst, report):
-    if '--' in tekst:
-        tdamages = tekst.split('--')
+    if '\n' in tekst:
+        tdamages = tekst.split('\n')
         num_damages = len(tdamages)
         for n in range(0, num_damages):
             reported_damage = tdamages[n].strip()
@@ -375,7 +375,7 @@ def reportDamage(tekst, report):
                 damage = Damage()
                 damage.damage = reported_damage
                 damage.report = report
-                damage.damaged_koie = report.koie_ordered
+                damage.damaged_koie = report.reservation.koie_ordered
                 damage.save()
     else:
         damage = Damage()

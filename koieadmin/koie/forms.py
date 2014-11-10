@@ -15,7 +15,7 @@ class ReservationForm(ModelForm):
 
 
 class ReportForm(ModelForm):
-    damages = forms.CharField(label='Her kan eventuelle skader fylles inn. I folgende format: skade1 -- skade2 -- skade3...', required=False)
+    damages = forms.CharField(label='damages; write each damage on its own line', widget=forms.Textarea)
     class Meta:
         model = Report
         fields = ('report', 'firewood_status', 'damages',)
