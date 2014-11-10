@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% load widget_tweaks %}
 
-{% block title %}Find reports{% endblock %}
+{% block title %}Finn rapporter{% endblock %}
 
 {% block styles %}
 {% endblock %}
@@ -20,7 +21,7 @@
                 </div>
             {% endfor %}
             <div class="form-group">
-                <input type="submit" value="Submit" class="btn btn-primary"/>
+                <input type="submit" value="{% trans "Submit" %}" class="btn btn-primary"/>
             </div>
         </form>
     </div>

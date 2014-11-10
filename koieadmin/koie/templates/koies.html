@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block styles %}{% endblock styles %}
 
@@ -21,14 +22,14 @@
     <h3>List of koies</h3>
       <table class="table table-striped">
         <tr>
-          <th>Name</th>
-          <th>Location</th>
+          <th>{% trans "Name" %}</th>
+          <th>Sted</th>
           {% if user.is_authenticated %}
-          <th>Firewood</th>
-          <th>Damages</th>
-          <th>Unread reports</th>
+          <th>Vedstatus</th>
+          <th>Skader</th>
+          <th>Uleste rapporter</th>
           {% else %}
-          <th>Number of beds</th>
+          <th>Sengeplasser</th>
           {% endif %}
         </tr>
         {% for koie in koies %}
@@ -47,7 +48,7 @@
     </table>
     {% include 'koies_map.html' %}
   {% else %}
-    <h3>No koies in KOIESYS.</h3>
+    <h3>{% trans "No koies in KoieAdmin." %}</h3>
   {% endif %}
   </div>
 {% endblock content %}
