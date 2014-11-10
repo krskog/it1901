@@ -1,19 +1,51 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block styles %}{% endblock styles %}
 
-{% block title %}CoolStuff{% endblock title %}
+{% block title %}Hjem{% endblock title %}
 
 
 {% block content %}
 <div class="row">
   <div class="col-md-12">
-    <div class="jumbotron">
-      <h2>Hjem</h2>
+    <div id="carousel-koie" class="carousel slide" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        {% if koies %}
+        {% for koie in koies %}
+        <li data-target="#carousel-koie" data-slide-to="{{ koie.id|add:"-1" }}"{% if koie.id == 1 %} class="active"{% endif %}></li>
+        {% endfor %}
+        {% endif %}
+      </ol>
+
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner">
+          {% for koie in koies %}
+          <div class="item{% if koie.id == 1 %} active{% endif %}">
+            <div class="container">
+              <img src="{{ STATIC_URL }}img/{{ koie.name.lower }}.jpg" alt="Bilde av koie">
+              <div class="carousel-caption">
+                  <h3>{{ koie.name }}</h3>
+                  <a href="{% url 'koie_detail' koie.id %}"><button class="btn btn-primary btn-sm">Les mer</button></a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+      <!-- Controls -->
+      <a class="left carousel-control" href="#carousel-koie" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+      </a>
+      <a class="right carousel-control" href="#carousel-koie" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+      </a>
     </div>
   </div>
   <div class="col-md-6">
-    <p><span class="lead">Koiesys</span> er et administrasjonssystem for NTNUI sine Koier.</p>
+      <p><span class="lead">Koiesys</span> er et administrasjonssystem for NTNUI sine Koier.</p>
+      <p>Utviklet av gruppe 21, høsten 2014</p>
   </div>
 </div>
 {% endblock content %}

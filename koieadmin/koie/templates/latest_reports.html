@@ -2,7 +2,7 @@
 
 {% block styles %}{% endblock styles %}
 
-{% block title %}CoolStuff{% endblock title %}
+{% block title %}Siste rapporter{% endblock title %}
 
 
 {% block content %}
@@ -25,7 +25,7 @@
                     {% if not report.notified %}
                      <a href="{% url 'send_report_email' report.id %}">Send påminnelse</a>
                     {% else %}
-                    (Sendt påminnelse)
+                    (Sendt påminnelse ({{ report.notification_date }}))
                     {% endif %}
                 {% endif %}
               </td>

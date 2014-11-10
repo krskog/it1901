@@ -1,0 +1,332 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-11-10 21:48+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: koie/forms.py:10
+msgid "reservation form"
+msgstr "reservasjonsskjema"
+
+#: koie/forms.py:12 koie/forms.py:32
+msgid "Your email"
+msgstr "Din epostadresse"
+
+#: koie/forms.py:13
+msgid "Rent date"
+msgstr "Leiedato"
+
+#: koie/forms.py:21
+msgid "report form"
+msgstr "Rapportskjema"
+
+#: koie/forms.py:30
+msgid "get users reports form"
+msgstr "Hent brukers rapporter-skjema"
+
+#: koie/forms.py:40
+msgid "damages form"
+msgstr "skadeskjema"
+
+#: koie/forms.py:47
+msgid "notification form"
+msgstr "utstyrsmeldingsskjema"
+
+#: koie/models.py:8 koie/models.py:12
+msgid "facility"
+msgstr "fasilitet"
+
+#: koie/models.py:9
+msgid "description"
+msgstr "beskrivelse"
+
+#: koie/models.py:13 koie/models.py:25
+msgid "facilities"
+msgstr "fasiliteter"
+
+#: koie/models.py:19
+msgid "koie name"
+msgstr "koiens navn"
+
+#: koie/models.py:20
+msgid "koie address"
+msgstr "koiens adresse"
+
+#: koie/models.py:21
+msgid "location"
+msgstr "sted"
+
+#: koie/models.py:22
+msgid "latitude"
+msgstr "breddegrad"
+
+#: koie/models.py:23
+msgid "longitude"
+msgstr "lengdegrad"
+
+#: koie/models.py:24
+msgid "beds"
+msgstr "senger"
+
+#: koie/models.py:28 koie/models.py:73 koie/models.py:92
+msgid "koie"
+msgstr "koie"
+
+#: koie/models.py:29
+msgid "koies"
+msgstr "koier"
+
+#: koie/models.py:72
+msgid "ordered by"
+msgstr "bestilt av"
+
+#: koie/models.py:74
+msgid "rent date"
+msgstr "leiedato"
+
+#: koie/models.py:75
+msgid "reservation registered"
+msgstr "reservasjon registrert"
+
+#: koie/models.py:76
+msgid "number of beds"
+msgstr "antall senger"
+
+#: koie/models.py:79 koie/models.py:95 koie/models.py:124 koie/views.py:245
+msgid "reservation"
+msgstr "reservasjon"
+
+#: koie/models.py:80
+msgid "reservations"
+msgstr "reservasjoner"
+
+#: koie/models.py:93
+msgid "due date"
+msgstr "frist"
+
+#: koie/models.py:94
+msgid "message"
+msgstr "beskjed"
+
+#: koie/models.py:98
+msgid "notification"
+msgstr "utstyrsmelding"
+
+#: koie/models.py:99 koie/views.py:257
+msgid "notifications"
+msgstr "utstyrsmeldinger"
+
+#: koie/models.py:125
+msgid "end of stay report"
+msgstr "gjestebokmelding"
+
+#: koie/models.py:126
+msgid "reported date"
+msgstr "rapportert dato"
+
+#: koie/models.py:127
+msgid "report read date"
+msgstr "lest dato"
+
+#: koie/models.py:128
+msgid "notification sent date"
+msgstr "påminnelse sendt-dato"
+
+#: koie/models.py:129 koie/views.py:373
+msgid "firewood status"
+msgstr "vedstatus"
+
+#: koie/models.py:132 koie/models.py:154 koie/models.py:157
+msgid "report"
+msgstr "rapport"
+
+#: koie/models.py:133 koie/views.py:105 koie/views.py:203
+msgid "reports"
+msgstr "rapporter"
+
+#: koie/models.py:158
+msgid "damaged koie"
+msgstr "skadet koie"
+
+#: koie/models.py:159 koie/models.py:164
+msgid "damage"
+msgstr "skade"
+
+#: koie/models.py:160
+msgid "importance"
+msgstr "prioritet"
+
+#: koie/models.py:161
+msgid "fixed date"
+msgstr "fikset dato"
+
+#: koie/models.py:165 koie/views.py:138 koie/views.py:176
+msgid "damages"
+msgstr "skader"
+
+#: koie/templates/get_unreported_reports.html:24
+#: koie/templates/notification_form.html:21
+msgid "Submit"
+msgstr "Send"
+
+#: koie/templates/koies.html:25
+msgid "Name"
+msgstr "Navn"
+
+#: koie/templates/koies.html:51
+msgid "No koies in KoieAdmin."
+msgstr "Ingen koier i KoieAdmin"
+
+#: koie/templates/reservation.html:24
+msgid "Reserve"
+msgstr "Reservèr"
+
+#: koie/templates/show_report.html:36
+msgid "Read"
+msgstr "Lest"
+
+#: koie/views.py:17 koie/views.py:36 koie/views.py:49 koie/views.py:64
+#: koie/views.py:104 koie/views.py:137 koie/views.py:175 koie/views.py:202
+#: koie/views.py:244 koie/views.py:256 koie/views.py:288 koie/views.py:316
+#: koie/views.py:342 koie/views.py:372
+msgid "home"
+msgstr "hjem"
+
+#: koie/views.py:37 koie/views.py:50
+msgid "koier"
+msgstr "koier"
+
+#: koie/views.py:65
+msgid "next reservations"
+msgstr "kommende reservasjoner"
+
+#: koie/views.py:177
+msgid "edit damages"
+msgstr "endre skader"
+
+#: koie/views.py:225
+#, python-format
+msgid "%(koie)s reserved for %(date)s."
+msgstr "%(koie)s reservert for %(date)s"
+
+#: koie/views.py:226
+msgid ""
+"You will have to fill out a report after your stay. Please check your email."
+msgstr ""
+"Du må fylle ut en rapport etter oppholdet ditt. Vennligst sjekk eposten din."
+
+#: koie/views.py:233
+msgid "Invalid email address"
+msgstr "Ugyldig epostadresse"
+
+#: koie/views.py:276
+#, python-format
+msgid "Added notification to %s"
+msgstr "La til utstyrsmelding til %s"
+
+#: koie/views.py:278
+msgid "Created notification, but did not find any reservations to notify."
+msgstr ""
+"Opprettet utstyrsmelding, men fant ingen passende reservasjoner å koble "
+"utstyrsmeldingen til"
+
+#: koie/views.py:280
+msgid "Something failed, please try again later."
+msgstr "Noe gikk galt. Vennligst prøv igjen senere."
+
+#: koie/views.py:289
+msgid "create notification"
+msgstr "Opprett utstyrsmelding"
+
+#: koie/views.py:306
+msgid "Report submitted"
+msgstr "Rapport levert"
+
+#: koie/views.py:309
+msgid "Did you fill out all the fields?"
+msgstr "Fylte du ut alle feltene?"
+
+#: koie/views.py:330
+msgid "You have no unreported stays."
+msgstr "Du har ingen urapporterte opphold."
+
+#: koie/views.py:335
+msgid "You have more than one report to fill out. Here is the first one."
+msgstr "Du har mer enn èn rapport å fylle ut. Her er den første."
+
+#: koie/views.py:343
+msgid "get reports"
+msgstr "hent rapporter"
+
+#: koie/views.py:353
+msgid "Needs refill"
+msgstr "Må fylles på snarest!"
+
+#: koie/views.py:355
+#, fuzzy
+#| msgid "firewood status"
+msgid "Firewood status is OK"
+msgstr "Vedbeholdningen er OK"
+
+#: koie/views.py:465
+#, fuzzy
+#| msgid ""
+#| "Please fill out a report for your stay at: http://127.0.0.1:8000/report/"
+msgid "Please fill out a report for your stay at: "
+msgstr "Vennligst fyll ut en rapport for ditt opphold på: "
+
+#: koie/views.py:477
+msgid "Invalid number of beds"
+msgstr "Ugylding antall sengeplasser"
+
+#: koie/views.py:486
+msgid "You cannot reserve for the past"
+msgstr "Du kan ikke reservere for fortiden"
+
+#: koie/views.py:489
+msgid "You cannot reserve for more than 3 months in the future"
+msgstr "Du kan ikke reservere for mer enn tre måneder inn i fremtiden"
+
+#~ msgid "koie ordered"
+#~ msgstr "bestilt koie"
+
+#~ msgid "Report for %s"
+#~ msgstr "Rapport for %s"
+
+#, fuzzy
+#~| msgid "location"
+#~ msgid "Location"
+#~ msgstr "Sted"
+
+#, fuzzy
+#~| msgid "firewood status"
+#~ msgid "Firewood"
+#~ msgstr "Vedstatus"
+
+#, fuzzy
+#~| msgid "damages"
+#~ msgid "Damages"
+#~ msgstr "Skader"
+
+#, fuzzy
+#~| msgid "get reports"
+#~ msgid "Unread reports"
+#~ msgstr "hent rapporter"
+
+#, fuzzy
+#~| msgid "number of beds"
+#~ msgid "Number of beds"
+#~ msgstr "antall senger"
