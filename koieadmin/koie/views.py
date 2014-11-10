@@ -325,7 +325,7 @@ def my_reports(request, email=None):
         form = GetReportsForm(request.POST)
         if form.is_valid() and email is None:
             email = form.cleaned_data['email']
-        user = User.objects.get(email=email)
+        user = get_or_create_user(email)
         reports = Report.objects.filter(reservation__ordered_by=user, reported_date=None)
         if reports.count() == 0:
             messages.success(request, "You have no unreported stays.")
