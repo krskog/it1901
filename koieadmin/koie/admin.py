@@ -1,5 +1,5 @@
 from django.contrib import admin
-from koie.models import Koie, Reservation, Report, Damage, Facility
+from koie.models import Koie, Reservation, Report, Damage, Facility, Notification
 
 
 class DamagesInline(admin.TabularInline):
@@ -16,3 +16,4 @@ admin.site.register(Reservation)
 admin.site.register(Report, ReportAdmin)
 admin.site.register(Damage)
 admin.site.register(Facility)
+admin.site.register(Notification)

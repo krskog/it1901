@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Utstyrsmeldinger{% endblock title %}
+{% block styles %}{% endblock styles%}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h3>Utstyrsmeldinger</h3>
+        {% if notifications %}
+        {% for notification in notifications %}
+        <div class="">
+            <h4 name="notification-title"><a>{{ notification.koie }} ({{ notification.due_date }})</a></h4>
+            <p class="hidden" name="notification" id="notification-{{ notification.id }}">{{ notification.message }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <p>Opprett ny <a href="{% url 'create_notification' %}">utstyrsmelding</a>.</p>
+    </div>
+</div>
+<script>
+    var notification_titles = document.getElementsByName('notification-title');
+    var notifications = document.getElementsByName('notification');
+    for (var i = 0; i < notifications.length; i++) {
+        var n = notifications[i];
+        var nt = notification_titles[0];
+        nt.addEventListener('click', function() {
+            //nt.preventDefault();
+            if (n.className == 'hidden') {
+                n.className = '';
+            }
+            else {
+                n.className = 'hidden';
+            }
+        })
+    }
+</script>
+{% endblock content %}

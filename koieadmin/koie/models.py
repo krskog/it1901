@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db.models import IntegerField, Model
 from datetime import date
 
 from django.utils.translation import ugettext_lazy as _
@@ -61,11 +59,12 @@ class Koie(models.Model):
             beds += r.beds
         return self.num_beds - beds
 
+
 class Reservation(models.Model):
     ordered_by = models.ForeignKey(User, related_name=_("ordered by"))
     koie_ordered = models.ForeignKey(Koie, related_name=_("ordered koie"))
     rent_date = models.DateField(_('rent date'))
-    ordered_date = models.DateTimeField(_('timestamp for order'), auto_now_add=True) # @TODO Exclude from forms
+    ordered_date = models.DateTimeField(_('timestamp for order'), auto_now_add=True)
     beds = models.IntegerField(_('number of beds'))
 
     class Meta:
@@ -76,6 +75,35 @@ class Reservation(models.Model):
 
     def get_free_beds(self):
         return self.koie_ordered.get_free_beds(self.rent_date)
+
+
+class Notification(models.Model):
+    koie = models.ForeignKey(Koie, related_name=_('koie'))
+    due_date = models.DateField(_('due date'))
+    message = models.TextField(_('message'), max_length=3000)
+    reservation = models.ForeignKey(Reservation, blank=True, null=True)
+
+    def __str__(self):
+        if len(self.message) > 20:
+            message = self.message[:17] + "..."
+        else:
+            message = self.message
+        return "'%s' (%s) " % (message, self.koie)
+
+    #@classmethod
+    def create(self, due_date):
+        reservations = Reservation.objects.filter(koie_ordered=self.koie, rent_date__gte=self.due_date).order_by('rent_date')
+        if reservations.count() > 0:
+            best = reservations[0]
+        else:
+            best = None
+        # If the same people reserve a koie for multiple days, this could be bad.
+        if best != None:
+            self.reservation = best
+            self.save()
+        return self
+        # Some notification if reservation not set?
+
 
 class Report(models.Model):
     reservation = models.ForeignKey(Reservation, related_name=_("reservation"))
