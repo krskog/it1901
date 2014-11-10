@@ -174,7 +174,7 @@ def edit_damage(request, damage_id):
     'breadcrumbs': [
         {'name': _('home').capitalize(), 'url': 'index'},
           {'name': _('damages').capitalize(), 'url': 'damages'},
-          {'name': 'edit damages'},
+          {'name': _('edit damages')},
     ],
     'form': form
     })
@@ -196,7 +196,6 @@ def read_report(request, report_id=None):
                 report.read_date = datetime.now()
                 report.save()
                 return redirect(latest_reports)
-
     return render(request, 'show_report.html', {
         'active': 'read_report',
         'breadcrumbs': [
@@ -223,15 +222,15 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
             if validate_reservation(request, reservation):
                 reservation.save()
                 send_report_email(reservation)
-                messages.success(request, '%s reserved for %s.' % (reservation.koie_ordered, reservation.rent_date))
-                messages.info(request, 'You will have to fill out a report after your stay. Please check your email.')
+                messages.success(request, _('%(koie)s reserved for %(date)s.' % {'koie': reservation.koie_ordered, 'date': reservation.rent_date}))
+                messages.info(request, _('You will have to fill out a report after your stay. Please check your email.'))
                 # Sends an email with a link to the report form connected to this reservation
                 # Should be split into report creation and then cronjob email sending
                 return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
             else:
                 form = ReservationForm(request.POST)
         else:
-            messages.error(request, 'Invalid email address')
+            messages.error(request, _('Invalid email address'))
             form = ReservationForm(request.POST)
     else:
         form = ReservationForm()
@@ -274,11 +273,11 @@ def create_notification(request, koie_id=None):
             due_date = form.cleaned_data['due_date']
             notification = notification.create(due_date)
             if notification.reservation != None:
-                messages.success(request, 'La til utstyrsmelding til %s' % notification.reservation)
+                messages.success(request, _('Added notification to %s' % notification.reservation))
             else:
-                messages.warning(request, 'Opprettet utstyrsmelding, men fant ingen passende reservasjoner å koble utstyrsmeldingen til')
+                messages.warning(request, _('Created notification, but did not find any reservations to notify.'))
         else:
-            messages.error(request, 'something failed, please try again')
+            messages.error(request, _('Something failed, please try again later.'))
     else:
         form = NotificationForm()
         if koie is not None:
@@ -304,10 +303,10 @@ def report_koie(request, report_id):
             damages = str(form.cleaned_data['damages'] )
             report_clean.save()
             reportDamage(damages, report_clean)
-            messages.success(request, 'Report submitted')
+            messages.success(request, _('Report submitted'))
             return redirect('index')
         else:
-            messages.error(request, "Did you fill out all the fields?")
+            messages.error(request, _("Did you fill out all the fields?"))
     else:
         form = ReportForm(instance=report)
 
@@ -328,12 +327,12 @@ def my_reports(request, email=None):
         user = User.objects.get(email=email)
         reports = Report.objects.filter(reservation__ordered_by=user, reported_date=None)
         if reports.count() == 0:
-            messages.success(request, "You have no unreported stays.")
+            messages.success(request, _("You have no unreported stays."))
             return redirect(index)
         elif reports.count() == 1:
             return redirect(report_koie, reports[0].id)
         else:
-            messages.success(request, "You have more than one report to fill out. Here is the first one.")
+            messages.success(request, _("You have more than one report to fill out. Here is the first one."))
             return redirect(report_koie, reports[0].id)
     else:
         form = GetReportsForm()
@@ -351,9 +350,9 @@ class Vedstatus:
         self.ved = ved
         self.vedkapasitet = int(seng)*2
         if ved < 6:
-            self.status = 'Må fylles på snarest!'
+            self.status = _('Needs refill')
         else:
-            self.status = 'Vedbeholdningen er bra!'
+            self.status = _('Firewood status is OK')
 
 
 def firewood_status(request):
@@ -371,7 +370,7 @@ def firewood_status(request):
     'koies': koies,
     'breadcrumbs': [
     {'name': _('home').capitalize(), 'url': 'index'},
-    {'name': _('vedstatus').capitalize()},
+    {'name': _('firewood status').capitalize()},
         ],
     })
 
@@ -462,7 +461,8 @@ def send_report_email(reservation=None, report_id=None):
         #report.notification_date =
         report.save()
     recipient = report.reservation.ordered_by.email
-    message = 'Please fill out a report for your stay at: http://127.0.0.1:8000/report/' + str(report.id) + '/'
+    url = 'http://127.0.0.1:8000/report/' + str(report.id) + '/'
+    message = _('Please fill out a report for your stay at: ' + url)
     #send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
     if create_report:
         return report
@@ -474,7 +474,7 @@ def validate_reservation(request, reservation):
     if not validate_date(request, reservation.rent_date):
         return False
     elif not validate_reserved_beds(reservation.koie_ordered, reservation.beds):
-        messages.error(request, 'Invalid number of beds')
+        messages.error(request, _('Invalid number of beds'))
         return False
     else:
         return True
@@ -483,10 +483,10 @@ def validate_reservation(request, reservation):
 # Validates date
 def validate_date(request, date):
     if date < date.today():
-        messages.error(request, 'You cannot reserve for the past')
+        messages.error(request, _('You cannot reserve for the past'))
         return False
     elif date > (date.today() + timedelta(3 * 30)):
-        messages.error(request, 'You cannot reserve for more than 3 months in the future')
+        messages.error(request, _('You cannot reserve for more than 3 months in the future'))
         return False
     else:
         return True

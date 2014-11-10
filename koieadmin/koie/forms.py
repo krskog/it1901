@@ -1,13 +1,16 @@
 from django import forms
 from django.forms import ModelForm
 from koie.models import Reservation, Report, Damage, Notification
+from django.utils.translation import ugettext_lazy as _
 
 from django.forms.extras.widgets import SelectDateWidget
 from datetime import date
 
 class ReservationForm(ModelForm):
-    email = forms.EmailField(label='Your email', max_length=100)
-    rent_date = forms.DateField(label="Rent date", widget=SelectDateWidget, initial=date.today())
+    name = _('reservation form')
+    
+    email = forms.EmailField(label=_('Your email'), max_length=100)
+    rent_date = forms.DateField(label=_("Rent date"), widget=SelectDateWidget, initial=date.today())
 
     class Meta:
         model = Reservation
@@ -15,6 +18,8 @@ class ReservationForm(ModelForm):
 
 
 class ReportForm(ModelForm):
+    name = _('report form')
+
     damages = forms.CharField(label='Her kan eventuelle skader fylles inn. I folgende format: skade1 -- skade2 -- skade3...', required=False)
     class Meta:
         model = Report
@@ -22,7 +27,9 @@ class ReportForm(ModelForm):
 
 
 class GetReportsForm(forms.Form):
-    email = forms.EmailField(label='Your email', max_length=100)
+    name = _('get users reports form')
+
+    email = forms.EmailField(label=_('Your email'), max_length=100)
 
     class Meta:
         name = 'get reports'
@@ -30,13 +37,14 @@ class GetReportsForm(forms.Form):
 
 # This is the admin form
 class DamageForm(ModelForm):
+    name = _('damages form')
     class Meta:
         model = Damage
         fields = ('importance', 'fixed_date',)
 
 
 class NotificationForm(ModelForm):
-    #name = _('notification form')
+    name = _('notification form')
 
     class Meta:
         model = Notification

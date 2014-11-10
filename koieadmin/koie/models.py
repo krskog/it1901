@@ -5,8 +5,12 @@ from datetime import date
 from django.utils.translation import ugettext_lazy as _
 
 class Facility(models.Model):
-    facility = models.CharField(_('facility_name'), max_length=50)
-    info = models.TextField(_('facility_info'), blank=True, null=True)
+    facility = models.CharField(_('facility'), max_length=50)
+    info = models.TextField(_('description'), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('facility')
+        verbose_name_plural = _('facilities')
 
     def __str__(self):
         return self.facility
@@ -18,7 +22,11 @@ class Koie(models.Model):
     latitude = models.DecimalField(_('latitude'), max_digits=10, decimal_places=5)
     longitude = models.DecimalField(_('longitude'), max_digits=10, decimal_places=5)
     num_beds = models.IntegerField(_('beds'), default=0)
-    facilities = models.ManyToManyField(Facility, related_name=_('facilities'), blank=True, null=True)
+    facilities = models.ManyToManyField(Facility, verbose_name=_('facilities'), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('koie')
+        verbose_name_plural = _('koies')
 
     def __str__(self):
         return self.name
@@ -61,27 +69,34 @@ class Koie(models.Model):
 
 
 class Reservation(models.Model):
-    ordered_by = models.ForeignKey(User, related_name=_("ordered by"))
-    koie_ordered = models.ForeignKey(Koie, related_name=_("ordered koie"))
+    ordered_by = models.ForeignKey(User, verbose_name=_('ordered by'))
+    koie_ordered = models.ForeignKey(Koie, verbose_name=_('koie'))
     rent_date = models.DateField(_('rent date'))
-    ordered_date = models.DateTimeField(_('timestamp for order'), auto_now_add=True)
+    ordered_date = models.DateTimeField(_('reservation registered'), auto_now_add=True)
     beds = models.IntegerField(_('number of beds'))
 
     class Meta:
+        verbose_name = _('reservation')
+        verbose_name_plural = _('reservations')
         get_latest_by = 'id'
 
     def __str__(self):
-        return "%s by %s @ %s" % (self.koie_ordered, self.ordered_by, self.rent_date.strftime("%d-%m-%Y"))
+        return "%(koie)s @ %(date)s" % {'koie': self.koie_ordered, 'date': self.rent_date}
+        #return "%s by %s @ %s" % (self.koie_ordered, self.ordered_by, self.rent_date.strftime("%d-%m-%Y"))
 
     def get_free_beds(self):
         return self.koie_ordered.get_free_beds(self.rent_date)
 
 
 class Notification(models.Model):
-    koie = models.ForeignKey(Koie, related_name=_('koie'))
+    koie = models.ForeignKey(Koie, verbose_name=_('koie'))
     due_date = models.DateField(_('due date'))
     message = models.TextField(_('message'), max_length=3000)
-    reservation = models.ForeignKey(Reservation, blank=True, null=True)
+    reservation = models.ForeignKey(Reservation, verbose_name=_('reservation'), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('notification')
+        verbose_name_plural = _('notifications')
 
     def __str__(self):
         if len(self.message) > 20:
@@ -106,12 +121,17 @@ class Notification(models.Model):
 
 
 class Report(models.Model):
-    reservation = models.ForeignKey(Reservation, related_name=_("reservation"))
+    reservation = models.ForeignKey(Reservation, verbose_name=_('reservation'))
     report = models.TextField(_('end of stay report'))
-    reported_date = models.DateTimeField(blank=True, null=True)
-    read_date = models.DateTimeField(blank=True, null=True)
-    notification_date = models.DateField(auto_now=True)
-    firewood_status = models.IntegerField()
+    reported_date = models.DateTimeField(_('reported date'), blank=True, null=True)
+    read_date = models.DateTimeField(_('report read date'), blank=True, null=True)
+    notification_date = models.DateField(_('notification sent date'), auto_now=True)
+    firewood_status = models.IntegerField(_('firewood status'))
+
+    class Meta:
+        verbose_name = _('report')
+        verbose_name_plural = _('reports')
+        get_latest_by = 'reported_date'
 
     def submit(self, rep, num):
         self.report = rep
@@ -131,17 +151,18 @@ class Report(models.Model):
         return self.reservation
 
     def __str__(self):
-        return "Report for %s" % self.reservation
-
-    class Meta:
-        get_latest_by = 'reported_date'
+        return "%s for %s" % (_('report').capitalize(), self.reservation)
 
 class Damage(models.Model):
-    reporten = models.ForeignKey(Report, related_name=_("reporten"), blank=True, null=True)
-    damaged_koie = models.ForeignKey(Koie, related_name=_("damaged_koie"), blank=True, null=True)
-    damage = models.TextField(_('skade'), blank=True, null=True)
-    importance = models.IntegerField(blank=True, null=True)
-    fixed_date = models.DateTimeField(blank=True, null=True)
+    report = models.ForeignKey(Report, verbose_name=_('report'), blank=True, null=True)
+    damaged_koie = models.ForeignKey(Koie, verbose_name=_('damaged koie'), blank=True, null=True)
+    damage = models.TextField(_('damage'), blank=True, null=True)
+    importance = models.IntegerField(_('importance'), blank=True, null=True)
+    fixed_date = models.DateTimeField(_('fixed date'), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('damage')
+        verbose_name_plural = _('damages')
 
     def __str__(self):
         return "%s (@%s)" % (self.damage, self.damaged_koie)

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block styles %}{% endblock styles %}
 {% load widget_tweaks %}
 {% block title %}CoolStuff{% endblock title %}
@@ -32,7 +33,7 @@
             {% csrf_token %}
             <input type="text" name="act" value="report_read" hidden>
             <div class="form-group">
-                <input type="submit" name="read-btn" value="Lest" class="btn btn-primary"/>
+                <input type="submit" name="read-btn" value="{% trans "Read" %}" class="btn btn-primary"/>
             </div>
         </form>
     </div>
