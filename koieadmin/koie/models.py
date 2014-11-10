@@ -82,7 +82,7 @@ class Report(models.Model):
     report = models.TextField(_('end of stay report'))
     reported_date = models.DateTimeField(blank=True, null=True)
     read_date = models.DateTimeField(blank=True, null=True)
-    notification_date = models.DateField(auto_now=True,null=True)
+    notification_date = models.DateField(auto_now=True)
     firewood_status = models.IntegerField()
 
     def submit(self, rep, num):
