@@ -11,19 +11,24 @@
     <div id="carousel-koie" class="carousel slide" data-ride="carousel">
       <!-- Indicators -->
       <ol class="carousel-indicators">
-        <li data-target="#carousel-koie" data-slide-to="0" class="active"></li>
-        <li data-target="#carousel-koie" data-slide-to="1"></li>
-        <li data-target="#carousel-koie" data-slide-to="2"></li>
+        {% if koies %}
+        {% for koie in koies %}
+        <li data-target="#carousel-koie" data-slide-to="{{ koie.id|add:"-1" }}"{% if koie.id == 1 %} class="active"{% endif %}></li>
+        {% endfor %}
+        {% endif %}
       </ol>
 
       <!-- Wrapper for slides -->
       <div class="carousel-inner">
           {% for koie in koies %}
-          <div class="item">
+          <div class="item{% if koie.id == 1 %} active{% endif %}">
+            <div class="container">
               <img src="{{ STATIC_URL }}img/{{ koie.name.lower }}.jpg" alt="Bilde av koie">
               <div class="carousel-caption">
                   <h3>{{ koie.name }}</h3>
+                  <a href="{% url 'koie_detail' koie.id %}"><button class="btn btn-primary btn-sm">Les mer</button></a>
               </div>
+            </div>
           </div>
           {% endfor %}
         </div>
