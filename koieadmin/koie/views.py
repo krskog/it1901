@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
 from django.contrib import messages
-from koie.models import Koie, Reservation, Report, Damage
-from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm
+from koie.models import Koie, Reservation, Report, Damage, Facility, Notification
+from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm, NotificationForm
 from django.core.mail import send_mail
 
 
@@ -115,23 +115,12 @@ def latest_reports(request, slug=None):
 def get_damages(request, slug=None):
     # Filters for the damage view
     if slug == 'fixed':
-        damages = []
-        for d in Damage.objects.all():
-            if d.fixed_date is not None:
-                damages.append(d)
-        damages.reverse()
+        damages = Damage.objects.exclude(fixed_date=None).order_by('-importance')
     elif slug == 'not_fixed':
-        damages = []
-        for d in Damage.objects.all():
-            if d.fixed_date is None:
-                damages.append(d)
-        damages.reverse()
+        damages = Damage.objects.filter(fixed_date=None).order_by('-importance')
     else:
         slug = 'default'
-        damages = []
-        for d in Damage.objects.all():
-            damages.append(d)
-        damages.reverse()
+        damages = get_latest_damages()
     return render(request, 'damages.html', {
       'active': 'damages',
       'damages': damages,
@@ -250,6 +239,51 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
     'form': form
     })
 
+
+def notification_index(request):
+    notifications = Notification.objects.all()
+    return render(request, 'notifications.html', {
+        'active': 'notification_index',
+        'breadcrumbs': [
+            {'name': _('home').capitalize(), 'url': 'index'},
+            {'name': _('notifications').capitalize()}
+        ],
+        'notifications': notifications,
+    })
+
+
+def create_notification(request, koie_id=None):
+    if koie_id != None:
+        koie = get_object_or_404(Koie, pk=koie_id)
+    else:
+        koie = None
+    if request.method == 'POST':
+        form = NotificationForm(request.POST)
+        if form.is_valid():
+            # notification = form.cleaned_data
+            notification = form.save()
+            due_date = form.cleaned_data['due_date']
+            notification = notification.create(due_date)
+            if notification.reservation != None:
+                messages.success(request, 'La til utstyrsmelding til %s' % notification.reservation)
+            else:
+                messages.warning(request, 'Opprettet utstyrsmelding, men fant ingen passende reservasjoner å koble utstyrsmeldingen til')
+        else:
+            messages.error(request, 'something failed, please try again')
+    else:
+        form = NotificationForm()
+        if koie is not None:
+            form.fields['koie'].initial = koie
+    return render(request, 'notification_form.html', {
+        'active': 'create_notification',
+        'breadcrumbs': [
+            {'name': _('home').capitalize(), 'url': 'index'},
+            {'name': _('create notification').capitalize()}
+        ],
+        'form': form,
+    })
+
+
 def report_koie(request, report_id):
     report = get_object_or_404(Report, pk=report_id)
     if request.method == 'POST':
@@ -282,7 +316,7 @@ def my_reports(request, email=None):
         form = GetReportsForm(request.POST)
         if form.is_valid() and email is None:
             email = form.cleaned_data['email']
-        user = User.objects.get(email=email)
+        user = get_or_create_user(email)
         reports = Report.objects.filter(reservation__ordered_by=user, reported_date=None)
         if reports.count() == 0:
             messages.success(request, "You have no unreported stays.")
@@ -303,10 +337,39 @@ def my_reports(request, email=None):
             'form': form,
         })
 
+class Vedstatus:
+    def init(self, ved, seng):
+        self.ved = ved
+        self.vedkapasitet = int(seng)*2
+        if ved < 6:
+            self.status = 'Må fylles på snarest!'
+        else:
+            self.status = 'Vedbeholdningen er bra!'
+
+
+def firewood_status(request):
+    koies = Koie.objects.all()
+    for koie in koies:
+        print(koie, koie.needs_refill())
+        #koie.unread_reports = Report.objects.filter(reservation__koie_ordered=koie, read_date=None).exclude(reported_date=None).count()
+        if Report.objects.filter(reservation__koie_ordered=koie).count() >= 1:
+            koie.firewood = Report.objects.filter(reservation__koie_ordered=koie).latest('reported_date').firewood_status
+        else:
+            koie.firewood = -1
+
+    return render(request, 'firewood.html', {
+    'active': 'koies',
+    'koies': koies,
+    'breadcrumbs': [
+    {'name': _('home').capitalize(), 'url': 'index'},
+    {'name': _('vedstatus').capitalize()},
+        ],
+    })
+
 # This should be rewritten to use newlines instead.
 def reportDamage(tekst, report):
-    if '--' in tekst:
-        tdamages = tekst.split('--')
+    if '\n' in tekst:
+        tdamages = tekst.split('\n')
         num_damages = len(tdamages)
         for n in range(0, num_damages):
             reported_damage = tdamages[n].strip()
@@ -314,7 +377,7 @@ def reportDamage(tekst, report):
                 damage = Damage()
                 damage.damage = reported_damage
                 damage.report = report
-                damage.damaged_koie = report.koie_ordered
+                damage.damaged_koie = report.reservation.koie_ordered
                 damage.save()
     else:
         damage = Damage()
@@ -354,7 +417,7 @@ def get_future_reservations(koie=None, num=10):
 ### Latest reports
 
 def get_latest_damages():
-    return Damage.objects.filter(fixed_date)
+    return Damage.objects.filter(fixed_date=None).order_by('-importance')
 
 def get_latest_reports():
     return Report.objects.filter(read_date=None)
@@ -388,6 +451,7 @@ def send_report_email(reservation=None, report_id=None):
     else:
         report = get_object_or_404(Report, pk=report_id)
         #report.notification_date =
+        report.save()
     recipient = report.reservation.ordered_by.email
     message = 'Please fill out a report for your stay at: http://127.0.0.1:8000/report/' + str(report.id) + '/'
     #send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
@@ -398,8 +462,7 @@ def send_report_email(reservation=None, report_id=None):
 
 # Validates reservation
 def validate_reservation(request, reservation):
-    if not validate_date(reservation.rent_date):
-        messages.error(request, 'Invalid reservation date')
+    if not validate_date(request, reservation.rent_date):
         return False
     elif not validate_reserved_beds(reservation.koie_ordered, reservation.beds):
         messages.error(request, 'Invalid number of beds')
@@ -409,8 +472,15 @@ def validate_reservation(request, reservation):
 
 
 # Validates date
-def validate_date(date):
-    return date >= date.today()
+def validate_date(request, date):
+    if date < date.today():
+        messages.error(request, 'You cannot reserve for the past')
+        return False
+    elif date > (date.today() + timedelta(3 * 30)):
+        messages.error(request, 'You cannot reserve for more than 3 months in the future')
+        return False
+    else:
+        return True
 
 # Validates number of beds
 def validate_reserved_beds(koie, num_beds):
