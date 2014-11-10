@@ -36,7 +36,6 @@ class Koie(models.Model):
             firewood_status = Report.objects.get(reservation__koie_ordered=self).firewood_status
         except:
             return True
-        print("%s: %s" % (self, firewood_status))
         if Report.objects.filter(reservation__koie_ordered=self).count() == 0:
             return True
         else:
