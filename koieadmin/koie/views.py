@@ -113,23 +113,12 @@ def latest_reports(request, slug=None):
 def get_damages(request, slug=None):
     # Filters for the damage view
     if slug == 'fixed':
-        damages = []
-        for d in Damage.objects.all():
-            if d.fixed_date is not None:
-                damages.append(d)
-        damages.reverse()
+        damages = Damage.objects.exclude(fixed_date=None).order_by('-importance')
     elif slug == 'not_fixed':
-        damages = []
-        for d in Damage.objects.all():
-            if d.fixed_date is None:
-                damages.append(d)
-        damages.reverse()
+        damages = Damage.objects.filter(fixed_date=None).order_by('-importance')
     else:
         slug = 'default'
-        damages = []
-        for d in Damage.objects.all():
-            damages.append(d)
-        damages.reverse()
+        damages = get_latest_damages()
     return render(request, 'damages.html', {
       'active': 'damages',
       'damages': damages,
@@ -426,7 +415,7 @@ def get_future_reservations(koie=None, num=10):
 ### Latest reports
 
 def get_latest_damages():
-    return Damage.objects.filter(fixed_date=None).order_by('importance')
+    return Damage.objects.filter(fixed_date=None).order_by('-importance')
 
 def get_latest_reports():
     return Report.objects.filter(read_date=None)
