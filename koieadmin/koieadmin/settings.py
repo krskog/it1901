@@ -92,7 +92,7 @@ LANGUAGES = (
 
 LANGUAGE_CODE = 'nb'
 
-TIME_ZONE = 'Europe/Oslo'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 

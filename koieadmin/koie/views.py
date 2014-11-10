@@ -11,11 +11,13 @@ from django.core.mail import send_mail
 
 # Index view
 def index(request):
+    koies = Koie.objects.all()
     return render(request, 'index.html', {
       'active': 'index',
       'breadcrumbs': [
           {'name': _('home').capitalize()}
-      ]
+      ],
+      'koies': koies,
     })
 
 
