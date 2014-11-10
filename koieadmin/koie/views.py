@@ -11,11 +11,13 @@ from django.core.mail import send_mail
 
 # Index view
 def index(request):
+    koies = Koie.objects.all()
     return render(request, 'index.html', {
       'active': 'index',
       'breadcrumbs': [
           {'name': _('home').capitalize()}
-      ]
+      ],
+      'koies': koies,
     })
 
 
@@ -385,7 +387,7 @@ def send_report_email(reservation=None, report_id=None):
         create_report = True
     else:
         report = get_object_or_404(Report, pk=report_id)
-        #report.notification_date = 
+        #report.notification_date =
     recipient = report.reservation.ordered_by.email
     message = 'Please fill out a report for your stay at: http://127.0.0.1:8000/report/' + str(report.id) + '/'
     #send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
