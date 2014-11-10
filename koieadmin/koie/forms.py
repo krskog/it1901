@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from koie.models import Reservation, Report, Damage
+from koie.models import Reservation, Report, Damage, Notification
 
 from django.forms.extras.widgets import SelectDateWidget
 from datetime import date
@@ -32,4 +32,12 @@ class GetReportsForm(forms.Form):
 class DamageForm(ModelForm):
     class Meta:
         model = Damage
-        fields = ('importance', 'fixed_date', )
+        fields = ('importance', 'fixed_date',)
+
+
+class NotificationForm(ModelForm):
+    #name = _('notification form')
+
+    class Meta:
+        model = Notification
+        fields = ('koie', 'due_date', 'message',)

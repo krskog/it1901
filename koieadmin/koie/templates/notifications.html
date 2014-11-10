@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Utstyrsmeldinger{% endblock title %}
+{% block styles %}{% endblock styles%}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h3>Utstyrsmeldinger <span class="small">Klikk på en melding for mer informasjon</span></h3>
+        {% if notifications %}
+        {% for notification in notifications %}
+        <div id="n-{{ notification.id }}">
+            <h4 name="notification-title">
+                {% if notification.reservation %}
+                <span class="glyphicon glyphicon-ok"></span>
+                {% else %}
+                <span class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+                {{ notification.koie }} ({{ notification.due_date }})
+            </h4>
+            <p class="hidden" name="notification">
+            {% if notification.reservation %}
+                <span class="lead">Koblet til reservasjon: {{ notification.reservation }}</span>
+            {% else %}
+                <span class="lead alert-danger">Ikke koblet til noen reservasjon</span>
+            {% endif %}
+                <br>
+                {{ notification.message }}
+            </p>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <p>Opprett ny <a href="{% url 'create_notification' %}">utstyrsmelding</a>.</p>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function() {
+        $('h4').on('click', function() {
+            $(this).next().toggleClass('hidden');
+        })
+    })
+</script>
+{% endblock content %}

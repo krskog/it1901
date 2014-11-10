@@ -4,8 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
 from django.contrib import messages
-from koie.models import Koie, Reservation, Report, Damage, Facility
-from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm
+from koie.models import Koie, Reservation, Report, Damage, Facility, Notification
+from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm, NotificationForm
 from django.core.mail import send_mail
 
 
@@ -248,6 +248,51 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
     'form': form
     })
 
+
+def notification_index(request):
+    notifications = Notification.objects.all()
+    return render(request, 'notifications.html', {
+        'active': 'notification_index',
+        'breadcrumbs': [
+            {'name': _('home').capitalize(), 'url': 'index'},
+            {'name': _('notifications').capitalize()}
+        ],
+        'notifications': notifications,
+    })
+
+
+def create_notification(request, koie_id=None):
+    if koie_id != None:
+        koie = get_object_or_404(Koie, pk=koie_id)
+    else:
+        koie = None
+    if request.method == 'POST':
+        form = NotificationForm(request.POST)
+        if form.is_valid():
+            # notification = form.cleaned_data
+            notification = form.save()
+            due_date = form.cleaned_data['due_date']
+            notification = notification.create(due_date)
+            if notification.reservation != None:
+                messages.success(request, 'La til utstyrsmelding til %s' % notification.reservation)
+            else:
+                messages.warning(request, 'Opprettet utstyrsmelding, men fant ingen passende reservasjoner å koble utstyrsmeldingen til')
+        else:
+            messages.error(request, 'something failed, please try again')
+    else:
+        form = NotificationForm()
+        if koie is not None:
+            form.fields['koie'].initial = koie
+    return render(request, 'notification_form.html', {
+        'active': 'create_notification',
+        'breadcrumbs': [
+            {'name': _('home').capitalize(), 'url': 'index'},
+            {'name': _('create notification').capitalize()}
+        ],
+        'form': form,
+    })
+
+
 def report_koie(request, report_id):
     report = get_object_or_404(Report, pk=report_id)
     if request.method == 'POST':
@@ -300,6 +345,35 @@ def my_reports(request, email=None):
             ],
             'form': form,
         })
+
+class Vedstatus:
+    def init(self, ved, seng):
+        self.ved = ved
+        self.vedkapasitet = int(seng)*2
+        if ved < 6:
+            self.status = 'Må fylles på snarest!'
+        else:
+            self.status = 'Vedbeholdningen er bra!'
+
+
+def firewood_status(request):
+    koies = Koie.objects.all()
+    for koie in koies:
+        print(koie, koie.needs_refill())
+        #koie.unread_reports = Report.objects.filter(reservation__koie_ordered=koie, read_date=None).exclude(reported_date=None).count()
+        if Report.objects.filter(reservation__koie_ordered=koie).count() >= 1:
+            koie.firewood = Report.objects.filter(reservation__koie_ordered=koie).latest('reported_date').firewood_status
+        else:
+            koie.firewood = -1
+
+    return render(request, 'firewood.html', {
+    'active': 'koies',
+    'koies': koies,
+    'breadcrumbs': [
+    {'name': _('home').capitalize(), 'url': 'index'},
+    {'name': _('vedstatus').capitalize()},
+        ],
+    })
 
 # This should be rewritten to use newlines instead.
 def reportDamage(tekst, report):
