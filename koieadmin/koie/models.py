@@ -137,7 +137,7 @@ class Report(models.Model):
         get_latest_by = 'reported_date'
 
 class Damage(models.Model):
-    reporten = models.ForeignKey(Report, related_name=_("reporten"), blank=True, null=True)
+    report = models.ForeignKey(Report, related_name=_("reporten"), blank=True, null=True)
     damaged_koie = models.ForeignKey(Koie, related_name=_("damaged_koie"), blank=True, null=True)
     damage = models.TextField(_('skade'), blank=True, null=True)
     importance = models.IntegerField(blank=True, null=True)

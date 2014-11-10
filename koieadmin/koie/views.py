@@ -426,7 +426,7 @@ def get_future_reservations(koie=None, num=10):
 ### Latest reports
 
 def get_latest_damages():
-    return Damage.objects.filter(fixed_date)
+    return Damage.objects.filter(fixed_date=None).order_by('importance')
 
 def get_latest_reports():
     return Report.objects.filter(read_date=None)
