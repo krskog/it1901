@@ -19,7 +19,7 @@ function initialize() {
 
     {% if koies %}
     {% for koie in koies %}
-            liste.push(["{{ koie.name }}", {{ koie.latitude }}, {{ koie.longitude}}, "{% url 'koie_detail' koie.id %}"]);
+    liste.push(["{{ koie.name }}", {{ koie.latitude|unlocalize }}, {{ koie.longitude|unlocalize }}, "{% url 'koie_detail' koie.id %}"]);
         {% endfor %}
     {% endif %}
 
@@ -64,9 +64,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
     </script>
   </head>
   <body>
-    <p> Koie info </p>
-    <p> Koie map v </p><br><br>
     <div id="koieOverview"></div>
-    
+
   </body>
 </html>
