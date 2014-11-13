@@ -84,7 +84,7 @@ DATABASES = {
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
 LOCALE_PATHS = (
-    '/Users/sklirg/projects/github/it1901/koieadmin/locale',
+    os.path.join(BASE_DIR, 'locale'),
 )
 
 LANGUAGES = (
