@@ -5,8 +5,10 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from koie.models import Koie, Reservation, Report, Damage, Facility, Notification
 from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm, NotificationForm
-from django.core.mail import send_mail
+#from django.core.mail import send_mail
 from koieadmin import settings
+#from celery import task
+from koie.tasks import send_email
 
 # Index view
 def index(request):
@@ -203,6 +205,7 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
         reservation = get_object_or_404(Reservation, pk=reservation_id)
     if request.method == 'POST':
         form = ReservationForm(request.POST)
+        print(form)
         if form.is_valid():
             reservation = form.save(commit=False)
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
@@ -444,7 +447,7 @@ def send_report_email(report):
     recipient = report.reservation.ordered_by.email
     url = "%s%s" % (settings.BASE_URL, report.get_absolute_url())
     message = _('Please fill out a report for your stay at: %s' % url)
-    send_mail('Report for koie', message, settings.EMAIL_HOST_USER, [recipient])
+    send_email.delay('Report for koie', message, settings.EMAIL_HOST_USER, [recipient])
     #return redirect(latest_reports)
 
 
@@ -461,11 +464,11 @@ def send_notification_email(notification):
         ' \
         % {'koie': notification.koie, 'date': notification.reservation.rent_date, 'equipment': equipment}
     recipient = notification.reservation.ordered_by.email
-    send_email('Utstyrsmelding', message, settings.EMAIL_HOST_USER, [recipient])
+    send_email.delay('Utstyrsmelding', message, settings.EMAIL_HOST_USER, [recipient])
 
-
-def send_email(topic, message, fr, to):
-    send_mail(topic, message, fr, to)
+#@task()
+#def send_email(topic, message, fr, to):
+#    send_mail(topic, message, fr, to)
 
 
 def generate_report(reservation):

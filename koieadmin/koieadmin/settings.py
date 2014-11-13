@@ -50,7 +50,8 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'widget_tweaks',
     'koie',
-    'django_extensions'
+    'django_extensions',
+    'djcelery',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS
@@ -130,6 +131,11 @@ MESSAGE_TAGS = {message_constants.ERROR: 'danger',}
 STATIC_URL = '/static/'
 
 STATIC_ROOT = join(PROJECT_ROOT, 'static/')
+
+import djcelery
+djcelery.setup_loader()
+
+BROKER_URL = 'amqp://guest:guest@localhost:5672'
 
 # Setup for email using gmail as a SMTP host
 
