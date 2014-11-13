@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block styles %}{% endblock styles %}
+{% block styles %}<style>a { width: 100%; }</style>{% endblock styles %}
 
 {% block title %}Hjem{% endblock title %}
 
 
 {% block content %}
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-12" style="max-width: 900px; margin: 0 auto;">
     <div id="carousel-koie" class="carousel slide" data-ride="carousel">
       <!-- Indicators -->
       <ol class="carousel-indicators">
@@ -23,13 +23,11 @@
       <div class="carousel-inner">
           {% for koie in koies %}
           <div class="item{% if koie.id == 1 %} active{% endif %}">
-            <div class="container">
-              <img src="{{ STATIC_URL }}img/{{ koie.name.lower }}.jpg" alt="Bilde av koie">
+              <img src="{{ STATIC_URL }}img/{{ koie.name.lower }}.jpg" class="img-responsive center-block" alt="Bilde av koie">
               <div class="carousel-caption">
                   <h3>{{ koie.name }}</h3>
                   <a href="{% url 'koie_detail' koie.id %}"><button class="btn btn-primary btn-sm">Les mer</button></a>
               </div>
-            </div>
           </div>
           {% endfor %}
         </div>
