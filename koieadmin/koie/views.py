@@ -74,13 +74,11 @@ def latest_reports(request, slug=None):
     if slug == 'read':
         reports = []
         for r in Report.objects.all():
-            print(r, r.read_date)
             if r.read_date is not None:
                 reports.append(r)
     elif slug == 'unread':
         reports = []
         for r in Report.objects.all():
-            print(r, r.read_date)
             if r.read_date is None:
                 reports.append(r)
     elif slug == 'all':
@@ -178,7 +176,6 @@ def read_report(request, report_id=None):
 
     report = get_object_or_404(Report, id=report_id)
     if request.method == 'POST':
-        print(request.POST)
         # Should mark report as read?
         if request.POST['act'] == 'report_read':
             if request.POST['read-btn'] == 'Lest':
@@ -349,7 +346,6 @@ class Vedstatus:
 def firewood_status(request):
     koies = Koie.objects.all()
     for koie in koies:
-        print(koie, koie.needs_refill())
         #koie.unread_reports = Report.objects.filter(reservation__koie_ordered=koie, read_date=None).exclude(reported_date=None).count()
         if Report.objects.filter(reservation__koie_ordered=koie).count() >= 1:
             koie.firewood = Report.objects.filter(reservation__koie_ordered=koie).latest('reported_date').firewood_status
