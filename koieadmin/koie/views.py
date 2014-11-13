@@ -446,8 +446,28 @@ def send_report_email(report):
     recipient = report.reservation.ordered_by.email
     url = "%s%s" % (settings.BASE_URL, report.get_absolute_url())
     message = _('Please fill out a report for your stay at: %s' % url)
-    send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
+    send_mail('Report for koie', message, settings.EMAIL_HOST_USER, [recipient])
     #return redirect(latest_reports)
+
+
+def send_notification_email(notification):
+    equipment = notification.message
+    message = '\
+        Hei! Det har nå blitt koblet en utstyrsmelding opp mot din reservasjon for %(koie)s den %(res_date)s.\n\
+        Du skal ta med deg:\n\
+        %(equipment)s\n\
+        \n\
+        Dersom du har spørsmål angående utstyrsmeldingen, kontakt oss.\n\n\
+        Mvh,\n\
+        Koieadministrasjonssystemet\
+        ' \
+        % {'koie': notification.koie, 'date': notification.reservation.rent_date, 'equipment': equipment}
+    recipient = notification.reservation.ordered_by.email
+    send_email('Utstyrsmelding', message, settings.EMAIL_HOST_USER, [recipient])
+
+
+def send_email(topic, message, fr, to):
+    send_mail(topic, message, fr, to)
 
 
 def generate_report(reservation):
