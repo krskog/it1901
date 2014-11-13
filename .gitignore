@@ -59,6 +59,7 @@ __pycache__
 
 # Django stuffs
 db.db
+local.py
 
 # Virtualenv
 it1901/
