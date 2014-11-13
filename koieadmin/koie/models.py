@@ -122,11 +122,11 @@ class Notification(models.Model):
 
 class Report(models.Model):
     reservation = models.ForeignKey(Reservation, verbose_name=_('reservation'))
-    report = models.TextField(_('end of stay report'))
+    report = models.TextField(_('comments about your stay'), null=True)
     reported_date = models.DateTimeField(_('reported date'), blank=True, null=True)
     read_date = models.DateTimeField(_('report read date'), blank=True, null=True)
     notification_date = models.DateField(_('notification sent date'), auto_now=True)
-    firewood_status = models.IntegerField(_('firewood status'))
+    firewood_status = models.IntegerField(_('firewood status'), null=True)
 
     class Meta:
         verbose_name = _('report')

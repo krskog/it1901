@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
@@ -212,9 +211,10 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
             if validate_reservation(request, reservation):
                 reservation.save()
-                send_report_email(reservation)
+                report = generate_report(reservation)
                 messages.success(request, _('%(koie)s reserved for %(date)s.' % {'koie': reservation.koie_ordered, 'date': reservation.rent_date}))
                 messages.info(request, _('You will have to fill out a report after your stay. Please check your email.'))
+                send_report_email(report)
                 # Sends an email with a link to the report form connected to this reservation
                 # Should be split into report creation and then cronjob email sending
                 return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
@@ -438,27 +438,24 @@ def get_koi(report_id):
 
 
 # Mailing
-def send_report_email(reservation=None, report_id=None):
-    create_report = False
-    if report_id is None:
-        report = Report()
-        report.reservation = reservation
-        report.report = ''
-        report.firewood_status = 0
-        report.save()
-        create_report = True
-    else:
-        report = get_object_or_404(Report, pk=report_id)
-        #report.notification_date =
-        report.save()
+def send_report_email(report):
+    #if report_id is None:
+    #    report_id = report.id
+    #    report = get_object_or_404(Report, pk=report_id)
+    report.save()  # Marks as edited, updates sent notification-field
     recipient = report.reservation.ordered_by.email
     url = "%s%s" % (settings.BASE_URL, report.get_absolute_url())
     message = _('Please fill out a report for your stay at: %s' % url)
-    #send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
-    if create_report:
-        return report
-    else:
-        return redirect(latest_reports)
+    send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
+    #return redirect(latest_reports)
+
+
+def generate_report(reservation):
+    report = Report()
+    report.reservation = reservation
+    report.save()
+    return report
+
 
 # Validates reservation
 def validate_reservation(request, reservation):
