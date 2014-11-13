@@ -12,7 +12,7 @@ from koie.tasks import send_email
 
 # Index view
 def index(request):
-    koies = Koie.objects.all()
+    koies = Koie.objects.all().order_by('id')
     return render(request, 'index.html', {
       'active': 'index',
       'breadcrumbs': [
