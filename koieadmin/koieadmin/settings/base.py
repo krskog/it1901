@@ -123,7 +123,7 @@ for settings_module in ['local']:  # local last
                              "'koieadmin/settings/example-local.py' to "
                              "'koieadmin/settings/local.py'.\n")
         sys.exit(1)
-    try:
-        exec('from %s import *' % settings_module)
-    except ImportError:
-        print("Could not import settings for '%s'" % settings_module)
+    #try:
+    #    exec('from %s import *' % settings_module)
+    #except ImportError:
+    #    print("Could not import settings for '%s'" % settings_module)
