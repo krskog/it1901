@@ -7,7 +7,7 @@ from django.contrib import messages
 from koie.models import Koie, Reservation, Report, Damage, Facility, Notification
 from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm, NotificationForm
 from django.core.mail import send_mail
-
+from koieadmin import settings
 
 # Index view
 def index(request):
@@ -452,8 +452,9 @@ def send_report_email(reservation=None, report_id=None):
         #report.notification_date =
         report.save()
     recipient = report.reservation.ordered_by.email
-    url = 'http://127.0.0.1:8000/report/' + str(report.id) + '/'
-    message = _('Please fill out a report for your stay at: ' + url)
+    url = "%s%s" % (settings.BASE_URL, report.get_absolute_url())
+    #url = 'http://127.0.0.1:8000/report/' + str(report.id) + '/'
+    message = _('Please fill out a report for your stay at: %s' % url)
     #send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
     if create_report:
         return report

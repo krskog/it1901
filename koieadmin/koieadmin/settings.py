@@ -30,6 +30,8 @@ ALLOWED_HOSTS = []
 
 ADMINS = (('Sklirg', 'sklirg@sklirg.io'),)
 
+BASE_URL = 'http://k.sklirg.io'
+
 # Application definition
 
 DJANGO_APPS = (

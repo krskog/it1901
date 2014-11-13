@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from datetime import date
 
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
 
 class Facility(models.Model):
     facility = models.CharField(_('facility'), max_length=50)
@@ -148,6 +149,9 @@ class Report(models.Model):
 
     def get_reservation(self):
         return self.reservation
+
+    def get_absolute_url(self):
+        return reverse("koie.views.report_koie", args=[self.id])
 
     def __str__(self):
         return "%s for %s" % (_('report').capitalize(), self.reservation)
