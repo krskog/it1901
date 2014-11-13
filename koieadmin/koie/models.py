@@ -42,7 +42,7 @@ class Koie(models.Model):
         # 2 Soon needs refill
         # 9 No data
         try:
-            firewood_status = Report.objects.get(reservation__koie_ordered=self).firewood_status
+            firewood_status = Report.objects.filter(reservation__koie_ordered=self).order_by('-reported_date')[0].firewood_status
         except:
             return True
         if Report.objects.filter(reservation__koie_ordered=self).count() == 0 or firewood_status is None:
