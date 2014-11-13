@@ -262,6 +262,8 @@ def create_notification(request, koie_id=None):
             notification = notification.create(due_date)
             if notification.reservation != None:
                 messages.success(request, _('Added notification to %s' % notification.reservation))
+                send_notification_email(notification)
+                return redirect(notification_index)
             else:
                 messages.warning(request, _('Created notification, but did not find any reservations to notify.'))
         else:
@@ -449,7 +451,7 @@ def send_report_email(report):
 def send_notification_email(notification):
     equipment = notification.message
     message = '\
-        Hei! Det har nå blitt koblet en utstyrsmelding opp mot din reservasjon for %(koie)s den %(res_date)s.\n\
+        Hei! Det har nå blitt koblet en utstyrsmelding opp mot din reservasjon for %(koie)s den %(date)s.\n\
         Du skal ta med deg:\n\
         %(equipment)s\n\
         \n\
