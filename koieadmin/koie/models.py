@@ -58,6 +58,8 @@ class Koie(models.Model):
                 # return 0
                 return False
             else:
+                if self.firewood_capacity() < 10:
+                    return firewood_status < (self.firewood_capacity() / 2)
                 return True
 
     def get_free_beds(self, date):
