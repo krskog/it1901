@@ -20,7 +20,7 @@ class ReservationForm(ModelForm):
 class ReportForm(ModelForm):
     name = _('report form')
 
-    damages = forms.CharField(label='damages; write each damage on its own line', widget=forms.Textarea)
+    damages = forms.CharField(label='damages; write each damage on its own line', widget=forms.Textarea, required=False)
     class Meta:
         model = Report
         fields = ('report', 'firewood_status', 'damages',)
