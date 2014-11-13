@@ -10,31 +10,17 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 from os.path import dirname, realpath, join
 PROJECT_ROOT = BASE_DIR
 
+PROJECT_SETTINGS_DIRECTORY = os.path.dirname(globals()['__file__'])
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ge_q)l68gr3%sb6u)*1kb*yc&h4-4_e8xg7^7ax*+8i(qcllu9'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
-TEMPLATE_DEBUG = False
-
-ALLOWED_HOSTS = ['127.0.0.1', 'k.sklirg.io']
-
-
-
-ADMINS = (('Sklirg', 'sklirg@sklirg.io'),)
-
-ADMINS = (('Sklirg', 'sklirg@sklirg.io'),)
-
-BASE_URL = 'http://k.sklirg.io'
 
 # Application definition
 
@@ -87,17 +73,6 @@ WSGI_APPLICATION = 'koieadmin.wsgi.application'
     }
 }"""
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'it1901',
-        'USER': 'it1901',
-        'PASSWORD': 'X9K9DLqNJyGzGw7zFpR5',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
@@ -135,12 +110,20 @@ STATIC_ROOT = join(PROJECT_ROOT, 'static/')
 import djcelery
 djcelery.setup_loader()
 
-BROKER_URL = 'amqp://guest:guest@localhost:5672'
+# Broker URL is set in local.py
 
-# Setup for email using gmail as a SMTP host
-
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'ntnu.koier@gmail.com'
-EMAIL_HOST_PASSWORD = 'it1901it1901'
+# Remember to keep 'local' last, so it can override any setting.
+for settings_module in ['local']:  # local last
+    if not os.path.exists(os.path.join(PROJECT_SETTINGS_DIRECTORY,
+            settings_module + ".py")):
+        sys.stderr.write("Could not find settings module '%s'.\n" %
+                settings_module)
+        if settings_module == 'local':
+            sys.stderr.write("You need to copy the settings file "
+                             "'koieadmin/settings/example-local.py' to "
+                             "'koieadmin/settings/local.py'.\n")
+        sys.exit(1)
+    try:
+        exec('from %s import *' % settings_module)
+    except ImportError:
+        print("Could not import settings for '%s'" % settings_module)
