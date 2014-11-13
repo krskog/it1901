@@ -64,8 +64,8 @@ def next_reservations(request):
       'active': 'next_reservations',
       'future_reservations': get_future_reservations(num=25),
       'breadcrumbs': [
-          {'name': _('home'), 'url': 'index'},
-          {'name': _('next reservations')}
+          {'name': _('home').capitalize(), 'url': 'index'},
+          {'name': _('next reservations').capitalize()}
       ],
     })
 
