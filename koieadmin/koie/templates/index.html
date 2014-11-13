@@ -1,15 +1,14 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block styles %}<style>a { width: 100%; }</style>{% endblock styles %}
+{% block styles %}{% endblock styles %}
 
 {% block title %}Hjem{% endblock title %}
 
 
 {% block content %}
 <div class="row">
-  <div class="col-md-12" style="max-width: 900px; margin: 0 auto;">
-    <div id="carousel-koie" class="carousel slide" data-ride="carousel">
+    <div id="carousel-koie" class="carousel slide" style="max-width: 900px; margin: 0 auto;" data-ride="carousel">
       <!-- Indicators -->
       <ol class="carousel-indicators">
         {% if koies %}
@@ -23,7 +22,7 @@
       <div class="carousel-inner">
           {% for koie in koies %}
           <div class="item{% if koie.id == 1 %} active{% endif %}">
-              <img src="{{ STATIC_URL }}img/{{ koie.name.lower }}.jpg" class="img-responsive center-block" alt="Bilde av koie">
+              <img src="{{ STATIC_URL }}img/{{ koie.name.lower }}.jpg" class="img-responsive" alt="Bilde av koie">
               <div class="carousel-caption">
                   <h3>{{ koie.name }}</h3>
                   <a href="{% url 'koie_detail' koie.id %}"><button class="btn btn-primary btn-sm">Les mer</button></a>
@@ -41,8 +40,9 @@
       </a>
     </div>
   </div>
-  <div class="col-md-6">
-      <p><span class="lead">Koiesys</span> er et administrasjonssystem for NTNUI sine Koier.</p>
+  <div class="row">
+    <div class="col-md-6">
+      <p><span class="lead">KoieAdmin</span> er et administrasjonssystem for NTNUI sine Koier.</p>
       <p>Utviklet av gruppe 21, høsten 2014</p>
   </div>
 </div>
