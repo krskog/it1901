@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
@@ -7,7 +6,7 @@ from django.contrib import messages
 from koie.models import Koie, Reservation, Report, Damage, Facility, Notification
 from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm, NotificationForm
 from django.core.mail import send_mail
-
+from koieadmin import settings
 
 # Index view
 def index(request):
@@ -75,13 +74,11 @@ def latest_reports(request, slug=None):
     if slug == 'read':
         reports = []
         for r in Report.objects.all():
-            print(r, r.read_date)
             if r.read_date is not None:
                 reports.append(r)
     elif slug == 'unread':
         reports = []
         for r in Report.objects.all():
-            print(r, r.read_date)
             if r.read_date is None:
                 reports.append(r)
     elif slug == 'all':
@@ -179,7 +176,6 @@ def read_report(request, report_id=None):
 
     report = get_object_or_404(Report, id=report_id)
     if request.method == 'POST':
-        print(request.POST)
         # Should mark report as read?
         if request.POST['act'] == 'report_read':
             if request.POST['read-btn'] == 'Lest':
@@ -212,9 +208,10 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
             if validate_reservation(request, reservation):
                 reservation.save()
-                send_report_email(reservation)
+                report = generate_report(reservation)
                 messages.success(request, _('%(koie)s reserved for %(date)s.' % {'koie': reservation.koie_ordered, 'date': reservation.rent_date}))
                 messages.info(request, _('You will have to fill out a report after your stay. Please check your email.'))
+                send_report_email(report)
                 # Sends an email with a link to the report form connected to this reservation
                 # Should be split into report creation and then cronjob email sending
                 return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
@@ -349,7 +346,6 @@ class Vedstatus:
 def firewood_status(request):
     koies = Koie.objects.all()
     for koie in koies:
-        print(koie, koie.needs_refill())
         #koie.unread_reports = Report.objects.filter(reservation__koie_ordered=koie, read_date=None).exclude(reported_date=None).count()
         if Report.objects.filter(reservation__koie_ordered=koie).count() >= 1:
             koie.firewood = Report.objects.filter(reservation__koie_ordered=koie).latest('reported_date').firewood_status
@@ -438,27 +434,44 @@ def get_koi(report_id):
 
 
 # Mailing
-def send_report_email(reservation=None, report_id=None):
-    create_report = False
-    if report_id is None:
-        report = Report()
-        report.reservation = reservation
-        report.report = ''
-        report.firewood_status = 0
-        report.save()
-        create_report = True
-    else:
-        report = get_object_or_404(Report, pk=report_id)
-        #report.notification_date =
-        report.save()
+def send_report_email(report):
+    #if report_id is None:
+    #    report_id = report.id
+    #    report = get_object_or_404(Report, pk=report_id)
+    report.save()  # Marks as edited, updates sent notification-field
     recipient = report.reservation.ordered_by.email
-    url = 'http://127.0.0.1:8000/report/' + str(report.id) + '/'
-    message = _('Please fill out a report for your stay at: ' + url)
-    #send_mail('Report for koie', message, 'ntnu.koier@gmail.no', [recipient])
-    if create_report:
-        return report
-    else:
-        return redirect(latest_reports)
+    url = "%s%s" % (settings.BASE_URL, report.get_absolute_url())
+    message = _('Please fill out a report for your stay at: %s' % url)
+    send_mail('Report for koie', message, settings.EMAIL_HOST_USER, [recipient])
+    #return redirect(latest_reports)
+
+
+def send_notification_email(notification):
+    equipment = notification.message
+    message = '\
+        Hei! Det har nå blitt koblet en utstyrsmelding opp mot din reservasjon for %(koie)s den %(res_date)s.\n\
+        Du skal ta med deg:\n\
+        %(equipment)s\n\
+        \n\
+        Dersom du har spørsmål angående utstyrsmeldingen, kontakt oss.\n\n\
+        Mvh,\n\
+        Koieadministrasjonssystemet\
+        ' \
+        % {'koie': notification.koie, 'date': notification.reservation.rent_date, 'equipment': equipment}
+    recipient = notification.reservation.ordered_by.email
+    send_email('Utstyrsmelding', message, settings.EMAIL_HOST_USER, [recipient])
+
+
+def send_email(topic, message, fr, to):
+    send_mail(topic, message, fr, to)
+
+
+def generate_report(reservation):
+    report = Report()
+    report.reservation = reservation
+    report.save()
+    return report
+
 
 # Validates reservation
 def validate_reservation(request, reservation):

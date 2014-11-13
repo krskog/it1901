@@ -34,6 +34,8 @@ ADMINS = (('Sklirg', 'sklirg@sklirg.io'),)
 
 ADMINS = (('Sklirg', 'sklirg@sklirg.io'),)
 
+BASE_URL = 'http://k.sklirg.io'
+
 # Application definition
 
 DJANGO_APPS = (
@@ -99,7 +101,7 @@ DATABASES = {
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
 LOCALE_PATHS = (
-    '/Users/sklirg/projects/github/it1901/koieadmin/locale',
+    os.path.join(BASE_DIR, 'locale'),
 )
 
 LANGUAGES = (
