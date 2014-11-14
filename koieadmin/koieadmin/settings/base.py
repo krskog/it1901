@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'koieadmin.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale'),
+    os.path.join(BASE_DIR, '..', 'locale'),
 )
 
 LANGUAGES = (
