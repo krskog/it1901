@@ -446,7 +446,7 @@ def send_report_email(report):
     recipient = report.reservation.ordered_by.email
     url = "%s%s" % (settings.BASE_URL, report.get_absolute_url())
     message = _('Please fill out a report for your stay at: %s' % url)
-    send_email.delay('Report for koie', message, settings.EMAIL_HOST_USER, [recipient])
+    delay_send_email('Report for koie', message, settings.EMAIL_HOST_USER, [recipient])
     #return redirect(latest_reports)
 
 
@@ -463,11 +463,11 @@ def send_notification_email(notification):
         ' \
         % {'koie': notification.koie, 'date': notification.reservation.rent_date, 'equipment': equipment}
     recipient = notification.reservation.ordered_by.email
-    send_email.delay('Utstyrsmelding', message, settings.EMAIL_HOST_USER, [recipient])
+    delay_send_email('Utstyrsmelding', message, settings.EMAIL_HOST_USER, [recipient])
 
-#@task()
-#def send_email(topic, message, fr, to):
-#    send_mail(topic, message, fr, to)
+
+def delay_send_email(topic, message, fr, to):
+    send_email.delay(topic, message, fr, to)
 
 
 def generate_report(reservation):
