@@ -502,4 +502,4 @@ def validate_date(request, date):
 
 # Validates number of beds
 def validate_reserved_beds(koie, num_beds):
-    return num_beds > 0 and num_beds <= koie.num_beds
+    return num_beds > 0 and num_beds <= koie.get_free_beds(date.today())
