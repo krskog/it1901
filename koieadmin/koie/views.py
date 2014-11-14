@@ -438,16 +438,17 @@ def get_koi(report_id):
 
 
 # Mailing
-def send_report_email(report):
-    #if report_id is None:
-    #    report_id = report.id
-    #    report = get_object_or_404(Report, pk=report_id)
+def send_report_email(report, report_id=None):
+    if report_id is not None:
+        report = get_object_or_404(Report, pk=report_id)
+    print('report id %s' % report_id)
     report.save()  # Marks as edited, updates sent notification-field
     recipient = report.reservation.ordered_by.email
     url = "%s%s" % (settings.BASE_URL, report.get_absolute_url())
     message = _('Please fill out a report for your stay at: %s' % url)
     delay_send_email('Report for koie', message, settings.EMAIL_HOST_USER, [recipient])
-    #return redirect(latest_reports)
+    if report_id is not None:
+        return redirect(index)
 
 
 def send_notification_email(notification):
