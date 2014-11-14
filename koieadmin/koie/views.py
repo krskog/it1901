@@ -180,7 +180,7 @@ def read_report(request, report_id=None):
     if request.method == 'POST':
         # Should mark report as read?
         if request.POST['act'] == 'report_read':
-            if request.POST['read-btn'] == 'Lest':
+            if request.POST['read-btn'] == _('Read'):
                 messages.success(request, 'Report marked as read')
                 report.read_date = datetime.now()
                 report.save()
