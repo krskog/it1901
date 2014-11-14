@@ -180,7 +180,7 @@ def read_report(request, report_id=None):
     if request.method == 'POST':
         # Should mark report as read?
         if request.POST['act'] == 'report_read':
-            if request.POST['read-btn'] == 'Lest':
+            if request.POST['read-btn'] == _('Read'):
                 messages.success(request, 'Report marked as read')
                 report.read_date = datetime.now()
                 report.save()
@@ -205,7 +205,6 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
         reservation = get_object_or_404(Reservation, pk=reservation_id)
     if request.method == 'POST':
         form = ReservationForm(request.POST)
-        print(form)
         if form.is_valid():
             reservation = form.save(commit=False)
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
@@ -482,8 +481,8 @@ def generate_report(reservation):
 def validate_reservation(request, reservation):
     if not validate_date(request, reservation.rent_date):
         return False
-    elif not validate_reserved_beds(reservation.koie_ordered, reservation.beds):
-        messages.error(request, _('Invalid number of beds'))
+    elif not validate_reserved_beds(reservation.koie_ordered, reservation.rent_date, reservation.beds):
+        messages.error(request, _('There are not enough available beds.'))
         return False
     else:
         return True
@@ -501,5 +500,5 @@ def validate_date(request, date):
         return True
 
 # Validates number of beds
-def validate_reserved_beds(koie, num_beds):
-    return num_beds > 0 and num_beds <= koie.num_beds
+def validate_reserved_beds(koie, date, num_beds):
+    return num_beds > 0 and num_beds <= koie.get_free_beds(date)
