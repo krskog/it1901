@@ -205,7 +205,6 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
         reservation = get_object_or_404(Reservation, pk=reservation_id)
     if request.method == 'POST':
         form = ReservationForm(request.POST)
-        print(form)
         if form.is_valid():
             reservation = form.save(commit=False)
             reservation.ordered_by = get_or_create_user(form.cleaned_data['email'])
