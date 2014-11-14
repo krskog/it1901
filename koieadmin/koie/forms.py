@@ -38,7 +38,8 @@ class GetReportsForm(forms.Form):
 # This is the admin form
 class DamageForm(ModelForm):
     name = _('damages form')
-    fixed_date = forms.DateField(label=_("Fixed date"), widget=SelectDateWidget, initial=date.today())
+    fixed_date = forms.DateField(label=_('Fixed date'), widget=forms.TextInput(attrs={'placeholder': date.today()}), required=False)
+    # fixed_date = forms.DateField(label=_("Fixed date"), widget=SelectDateWidget, initial=date.today())
     class Meta:
         model = Damage
         fields = ('importance', 'fixed_date',)
