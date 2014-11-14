@@ -482,8 +482,8 @@ def generate_report(reservation):
 def validate_reservation(request, reservation):
     if not validate_date(request, reservation.rent_date):
         return False
-    elif not validate_reserved_beds(reservation.koie_ordered, reservation.beds):
-        messages.error(request, _('Invalid number of beds'))
+    elif not validate_reserved_beds(reservation.koie_ordered, reservation.rent_date, reservation.beds):
+        messages.error(request, _('There are not enough available beds.'))
         return False
     else:
         return True
@@ -501,5 +501,5 @@ def validate_date(request, date):
         return True
 
 # Validates number of beds
-def validate_reserved_beds(koie, num_beds):
-    return num_beds > 0 and num_beds <= koie.get_free_beds(date.today())
+def validate_reserved_beds(koie, date, num_beds):
+    return num_beds > 0 and num_beds <= koie.get_free_beds(date)
