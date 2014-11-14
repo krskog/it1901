@@ -12,7 +12,7 @@
     <p><span class="lead"></span>
       {% if latest_reports %}
         <table class="table">
-            <tr><th>id</th><th>Koie</th><th>Bruker</th><th>Vedstatus</th><th>Rapportert</th></tr>
+            <tr><th>Reservasjons-id</th><th>Koie</th><th>Bruker</th><th>Vedstatus</th><th>Rapportert</th></tr>
           {% for report in latest_reports %}
             <tr>
               <td>{{ report.reservation_id }}</td>
