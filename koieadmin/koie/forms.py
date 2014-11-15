@@ -7,7 +7,6 @@ from django.forms.extras.widgets import SelectDateWidget
 from datetime import date
 
 
-# Form for reserving a koie
 class ReservationForm(ModelForm):
     name = _('reservation form')
 
@@ -19,7 +18,6 @@ class ReservationForm(ModelForm):
         exclude = ('ordered_by', 'ordered_date',)
 
 
-# Form for reporting a stay
 class ReportForm(ModelForm):
     name = _('report form')
 
@@ -29,8 +27,8 @@ class ReportForm(ModelForm):
         fields = ('report', 'firewood_status', 'damages',)
 
 
-# Form for getting a users unreported stays
 class GetReportsForm(forms.Form):
+    """ Form for getting a users unreported stays """
     name = _('get users reports form')
 
     email = forms.EmailField(label=_('Your email'), max_length=100)
@@ -39,8 +37,8 @@ class GetReportsForm(forms.Form):
         name = 'get reports'
 
 
-# Admin form for updating damages
 class DamageForm(ModelForm):
+    """ Admin form for updating damage reports """
     name = _('damages form')
     fixed_date = forms.DateField(label=_('Fixed date'), widget=forms.TextInput(attrs={'placeholder': date.today()}), required=False)
     class Meta:
@@ -48,7 +46,6 @@ class DamageForm(ModelForm):
         fields = ('importance', 'fixed_date',)
 
 
-# Form for creating a notification
 class NotificationForm(ModelForm):
     name = _('notification form')
     due_date = forms.DateField(label='due date', widget=SelectDateWidget, initial=date.today())

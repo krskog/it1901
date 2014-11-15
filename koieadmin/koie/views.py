@@ -8,8 +8,9 @@ from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm, 
 from koieadmin import settings
 from koie.tasks import send_email
 
-# Index view
+
 def index(request):
+    """ Index view """
     koies = Koie.objects.all().order_by('id')
     return render(request, 'index.html', {
       'active': 'index',
@@ -20,8 +21,8 @@ def index(request):
     })
 
 
-# Koie list
 def koie_index(request):
+    """ Koie list """
     koies = Koie.objects.all()
     if request.user.is_authenticated():
         for koie in koies:
@@ -41,8 +42,8 @@ def koie_index(request):
     })
 
 
-# Koie detail, lists information about a koie
 def koie_detail(request, koie_id):
+    """ Koie detail, lists information about a koie """
     koie = get_object_or_404(Koie, pk=koie_id)
     return render(request, 'koie_detail.html', {
       'active': 'koie_detail',
@@ -56,8 +57,8 @@ def koie_detail(request, koie_id):
     })
 
 
-# Lists upcoming reservations
 def next_reservations(request):
+    """ Lists upcoming reservations """
     return render(request, 'next_reservations.html', {
       'active': 'next_reservations',
       'future_reservations': get_future_reservations(num=25),
@@ -68,8 +69,8 @@ def next_reservations(request):
     })
 
 
-# Lists latest reports
 def latest_reports(request, slug=None):
+    """ Lists latest reports """
     # Filters for the report view
     if slug == 'read':
         reports = []
@@ -108,8 +109,8 @@ def latest_reports(request, slug=None):
     })
 
 
-# Lists damages
 def get_damages(request, slug=None):
+    """ Lists damages """
     # Filters for the damage view
     if slug == 'fixed':
         damages = Damage.objects.exclude(fixed_date=None).order_by('-importance')
@@ -129,8 +130,9 @@ def get_damages(request, slug=None):
       'slug': slug,
     })
 
-# A view for admins to read reports
+
 def damage_fixed(request, damage_id=None):
+    """ Admin view to read reports """
     if damage_id is None:
         messages.error(request, 'No report specified')
         return redirect(get_damages)
@@ -141,8 +143,8 @@ def damage_fixed(request, damage_id=None):
     return redirect(get_damages)
 
 
-# Admin view to edit or update a damage report
 def edit_damage(request, damage_id):
+    """ Admin view to edit or update a damage report """
     damage = get_object_or_404(Damage, pk=damage_id)
     if request.method == 'POST':
         form = DamageForm(request.POST, instance=damage)
@@ -169,8 +171,8 @@ def edit_damage(request, damage_id):
     })
 
 
-# Admin view to read reports
 def read_report(request, report_id=None):
+    """ Admin view to read reports """
     if report_id is None:
         messages.error(request, 'No report specified')
         return redirect(latest_reports)
@@ -196,8 +198,9 @@ def read_report(request, report_id=None):
 
 ### Forms & Stuff
 
-# Form to reserve a koie
+
 def reserve_koie(request, reservation_id=None, koie_id=None):
+    """ View to reserve a koie """
     if reservation_id == None:
         reservation = Reservation()
     else:
@@ -235,8 +238,8 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
     })
 
 
-# View for notifications
 def notification_index(request):
+    """ View for listing notifications """
     notifications = Notification.objects.all()
     return render(request, 'notifications.html', {
         'active': 'notification_index',
@@ -248,8 +251,8 @@ def notification_index(request):
     })
 
 
-# View for creating a new notification
 def create_notification(request, koie_id=None):
+    """ View for creating a new notification """
     if koie_id != None:
         koie = get_object_or_404(Koie, pk=koie_id)
     else:
@@ -283,8 +286,8 @@ def create_notification(request, koie_id=None):
     })
 
 
-# View for reporting a stay at a koie
 def report_koie(request, report_id):
+    """ View for reporting a stay at a koie """
     report = get_object_or_404(Report, pk=report_id)
     if request.method == 'POST':
         form = ReportForm(request.POST, instance=report)
@@ -312,8 +315,8 @@ def report_koie(request, report_id):
     })
 
 
-# View to let user see reports for his stays
 def my_reports(request, email=None):
+    """ View for user to get unreported stays """
     if request.method == 'POST':
         form = GetReportsForm(request.POST)
         if form.is_valid() and email is None:
@@ -340,8 +343,10 @@ def my_reports(request, email=None):
         })
 
 
-# Class used for defining firefood status
 class Vedstatus:
+    """ Firewood class
+        Used for defining firewood status
+    """
     def init(self, ved, seng):
         self.ved = ved
         self.vedkapasitet = int(seng)*2
@@ -351,8 +356,8 @@ class Vedstatus:
             self.status = _('Firewood status is OK')
 
 
-# View for firewood status overview
 def firewood_status(request):
+    """ View for firewood status overview """
     koies = Koie.objects.all()
     for koie in koies:
         if Report.objects.filter(reservation__koie_ordered=koie).count() >= 1:
@@ -369,13 +374,11 @@ def firewood_status(request):
         ],
     })
 
-## ========== METHODS =============
-
 ### Validation
 
 
-# Gets or creates a user if noe user with that email exists
 def get_or_create_user(email):
+    """ Get or create a user object """
     users = User.objects.filter(email=email)
     if users.count() > 1:
         pass # WHAT THE FUCK
@@ -391,8 +394,8 @@ def get_or_create_user(email):
 
 ### Lists / views
 
-# Lists `num` future reservations
 def get_future_reservations(koie=None, num=10):
+    """ Lists `num` future reservations """
     today = date.today()
     if koie == None:
         return Reservation.objects.filter(rent_date__gte=today).order_by('rent_date')[:num]
@@ -400,8 +403,8 @@ def get_future_reservations(koie=None, num=10):
         return Reservation.objects.filter(koie_ordered=koie, rent_date__gte=today).order_by('rent_date')[:num]
 
 
-# Function to add damages
 def reportDamage(tekst, report):
+    """ Function to add damages from a damage report """
     if '\n' in tekst:
         tdamages = tekst.split('\n')
         num_damages = len(tdamages)
@@ -428,8 +431,8 @@ def get_latest_reports():
     return Report.objects.filter(read_date=None)
 
 
-# Mailing
 def send_report_email(report, report_id=None):
+    """ Send user email with information about a report """
     if report_id is not None:
         report = get_object_or_404(Report, pk=report_id)
     print('report id %s' % report_id)
@@ -443,6 +446,7 @@ def send_report_email(report, report_id=None):
 
 
 def send_notification_email(notification):
+    """ Send user email about a notification added to his/her reservation """
     equipment = notification.message
     message = '\
         Hei! Det har nå blitt koblet en utstyrsmelding opp mot din reservasjon for %(koie)s den %(date)s.\n\
@@ -459,18 +463,20 @@ def send_notification_email(notification):
 
 
 def delay_send_email(topic, message, fr, to):
+    """ Make sure view is not loading endlessly for response, queue the email sending """
     send_email.delay(topic, message, fr, to)
 
 
 def generate_report(reservation):
+    """ Generate a report for a stay """
     report = Report()
     report.reservation = reservation
     report.save()
     return report
 
 
-# Validates reservation
 def validate_reservation(request, reservation):
+    """ Validate a reservation """
     if not validate_date(request, reservation.rent_date):
         return False
     elif not validate_reserved_beds(reservation.koie_ordered, reservation.rent_date, reservation.beds):
@@ -480,8 +486,8 @@ def validate_reservation(request, reservation):
         return True
 
 
-# Validates date
 def validate_date(request, date):
+    """ Validation of date according to system spec """
     if date < date.today():
         messages.error(request, _('You cannot reserve for the past'))
         return False
@@ -491,6 +497,6 @@ def validate_date(request, date):
     else:
         return True
 
-# Validates number of beds
 def validate_reserved_beds(koie, date, num_beds):
+    """ Validate number of beds available """
     return num_beds > 0 and num_beds <= koie.get_free_beds(date)
