@@ -5,7 +5,11 @@ from datetime import date
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 
+
 class Facility(models.Model):
+    """ Facility class
+        Used for creating a facility which can be connected to a koie.
+    """
     facility = models.CharField(_('facility'), max_length=50)
     info = models.TextField(_('description'), blank=True, null=True)
 
@@ -16,7 +20,11 @@ class Facility(models.Model):
     def __str__(self):
         return self.facility
 
+
 class Koie(models.Model):
+    """ Koie class
+        Contains basic information about a koie.
+    """
     name = models.CharField(_('koie name'), max_length=50)
     address = models.CharField(_('koie address'), max_length=200)
     location = models.CharField(_('location'), max_length=50)
@@ -71,6 +79,9 @@ class Koie(models.Model):
 
 
 class Reservation(models.Model):
+    """ Reservation class
+        Reservation of a koie
+    """
     ordered_by = models.ForeignKey(User, verbose_name=_('ordered by'))
     koie_ordered = models.ForeignKey(Koie, verbose_name=_('koie'))
     rent_date = models.DateField(_('rent date'))
@@ -91,6 +102,9 @@ class Reservation(models.Model):
 
 
 class Notification(models.Model):
+    """ Notification class
+        A message you can connect to a koie/reservation.
+    """
     koie = models.ForeignKey(Koie, verbose_name=_('koie'))
     due_date = models.DateField(_('due date'))
     message = models.TextField(_('message'), max_length=3000)
@@ -123,6 +137,9 @@ class Notification(models.Model):
 
 
 class Report(models.Model):
+    """ Report class
+        A report to fill out after a customers stay at a koie
+    """
     reservation = models.ForeignKey(Reservation, verbose_name=_('reservation'))
     report = models.TextField(_('comments about your stay'), null=True)
     reported_date = models.DateTimeField(_('reported date'), blank=True, null=True)
@@ -159,6 +176,9 @@ class Report(models.Model):
         return "%s for %s" % (_('report').capitalize(), self.reservation)
 
 class Damage(models.Model):
+    """ Damage class
+        A damage on a koie or its equipment
+    """
     report = models.ForeignKey(Report, verbose_name=_('report'), blank=True, null=True)
     damaged_koie = models.ForeignKey(Koie, verbose_name=_('damaged koie'), blank=True, null=True)
     damage = models.TextField(_('damage'), blank=True, null=True)

@@ -6,6 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms.extras.widgets import SelectDateWidget
 from datetime import date
 
+
+# Form for reserving a koie
 class ReservationForm(ModelForm):
     name = _('reservation form')
 
@@ -17,6 +19,7 @@ class ReservationForm(ModelForm):
         exclude = ('ordered_by', 'ordered_date',)
 
 
+# Form for reporting a stay
 class ReportForm(ModelForm):
     name = _('report form')
 
@@ -26,6 +29,7 @@ class ReportForm(ModelForm):
         fields = ('report', 'firewood_status', 'damages',)
 
 
+# Form for getting a users unreported stays
 class GetReportsForm(forms.Form):
     name = _('get users reports form')
 
@@ -35,16 +39,16 @@ class GetReportsForm(forms.Form):
         name = 'get reports'
 
 
-# This is the admin form
+# Admin form for updating damages
 class DamageForm(ModelForm):
     name = _('damages form')
     fixed_date = forms.DateField(label=_('Fixed date'), widget=forms.TextInput(attrs={'placeholder': date.today()}), required=False)
-    # fixed_date = forms.DateField(label=_("Fixed date"), widget=SelectDateWidget, initial=date.today())
     class Meta:
         model = Damage
         fields = ('importance', 'fixed_date',)
 
 
+# Form for creating a notification
 class NotificationForm(ModelForm):
     name = _('notification form')
     due_date = forms.DateField(label='due date', widget=SelectDateWidget, initial=date.today())

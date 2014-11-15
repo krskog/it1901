@@ -5,9 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from koie.models import Koie, Reservation, Report, Damage, Facility, Notification
 from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm, NotificationForm
-#from django.core.mail import send_mail
 from koieadmin import settings
-#from celery import task
 from koie.tasks import send_email
 
 # Index view
@@ -143,6 +141,7 @@ def damage_fixed(request, damage_id=None):
     return redirect(get_damages)
 
 
+# Admin view to edit or update a damage report
 def edit_damage(request, damage_id):
     damage = get_object_or_404(Damage, pk=damage_id)
     if request.method == 'POST':
@@ -170,7 +169,7 @@ def edit_damage(request, damage_id):
     })
 
 
-# A view for admins to read reports
+# Admin view to read reports
 def read_report(request, report_id=None):
     if report_id is None:
         messages.error(request, 'No report specified')
@@ -178,7 +177,6 @@ def read_report(request, report_id=None):
 
     report = get_object_or_404(Report, id=report_id)
     if request.method == 'POST':
-        # Should mark report as read?
         if request.POST['act'] == 'report_read':
             if request.POST['read-btn'] == _('Read'):
                 messages.success(request, 'Report marked as read')
@@ -198,6 +196,7 @@ def read_report(request, report_id=None):
 
 ### Forms & Stuff
 
+# Form to reserve a koie
 def reserve_koie(request, reservation_id=None, koie_id=None):
     if reservation_id == None:
         reservation = Reservation()
@@ -214,9 +213,7 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
                 messages.success(request, _('%(koie)s reserved for %(date)s.' % {'koie': reservation.koie_ordered, 'date': reservation.rent_date}))
                 messages.info(request, _('You will have to fill out a report after your stay. Please check your email.'))
                 send_report_email(report)
-                # Sends an email with a link to the report form connected to this reservation
-                # Should be split into report creation and then cronjob email sending
-                return redirect('koie_detail', koie_id=reservation.koie_ordered.id) # Redirect to koie page
+                return redirect('koie_detail', koie_id=reservation.koie_ordered.id)
             else:
                 form = ReservationForm(request.POST)
         else:
@@ -238,6 +235,7 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
     })
 
 
+# View for notifications
 def notification_index(request):
     notifications = Notification.objects.all()
     return render(request, 'notifications.html', {
@@ -250,6 +248,7 @@ def notification_index(request):
     })
 
 
+# View for creating a new notification
 def create_notification(request, koie_id=None):
     if koie_id != None:
         koie = get_object_or_404(Koie, pk=koie_id)
@@ -284,6 +283,7 @@ def create_notification(request, koie_id=None):
     })
 
 
+# View for reporting a stay at a koie
 def report_koie(request, report_id):
     report = get_object_or_404(Report, pk=report_id)
     if request.method == 'POST':
@@ -311,6 +311,8 @@ def report_koie(request, report_id):
     'form': form
     })
 
+
+# View to let user see reports for his stays
 def my_reports(request, email=None):
     if request.method == 'POST':
         form = GetReportsForm(request.POST)
@@ -337,6 +339,8 @@ def my_reports(request, email=None):
             'form': form,
         })
 
+
+# Class used for defining firefood status
 class Vedstatus:
     def init(self, ved, seng):
         self.ved = ved
@@ -347,10 +351,10 @@ class Vedstatus:
             self.status = _('Firewood status is OK')
 
 
+# View for firewood status overview
 def firewood_status(request):
     koies = Koie.objects.all()
     for koie in koies:
-        #koie.unread_reports = Report.objects.filter(reservation__koie_ordered=koie, read_date=None).exclude(reported_date=None).count()
         if Report.objects.filter(reservation__koie_ordered=koie).count() >= 1:
             koie.firewood = Report.objects.filter(reservation__koie_ordered=koie).latest('reported_date').firewood_status
         else:
@@ -365,7 +369,38 @@ def firewood_status(request):
         ],
     })
 
-# This should be rewritten to use newlines instead.
+## ========== METHODS =============
+
+### Validation
+
+
+# Gets or creates a user if noe user with that email exists
+def get_or_create_user(email):
+    users = User.objects.filter(email=email)
+    if users.count() > 1:
+        pass # WHAT THE FUCK
+    elif users.count() == 1:
+        return users[0]
+    else:
+       # Create new user
+        user = User()
+        user.email = email
+        user.username = email
+        user.save()
+        return user
+
+### Lists / views
+
+# Lists `num` future reservations
+def get_future_reservations(koie=None, num=10):
+    today = date.today()
+    if koie == None:
+        return Reservation.objects.filter(rent_date__gte=today).order_by('rent_date')[:num]
+    else:
+        return Reservation.objects.filter(koie_ordered=koie, rent_date__gte=today).order_by('rent_date')[:num]
+
+
+# Function to add damages
 def reportDamage(tekst, report):
     if '\n' in tekst:
         tdamages = tekst.split('\n')
@@ -385,56 +420,12 @@ def reportDamage(tekst, report):
         damage.damaged_koie = report.reservation.koie_ordered
         damage.save()
 
-## ========== METHODS =============
-
-### Validation
-
-def get_or_create_user(email):
-    users = User.objects.filter(email=email)
-    if users.count() > 1:
-        pass # WHAT THE FUCK
-    elif users.count() == 1:
-        return users[0]
-    else:
-       # Create new user
-        user = User()
-        user.email = email
-        user.username = email
-        user.save()
-        return user
-
-### Lists / views
-
-def get_future_reservations(koie=None, num=10):
-    today = date.today()
-    if koie == None:
-        return Reservation.objects.filter(rent_date__gte=today).order_by('rent_date')[:num]
-    else:
-        return Reservation.objects.filter(koie_ordered=koie, rent_date__gte=today).order_by('rent_date')[:num]
-
-
-### Latest reports
 
 def get_latest_damages():
     return Damage.objects.filter(fixed_date=None).order_by('-importance')
 
 def get_latest_reports():
     return Report.objects.filter(read_date=None)
-
-def get_specific_report(id):
-    return Report.objects.filter(id = id)
-
-def get_koia(id):
-    repid =  Report.objects.get(id = id)
-    resid =  Reservation.objects.get(id = repid.reservation_id)
-    koie = Koie.objects.get(id = resid.koie_ordered_id)
-    return koie.name
-
-def get_koi(report_id):
-    repid =  Report.objects.get(id = report_id)
-    resid =  Reservation.objects.get(id = repid.reservation_id)
-    koie = Koie.objects.get(id = resid.koie_ordered_id)
-    return koie
 
 
 # Mailing
