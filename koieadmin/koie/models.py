@@ -200,8 +200,7 @@ class Firewood(models.Model):
     firewood_status = models.IntegerField(_('firewood status'), blank=True, null=True)
 
     def __str__(self):
-        #return '%s' % self.firewood_status
-        return self.get_status_code()
+        return 'Firewood status for %(koie)s: %(status)s' % {'koie': self.koie, 'status': self.firewood_status}
 
     def get_firewood(self):
         return self.firewood_status
@@ -216,15 +215,15 @@ class Firewood(models.Model):
 
     def get_status_code(self):
         if self.firewood_status is None:
-            return 3
+            return 2
         if self.get_capacity() > 5:
             if self.firewood_status > 5:
                 return 1
             else:
-                return 2
+                return 3
         else:
             if self.firewood_status < (self.get_capacity() / 2):
-                return 2
+                return 3
             else:
                 return 1
 

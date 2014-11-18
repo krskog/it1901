@@ -389,7 +389,7 @@ class Vedstatus:
 @login_required
 def firewood_status(request):
     """ View for firewood status overview """
-    koies = Koie.objects.all().order_by('-firewood')
+    koies = sorted(Koie.objects.all(), key=lambda a: a.firewood.get_status_code(), reverse=True)
 
     return render(request, 'firewood.html', {
     'active': 'koies',
