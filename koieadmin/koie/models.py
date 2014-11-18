@@ -200,7 +200,8 @@ class Firewood(models.Model):
     firewood_status = models.IntegerField(_('firewood status'), blank=True, null=True)
 
     def __str__(self):
-        return '%s' % self.firewood_status
+        #return '%s' % self.firewood_status
+        return self.get_status_code()
 
     def get_firewood(self):
         return self.firewood_status
