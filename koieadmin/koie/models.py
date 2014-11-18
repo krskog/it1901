@@ -121,9 +121,8 @@ class Notification(models.Model):
             message = self.message
         return "'%s' (%s) " % (message, self.koie)
 
-    #@classmethod
     def create(self, due_date):
-        reservations = Reservation.objects.filter(koie_ordered=self.koie, rent_date__gte=self.due_date).order_by('rent_date')
+        reservations = Reservation.objects.filter(koie_ordered=self.koie, rent_date__gte=date.today()).exclude(rent_date__lte=self.due_date).order_by('rent_date')
         if reservations.count() > 0:
             best = reservations[0]
         else:
