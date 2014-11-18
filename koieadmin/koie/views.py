@@ -407,7 +407,7 @@ def get_or_create_user(email):
     """ Get or create a user object """
     users = User.objects.filter(email=email)
     if users.count() > 1:
-        pass # WHAT THE FUCK
+        pass
     elif users.count() == 1:
         return users[0]
     else:
