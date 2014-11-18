@@ -18,6 +18,7 @@ PROJECT_ROOT = BASE_DIR
 
 PROJECT_SETTINGS_DIRECTORY = os.path.dirname(globals()['__file__'])
 
+LOGIN_URL = '/admin/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
