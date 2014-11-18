@@ -7,6 +7,8 @@ from koie.models import Koie, Reservation, Report, Damage, Facility, Notificatio
 from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm, NotificationForm
 from koieadmin import settings
 from koie.tasks import send_email
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -19,6 +21,22 @@ def index(request):
       ],
       'koies': koies,
     })
+
+
+def log_in(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+            messages.success(request, _('Successfully logged in as %s' % user))
+            return redirect(index)
+        else:
+            messages.error(request, _('This user is not active'))
+    else:
+        messages.error(request, _('No user with this username/password combination exists'))
+    return redirect(index)
 
 
 def koie_index(request):
@@ -57,6 +75,7 @@ def koie_detail(request, koie_id):
     })
 
 
+@login_required
 def next_reservations(request):
     """ Lists upcoming reservations """
     return render(request, 'next_reservations.html', {
@@ -69,6 +88,7 @@ def next_reservations(request):
     })
 
 
+@login_required
 def latest_reports(request, slug=None):
     """ Lists latest reports """
     # Filters for the report view
@@ -109,6 +129,7 @@ def latest_reports(request, slug=None):
     })
 
 
+@login_required
 def get_damages(request, slug=None):
     """ Lists damages """
     # Filters for the damage view
@@ -131,6 +152,7 @@ def get_damages(request, slug=None):
     })
 
 
+@login_required
 def damage_fixed(request, damage_id=None):
     """ Admin view to read reports """
     if damage_id is None:
@@ -143,6 +165,7 @@ def damage_fixed(request, damage_id=None):
     return redirect(get_damages)
 
 
+@login_required
 def edit_damage(request, damage_id):
     """ Admin view to edit or update a damage report """
     damage = get_object_or_404(Damage, pk=damage_id)
@@ -171,6 +194,7 @@ def edit_damage(request, damage_id):
     })
 
 
+@login_required
 def read_report(request, report_id=None):
     """ Admin view to read reports """
     if report_id is None:
@@ -238,6 +262,7 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
     })
 
 
+@login_required
 def notification_index(request):
     """ View for listing notifications """
     notifications = Notification.objects.all()
@@ -251,6 +276,7 @@ def notification_index(request):
     })
 
 
+@login_required
 def create_notification(request, koie_id=None):
     """ View for creating a new notification """
     if koie_id != None:
@@ -356,6 +382,7 @@ class Vedstatus:
             self.status = _('Firewood status is OK')
 
 
+@login_required
 def firewood_status(request):
     """ View for firewood status overview """
     koies = Koie.objects.all()
@@ -394,6 +421,7 @@ def get_or_create_user(email):
 
 ### Lists / views
 
+@login_required
 def get_future_reservations(koie=None, num=10):
     """ Lists `num` future reservations """
     today = date.today()

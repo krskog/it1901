@@ -1,0 +1,7 @@
+{% load i18n %}
+<form action="{% url "log_in" %}" method="POST">
+  {% csrf_token %}
+  <input type="text" name="username" placeholder="{% trans "username" %}">
+  <input type="password" name="password" placeholder="********">
+  <input type="submit" name="submit" value="{% trans "Log in" %}" class="btn btn-primary btn-sm">
+</form>
