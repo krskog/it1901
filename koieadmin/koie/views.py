@@ -240,7 +240,7 @@ def reserve_koie(request, reservation_id=None, koie_id=None):
             else:
                 form = ReservationForm(request.POST)
         else:
-            messages.error(request, _('Invalid email address'))
+            messages.error(request, _('Please verify all the fields'))
             form = ReservationForm(request.POST)
     else:
         form = ReservationForm()
