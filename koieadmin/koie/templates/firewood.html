@@ -12,25 +12,12 @@
     <p><span class="lead"></span>
       {% if koies %}
         <table class="table">
-            <tr><th>Koie</th><th>Vedstatus</th><th>Total vedkapasitet</th><th>Status</th></tr>
+            <tr><th>Koie</th><th>Vedstatus</th><th>Status</th></tr>
           {% for koie in koies %}
             <tr>
               <td>{{ koie.name }}</td>
-              {% if koie.firewood == -1 or koie.firewood == None %}
-              <td>N/A</td>
-              {% else %}
-              <td> {{ koie.firewood }} </td>
-              {% endif %}
-              <td>{{ koie.firewood_capacity }}</td>
-              {% if koie.needs_refill %}
-                {% if koie.firewood == -1 or koie.firewood == None %}
-                  <td class="warning">Ingen informasjon om vedstatus</td>
-                  {% else %}
-                  <td class="danger">Koien trenger påfyll av ved!</td>
-                {% endif %}
-              {% else %}
-                <td class="success">Vedstanden er grei!</td>
-              {% endif %}
+              <td>{{ koie.firewood.get_status }}</td>
+              <td class="{{ koie.firewood.get_status_class }}">{{ koie.firewood.get_status_text }}</td>
             </tr>
           {% endfor %}
         </table>
