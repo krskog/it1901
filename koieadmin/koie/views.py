@@ -296,10 +296,13 @@ def report_koie(request, report_id):
             report_clean.reservation = report.reservation
             report_clean.reported_date = datetime.now()
             damages = str(form.cleaned_data['damages'] )
-            report_clean.save()
-            reportDamage(damages, report_clean)
-            messages.success(request, _('Report submitted'))
-            return redirect('index')
+            if validate_report(request, report_clean):
+                report_clean.save()
+                reportDamage(damages, report_clean)
+                messages.success(request, _('Report submitted'))
+                return redirect('index')
+            else:
+                form = ReportForm(instance=report)
         else:
             messages.error(request, _("Did you fill out all the fields?"))
     else:
@@ -500,3 +503,14 @@ def validate_date(request, date):
 def validate_reserved_beds(koie, date, num_beds):
     """ Validate number of beds available """
     return num_beds > 0 and num_beds <= koie.get_free_beds(date)
+
+def validate_report(request, report):
+    """ Validate of report """
+    if not validate_firewood(report.firewood_status):
+        messages.error(request, _('Invalid firewood status'))
+        return False
+    else:
+        return True
+
+def validate_firewood(firewood):
+    return firewood >= 0 and firewood <= 100
