@@ -45,10 +45,6 @@ def koie_index(request):
     if request.user.is_authenticated():
         for koie in koies:
             koie.unread_reports = Report.objects.filter(reservation__koie_ordered=koie, read_date=None).exclude(reported_date=None).count()
-            if Report.objects.filter(reservation__koie_ordered=koie).count() >= 1:
-                koie.firewood = Report.objects.filter(reservation__koie_ordered=koie).latest('reported_date').firewood_status
-            else:
-                koie.firewood = 'N/A'
             koie.damages = Damage.objects.filter(damaged_koie=koie, fixed_date=None).count()
     return render(request, 'koies.html', {
       'active': 'koie_index',

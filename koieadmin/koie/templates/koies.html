@@ -37,7 +37,7 @@
           <td><a href="{% url 'koie_detail' koie.id %}">{{ koie.name }}</a></td>
           <td>{{ koie.location }}</td>
           {% if user.is_authenticated %}
-          <td>{{ koie.firewood }}</td>
+          <td>{{ koie.firewood.get_status }}</td>
           <td>{{ koie.damages }}</td>
           <td>{{ koie.unread_reports }}</td>
           {% else %}
