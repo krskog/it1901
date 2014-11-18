@@ -191,3 +191,66 @@ class Damage(models.Model):
 
     def __str__(self):
         return "%s (@%s)" % (self.damage, self.damaged_koie)
+
+class Firewood(models.Model):
+    """ Firewood class
+        A OTO relation for firewood status
+    """
+    koie = models.OneToOneField(Koie, verbose_name=_('koie'))
+    firewood_status = models.IntegerField(_('firewood status'), blank=True, null=True)
+
+    def __str__(self):
+        return '%s' % self.firewood_status
+
+    def get_firewood(self):
+        return self.firewood_status
+
+    def get_capacity(self):
+        return self.koie.firewood_capacity()
+
+    def get_status(self):
+        if self.firewood_status is None:
+            return _('N/A')
+        return "%s/%s" % (self.firewood_status, self.get_capacity())
+
+    def get_status_code(self):
+        if self.firewood_status is None:
+            return 3
+        if self.get_capacity() > 5:
+            if self.firewood_status > 5:
+                return 1
+            else:
+                return 2
+        else:
+            if self.firewood_status < (self.get_capacity() / 2):
+                return 2
+            else:
+                return 1
+
+    def get_status_class(self):
+        if self.firewood_status is None:
+            return 'warning'
+        if self.get_capacity() > 5:
+            if self.firewood_status > 5:
+                return 'success'
+            else:
+                return 'danger'
+        else:
+            if self.firewood_status < (self.get_capacity() / 2):
+                return 'danger'
+            else:
+                return 'success'
+
+    def get_status_text(self):
+        if self.firewood_status is None:
+            return _('No information available')
+        if self.get_capacity() > 5:
+            if self.firewood_status > 5:
+                return _('Firewood status OK')
+            else:
+                return _('Needs refill')
+        else:
+            if self.firewood_status < (self.get_capacity() / 2):
+                return _('Needs refill')
+            else:
+                return _('Firewood status OK')

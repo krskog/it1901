@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
 from django.contrib import messages
-from koie.models import Koie, Reservation, Report, Damage, Facility, Notification
+from koie.models import Koie, Reservation, Report, Damage, Facility, Notification, Firewood
 from koie.forms import ReservationForm, ReportForm, DamageForm, GetReportsForm, NotificationForm
 from koieadmin import settings
 from koie.tasks import send_email
@@ -299,6 +299,7 @@ def report_koie(request, report_id):
             if validate_report(request, report_clean):
                 report_clean.save()
                 reportDamage(damages, report_clean)
+                report_firewood(report.reservation.koie_ordered, report_clean.firewood_status)
                 messages.success(request, _('Report submitted'))
                 return redirect('index')
             else:
@@ -361,12 +362,7 @@ class Vedstatus:
 
 def firewood_status(request):
     """ View for firewood status overview """
-    koies = Koie.objects.all()
-    for koie in koies:
-        if Report.objects.filter(reservation__koie_ordered=koie).count() >= 1:
-            koie.firewood = Report.objects.filter(reservation__koie_ordered=koie).latest('reported_date').firewood_status
-        else:
-            koie.firewood = -1
+    koies = Koie.objects.all().order_by('-firewood')
 
     return render(request, 'firewood.html', {
     'active': 'koies',
@@ -426,6 +422,13 @@ def reportDamage(tekst, report):
         damage.damaged_koie = report.reservation.koie_ordered
         damage.save()
 
+def report_firewood(koie, firewood_status):
+    try:
+        firewood = Firewood.objects.get(koie=koie)
+    except:
+        firewood = Firewood.objects.create(koie=koie, firewood_status=-1)
+    firewood.firewood_status = firewood_status
+    firewood.save()
 
 def get_latest_damages():
     return Damage.objects.filter(fixed_date=None).order_by('-importance')
@@ -438,7 +441,6 @@ def send_report_email(report, report_id=None):
     """ Send user email with information about a report """
     if report_id is not None:
         report = get_object_or_404(Report, pk=report_id)
-    print('report id %s' % report_id)
     report.save()  # Marks as edited, updates sent notification-field
     recipient = report.reservation.ordered_by.email
     url = "%s%s" % (settings.BASE_URL, report.get_absolute_url())
