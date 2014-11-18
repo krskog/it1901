@@ -416,7 +416,6 @@ def get_or_create_user(email):
 
 ### Lists / views
 
-@login_required
 def get_future_reservations(koie=None, num=10):
     """ Lists `num` future reservations """
     today = date.today()
